@@ -11,6 +11,7 @@ import APropos from "./pages/APropos";
 import Localites from "./pages/Localites";
 import Carrieres from "./pages/Carrieres";
 import Contact from "./pages/Contact";
+import Blog from "./pages/Blog";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/localites" element={<Localites />} />
           <Route path="/carrieres" element={<Carrieres />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/blog" element={<Blog />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
