@@ -1,9 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
+import { useState } from "react";
 
 const Header = () => {
   const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const leftNavItems = [
     { path: "/", label: "Accueil" },
@@ -20,67 +22,122 @@ const Header = () => {
     { path: "/contact", label: "Contact", hasDropdown: true },
   ];
 
+  const allNavItems = [...leftNavItems, ...rightNavItems];
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   return (
-    <header className="bg-background border-b border-border">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Navigation gauche */}
-          <nav className="hidden lg:flex items-center space-x-8">
-            {leftNavItems.map((item) => (
-              <div key={item.path} className="relative group">
-                <Link
-                  to={item.path}
-                  className={cn(
-                    "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary",
-                    location.pathname === item.path
-                      ? "text-primary"
-                      : "text-muted-foreground"
-                  )}
-                >
-                  {item.label}
-                  {item.hasDropdown && <ChevronDown className="w-4 h-4" />}
-                </Link>
+    <>
+      <header className="bg-background border-b border-border relative z-50">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            {/* Navigation gauche - Desktop seulement */}
+            <nav className="hidden lg:flex items-center space-x-8">
+              {leftNavItems.map((item) => (
+                <div key={item.path} className="relative group">
+                  <Link
+                    to={item.path}
+                    className={cn(
+                      "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary",
+                      location.pathname === item.path
+                        ? "text-primary"
+                        : "text-muted-foreground"
+                    )}
+                  >
+                    {item.label}
+                    {item.hasDropdown && <ChevronDown className="w-4 h-4" />}
+                  </Link>
+                </div>
+              ))}
+            </nav>
+
+            {/* Logo central */}
+            <Link to="/" className="flex items-center">
+              <div className="bg-primary text-primary-foreground px-3 py-1 rounded">
+                <span className="text-lg font-bold">aymen</span>
               </div>
-            ))}
-          </nav>
+              <span className="ml-2 text-sm text-muted-foreground">Promotion</span>
+            </Link>
 
-          {/* Logo central */}
-          <Link to="/" className="flex items-center">
-            <div className="bg-primary text-primary-foreground px-3 py-1 rounded">
-              <span className="text-lg font-bold">aymen</span>
-            </div>
-            <span className="ml-2 text-sm text-muted-foreground">Promotion</span>
-          </Link>
+            {/* Navigation droite - Desktop seulement */}
+            <nav className="hidden lg:flex items-center space-x-8">
+              {rightNavItems.map((item) => (
+                <div key={item.path} className="relative group">
+                  <Link
+                    to={item.path}
+                    className={cn(
+                      "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary",
+                      location.pathname === item.path
+                        ? "text-primary"
+                        : "text-muted-foreground"
+                    )}
+                  >
+                    {item.label}
+                    {item.hasDropdown && <ChevronDown className="w-4 h-4" />}
+                  </Link>
+                </div>
+              ))}
+            </nav>
 
-          {/* Navigation droite */}
-          <nav className="hidden lg:flex items-center space-x-8">
-            {rightNavItems.map((item) => (
-              <div key={item.path} className="relative group">
-                <Link
-                  to={item.path}
-                  className={cn(
-                    "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary",
-                    location.pathname === item.path
-                      ? "text-primary"
-                      : "text-muted-foreground"
-                  )}
-                >
-                  {item.label}
-                  {item.hasDropdown && <ChevronDown className="w-4 h-4" />}
-                </Link>
-              </div>
-            ))}
-          </nav>
-
-          {/* Menu mobile */}
-          <div className="lg:hidden">
-            <button className="text-muted-foreground hover:text-primary">
-              Menu
+            {/* Bouton menu mobile */}
+            <button
+              onClick={toggleMobileMenu}
+              className="lg:hidden text-muted-foreground hover:text-primary"
+            >
+              <Menu className="w-6 h-6" />
             </button>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Menu mobile overlay */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 bg-slate-900 z-50 lg:hidden">
+          <div className="flex flex-col h-full">
+            {/* Header du menu mobile */}
+            <div className="flex items-center justify-between p-4 border-b border-slate-700">
+              <Link to="/" className="flex items-center" onClick={toggleMobileMenu}>
+                <div className="bg-primary text-primary-foreground px-3 py-1 rounded">
+                  <span className="text-lg font-bold">aymen</span>
+                </div>
+                <span className="ml-2 text-sm text-slate-300">Promotion</span>
+              </Link>
+              <button
+                onClick={toggleMobileMenu}
+                className="text-slate-300 hover:text-white"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Navigation mobile */}
+            <nav className="flex-1 p-4">
+              <ul className="space-y-6">
+                {allNavItems.map((item) => (
+                  <li key={item.path}>
+                    <Link
+                      to={item.path}
+                      onClick={toggleMobileMenu}
+                      className={cn(
+                        "flex items-center justify-between text-lg font-medium transition-colors",
+                        location.pathname === item.path
+                          ? "text-primary"
+                          : "text-white hover:text-primary"
+                      )}
+                    >
+                      <span>{item.label}</span>
+                      {item.hasDropdown && <ChevronDown className="w-5 h-5" />}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
