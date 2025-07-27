@@ -1,11 +1,10 @@
-import Header from "@/components/Header";
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
 
-const NosBiens = () => {
+const BiensSection = () => {
   const [selectedTypology, setSelectedTypology] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
@@ -111,39 +110,6 @@ const NosBiens = () => {
       status: "À louer",
       etat: "Neuf",
       city: "Alger"
-    },
-    {
-      id: 10,
-      title: "Résidence Océan View",
-      location: "Rais Hamidou, Alger",
-      description: "Appartements avec vue mer et accès direct à la plage.",
-      image: "/placeholder.svg",
-      typology: "F2",
-      status: "Loué",
-      etat: "Bon état",
-      city: "Alger"
-    },
-    {
-      id: 11,
-      title: "Golden Residence",
-      location: "Ouled Fayet, Alger",
-      description: "Résidence de standing avec services hôteliers et spa.",
-      image: "/placeholder.svg",
-      typology: "F3",
-      status: "À vendre",
-      etat: "Rénové",
-      city: "Alger"
-    },
-    {
-      id: 12,
-      title: "Crystal Palace",
-      location: "Staoueli, Alger",
-      description: "Complexe résidentiel avec piscine et salle de sport.",
-      image: "/placeholder.svg",
-      typology: "Duplex",
-      status: "À louer",
-      etat: "Neuf",
-      city: "Alger"
     }
   ];
 
@@ -164,9 +130,7 @@ const NosBiens = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
+    <>
       {/* Hero Section */}
       <section className="relative h-[60vh] bg-cover bg-center bg-no-repeat" style={{
         backgroundImage: "url('/placeholder.svg')"
@@ -307,8 +271,8 @@ const NosBiens = () => {
           )}
         </div>
       </section>
-    </div>
+    </>
   );
 };
 
-export default NosBiens;
+export default BiensSection;

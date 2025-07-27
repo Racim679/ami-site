@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import HeroCarousel from "@/components/HeroCarousel";
-import ProjectsSection from "@/components/ProjectsSection";
+import BiensSection from "@/components/BiensSection";
 import ApartmentExplorer from "@/components/ApartmentExplorer";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import Footer from "@/components/Footer";
@@ -14,8 +14,8 @@ const Index = () => {
         {/* Hero Section - Video Carousel */}
         <HeroCarousel />
         
-        {/* Nos Projets Section */}
-        <ProjectsSection />
+        {/* Nos Biens Section */}
+        <BiensSection />
         
         {/* Explorer nos appartements luxueux */}
         <ApartmentExplorer />
