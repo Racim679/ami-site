@@ -8,18 +8,21 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const leftNavItems = [
-    { path: "/", label: "Accueil" },
-    { path: "/nos-biens", label: "Nos biens" },
+    { path: "/", label: "aymen promotion", hasDropdown: false },
+  ];
+
+  const centerNavItems = [
+    { path: "/nos-biens", label: "Nos biens", hasDropdown: false },
     { path: "/services", label: "Services", hasDropdown: true },
-    { path: "/a-propos", label: "À propos" },
+    { path: "/a-propos", label: "À propos", hasDropdown: false },
+    { path: "/localites", label: "Localités", hasDropdown: false },
   ];
 
   const rightNavItems = [
-    { path: "/localites", label: "Localités" },
     { path: "/contact", label: "Contact", hasDropdown: true },
   ];
 
-  const allNavItems = [...leftNavItems, ...rightNavItems];
+  const allNavItems = [...leftNavItems, ...centerNavItems, ...rightNavItems];
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -31,7 +34,7 @@ const Header = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             {/* Navigation gauche - Desktop seulement */}
-            <nav className="hidden lg:flex items-center space-x-8">
+            <nav className="hidden lg:flex items-center">
               {leftNavItems.map((item) => (
                 <div key={item.path} className="relative group">
                   <Link
@@ -50,16 +53,28 @@ const Header = () => {
               ))}
             </nav>
 
-            {/* Logo central */}
-            <Link to="/" className="flex items-center">
-              <div className="bg-primary text-primary-foreground px-3 py-1 rounded">
-                <span className="text-lg font-bold">aymen</span>
-              </div>
-              <span className="ml-2 text-sm text-muted-foreground">Promotion</span>
-            </Link>
+            {/* Navigation centrale - Desktop seulement */}
+            <nav className="hidden lg:flex items-center space-x-8">
+              {centerNavItems.map((item) => (
+                <div key={item.path} className="relative group">
+                  <Link
+                    to={item.path}
+                    className={cn(
+                      "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary",
+                      location.pathname === item.path
+                        ? "text-primary"
+                        : "text-muted-foreground"
+                    )}
+                  >
+                    {item.label}
+                    {item.hasDropdown && <ChevronDown className="w-4 h-4" />}
+                  </Link>
+                </div>
+              ))}
+            </nav>
 
             {/* Navigation droite - Desktop seulement */}
-            <nav className="hidden lg:flex items-center space-x-8">
+            <nav className="hidden lg:flex items-center">
               {rightNavItems.map((item) => (
                 <div key={item.path} className="relative group">
                   <Link
@@ -77,6 +92,14 @@ const Header = () => {
                 </div>
               ))}
             </nav>
+
+            {/* Logo mobile (visible seulement sur mobile) */}
+            <Link to="/" className="flex items-center lg:hidden">
+              <div className="bg-primary text-primary-foreground px-3 py-1 rounded">
+                <span className="text-lg font-bold">aymen</span>
+              </div>
+              <span className="ml-2 text-sm text-muted-foreground">Promotion</span>
+            </Link>
 
             {/* Bouton menu mobile */}
             <button
