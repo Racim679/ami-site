@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
 
-const Projets = () => {
+const NosBiens = () => {
   const [selectedTypology, setSelectedTypology] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
@@ -280,4 +280,4 @@ const Projets = () => {
   );
 };
 
-export default Projets;
+export default NosBiens;

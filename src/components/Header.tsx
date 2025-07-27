@@ -9,16 +9,13 @@ const Header = () => {
 
   const leftNavItems = [
     { path: "/", label: "Accueil" },
-    { path: "/projets", label: "Projets" },
-    { path: "/locaux", label: "Locaux" },
+    { path: "/nos-biens", label: "Nos biens" },
     { path: "/services", label: "Services", hasDropdown: true },
     { path: "/a-propos", label: "À propos" },
   ];
 
   const rightNavItems = [
     { path: "/localites", label: "Localités" },
-    { path: "/carrieres", label: "Carrière" },
-    { path: "/blog", label: "Blog", hasDropdown: true },
     { path: "/contact", label: "Contact", hasDropdown: true },
   ];
 
