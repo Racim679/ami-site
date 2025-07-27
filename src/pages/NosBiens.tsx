@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import PropertyMap from "@/components/PropertyMap";
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -257,6 +258,19 @@ const NosBiens = () => {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Map Section */}
+      <section className="py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4 text-foreground">Localisation des biens</h2>
+            <p className="text-xl text-muted-foreground">
+              Explorez la carte interactive pour voir l'emplacement de nos propriétés
+            </p>
+          </div>
+          <PropertyMap />
         </div>
       </section>
 
