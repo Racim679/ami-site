@@ -123,30 +123,32 @@ const PropertyMap: React.FC = () => {
             zoom={10}
             style={{ height: '100%', width: '100%' }}
           >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {filteredProperties.map((property) => (
-              <Marker
-                key={property.id}
-                position={[property.latitude, property.longitude]}
-              >
-                <Popup>
-                  <div>
-                    <h3 style={{ fontWeight: 'bold', marginBottom: '4px' }}>{property.title}</h3>
-                    <p style={{ fontSize: '12px', margin: '2px 0' }}>
-                      Status: {property.status}
-                    </p>
-                    {getLocalityName(property.locality_id) && (
+            <>
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              {filteredProperties.map((property) => (
+                <Marker
+                  key={property.id}
+                  position={[property.latitude, property.longitude]}
+                >
+                  <Popup>
+                    <div>
+                      <h3 style={{ fontWeight: 'bold', marginBottom: '4px' }}>{property.title}</h3>
                       <p style={{ fontSize: '12px', margin: '2px 0' }}>
-                        Localité: {getLocalityName(property.locality_id)}
+                        Status: {property.status}
                       </p>
-                    )}
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
+                      {getLocalityName(property.locality_id) && (
+                        <p style={{ fontSize: '12px', margin: '2px 0' }}>
+                          Localité: {getLocalityName(property.locality_id)}
+                        </p>
+                      )}
+                    </div>
+                  </Popup>
+                </Marker>
+              ))}
+            </>
           </MapContainer>
         </div>
         <div className="mt-4 text-sm text-muted-foreground">
