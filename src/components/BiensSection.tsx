@@ -3,152 +3,114 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
-
 const BiensSection = () => {
   const [selectedTypology, setSelectedTypology] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedEtat, setSelectedEtat] = useState("");
   const [visibleResidences, setVisibleResidences] = useState(9);
-
-  const residences = [
-    {
-      id: 1,
-      title: "Résidence Al Manar",
-      location: "Said Hamdine, Alger",
-      description: "Un complexe résidentiel moderne offrant tout le confort nécessaire pour une vie paisible et luxueuse.",
-      image: "/placeholder.svg",
-      typology: "F3",
-      status: "À vendre",
-      etat: "Neuf",
-      city: "Alger"
-    },
-    {
-      id: 2,
-      title: "Complexe Andalous Garden",
-      location: "Hydra, Alger",
-      description: "Des appartements haut de gamme dans un cadre verdoyant avec toutes les commodités modernes.",
-      image: "/placeholder.svg",
-      typology: "F4",
-      status: "À louer",
-      etat: "Rénové",
-      city: "Alger"
-    },
-    {
-      id: 3,
-      title: "Villa Park Premium",
-      location: "Dely Ibrahim, Alger",
-      description: "Résidence de standing avec vue panoramique et finitions de qualité supérieure.",
-      image: "/placeholder.svg",
-      typology: "F5",
-      status: "Vendu",
-      etat: "Bon état",
-      city: "Alger"
-    },
-    {
-      id: 4,
-      title: "Tour Horizon City",
-      location: "El Biar, Alger",
-      description: "Une tour moderne au cœur de la ville avec tous les services à proximité.",
-      image: "/placeholder.svg",
-      typology: "F2",
-      status: "À vendre",
-      etat: "À rénover",
-      city: "Alger"
-    },
-    {
-      id: 5,
-      title: "Résidence Marina Bay",
-      location: "Ain Benian, Alger",
-      description: "Résidence en bord de mer offrant une vue exceptionnelle sur la baie d'Alger.",
-      image: "/placeholder.svg",
-      typology: "Duplex",
-      status: "Loué",
-      etat: "Neuf",
-      city: "Alger"
-    },
-    {
-      id: 6,
-      title: "Green Valley Estate",
-      location: "Cheraga, Alger",
-      description: "Un projet écologique dans un environnement naturel préservé.",
-      image: "/placeholder.svg",
-      typology: "Studio",
-      status: "À vendre",
-      etat: "À démolir",
-      city: "Alger"
-    },
-    {
-      id: 7,
-      title: "Résidence Prestige",
-      location: "Kouba, Alger",
-      description: "Appartements de luxe avec finitions haut de gamme et services personnalisés.",
-      image: "/placeholder.svg",
-      typology: "F3",
-      status: "Vendu",
-      etat: "Bon état",
-      city: "Alger"
-    },
-    {
-      id: 8,
-      title: "Villa Royal Gardens",
-      location: "Ben Aknoun, Alger",
-      description: "Villas individuelles dans un cadre résidentiel calme et sécurisé.",
-      image: "/placeholder.svg",
-      typology: "F4",
-      status: "Vendu",
-      etat: "Rénové",
-      city: "Alger"
-    },
-    {
-      id: 9,
-      title: "Complexe Atlas Heights",
-      location: "Bouzareah, Alger",
-      description: "Résidence moderne avec vue sur la mer et espaces verts aménagés.",
-      image: "/placeholder.svg",
-      typology: "F5",
-      status: "À louer",
-      etat: "Neuf",
-      city: "Alger"
-    }
-  ];
-
+  const residences = [{
+    id: 1,
+    title: "Résidence Al Manar",
+    location: "Said Hamdine, Alger",
+    description: "Un complexe résidentiel moderne offrant tout le confort nécessaire pour une vie paisible et luxueuse.",
+    image: "/placeholder.svg",
+    typology: "F3",
+    status: "À vendre",
+    etat: "Neuf",
+    city: "Alger"
+  }, {
+    id: 2,
+    title: "Complexe Andalous Garden",
+    location: "Hydra, Alger",
+    description: "Des appartements haut de gamme dans un cadre verdoyant avec toutes les commodités modernes.",
+    image: "/placeholder.svg",
+    typology: "F4",
+    status: "À louer",
+    etat: "Rénové",
+    city: "Alger"
+  }, {
+    id: 3,
+    title: "Villa Park Premium",
+    location: "Dely Ibrahim, Alger",
+    description: "Résidence de standing avec vue panoramique et finitions de qualité supérieure.",
+    image: "/placeholder.svg",
+    typology: "F5",
+    status: "Vendu",
+    etat: "Bon état",
+    city: "Alger"
+  }, {
+    id: 4,
+    title: "Tour Horizon City",
+    location: "El Biar, Alger",
+    description: "Une tour moderne au cœur de la ville avec tous les services à proximité.",
+    image: "/placeholder.svg",
+    typology: "F2",
+    status: "À vendre",
+    etat: "À rénover",
+    city: "Alger"
+  }, {
+    id: 5,
+    title: "Résidence Marina Bay",
+    location: "Ain Benian, Alger",
+    description: "Résidence en bord de mer offrant une vue exceptionnelle sur la baie d'Alger.",
+    image: "/placeholder.svg",
+    typology: "Duplex",
+    status: "Loué",
+    etat: "Neuf",
+    city: "Alger"
+  }, {
+    id: 6,
+    title: "Green Valley Estate",
+    location: "Cheraga, Alger",
+    description: "Un projet écologique dans un environnement naturel préservé.",
+    image: "/placeholder.svg",
+    typology: "Studio",
+    status: "À vendre",
+    etat: "À démolir",
+    city: "Alger"
+  }, {
+    id: 7,
+    title: "Résidence Prestige",
+    location: "Kouba, Alger",
+    description: "Appartements de luxe avec finitions haut de gamme et services personnalisés.",
+    image: "/placeholder.svg",
+    typology: "F3",
+    status: "Vendu",
+    etat: "Bon état",
+    city: "Alger"
+  }, {
+    id: 8,
+    title: "Villa Royal Gardens",
+    location: "Ben Aknoun, Alger",
+    description: "Villas individuelles dans un cadre résidentiel calme et sécurisé.",
+    image: "/placeholder.svg",
+    typology: "F4",
+    status: "Vendu",
+    etat: "Rénové",
+    city: "Alger"
+  }, {
+    id: 9,
+    title: "Complexe Atlas Heights",
+    location: "Bouzareah, Alger",
+    description: "Résidence moderne avec vue sur la mer et espaces verts aménagés.",
+    image: "/placeholder.svg",
+    typology: "F5",
+    status: "À louer",
+    etat: "Neuf",
+    city: "Alger"
+  }];
   const filteredResidences = residences.filter(residence => {
-    return (
-      (!selectedTypology || residence.typology === selectedTypology) &&
-      (!selectedStatus || residence.status === selectedStatus) &&
-      (!selectedLocation || residence.city === selectedLocation) &&
-      (!selectedEtat || residence.etat === selectedEtat)
-    );
+    return (!selectedTypology || residence.typology === selectedTypology) && (!selectedStatus || residence.status === selectedStatus) && (!selectedLocation || residence.city === selectedLocation) && (!selectedEtat || residence.etat === selectedEtat);
   });
-
   const displayedResidences = filteredResidences.slice(0, visibleResidences);
-
   const loadMore = () => {
     const increment = window.innerWidth >= 768 ? 9 : 3;
     setVisibleResidences(prev => prev + increment);
   };
-
-  return (
-    <>
+  return <>
       {/* Hero Section */}
-      <section className="relative h-[60vh] bg-cover bg-center bg-no-repeat" style={{
-        backgroundImage: "url('/placeholder.svg')"
-      }}>
-        <div className="absolute inset-0 bg-black/40"></div>
-        <div className="relative h-full flex items-center">
-          <div className="container mx-auto px-4">
-            <div className="max-w-2xl text-white">
-              <h1 className="text-5xl font-bold mb-6">
-                Découvrez nos projets exceptionnels
-              </h1>
-              <p className="text-xl leading-relaxed">
-                Optez pour le raffinement et le confort des appartements au standing de notre promotion immobilière
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      
 
       {/* Filters Section */}
       <section className="py-8">
@@ -228,14 +190,9 @@ const BiensSection = () => {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {displayedResidences.map((residence) => (
-              <Card key={residence.id} className="group overflow-hidden hover:shadow-xl transition-all duration-300">
+            {displayedResidences.map(residence => <Card key={residence.id} className="group overflow-hidden hover:shadow-xl transition-all duration-300">
                 <div className="relative overflow-hidden">
-                  <img 
-                    src={residence.image} 
-                    alt={residence.title}
-                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
+                  <img src={residence.image} alt={residence.title} className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300" />
                   <div className="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
                     {residence.typology}
                   </div>
@@ -258,21 +215,16 @@ const BiensSection = () => {
                     </Button>
                   </div>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
           
-          {visibleResidences < filteredResidences.length && (
-            <div className="text-center mt-12">
+          {visibleResidences < filteredResidences.length && <div className="text-center mt-12">
               <Button onClick={loadMore} size="lg" className="px-8">
                 Voir plus
               </Button>
-            </div>
-          )}
+            </div>}
         </div>
       </section>
-    </>
-  );
+    </>;
 };
-
 export default BiensSection;
