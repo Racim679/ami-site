@@ -133,13 +133,13 @@ const PropertyMap: React.FC = () => {
                 position={[property.latitude, property.longitude]}
               >
                 <Popup>
-                  <div className="text-center">
-                    <h3 className="font-semibold">{property.title}</h3>
-                    <p className="text-sm text-muted-foreground">
+                  <div>
+                    <h3 style={{ fontWeight: 'bold', marginBottom: '4px' }}>{property.title}</h3>
+                    <p style={{ fontSize: '12px', margin: '2px 0' }}>
                       Status: {property.status}
                     </p>
                     {getLocalityName(property.locality_id) && (
-                      <p className="text-sm text-muted-foreground">
+                      <p style={{ fontSize: '12px', margin: '2px 0' }}>
                         Localité: {getLocalityName(property.locality_id)}
                       </p>
                     )}
