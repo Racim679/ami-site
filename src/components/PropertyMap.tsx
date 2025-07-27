@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import { supabase } from '@/integrations/supabase/client';
@@ -7,12 +7,16 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import 'leaflet/dist/leaflet.css';
 
 // Fix pour les icônes par défaut de Leaflet
-delete (Icon.Default.prototype as any)._getIconUrl;
-Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
+try {
+  delete (Icon.Default.prototype as any)._getIconUrl;
+  Icon.Default.mergeOptions({
+    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+  });
+} catch (error) {
+  console.warn('Leaflet icon initialization failed:', error);
+}
 
 interface Property {
   id: string;
@@ -118,12 +122,12 @@ const PropertyMap: React.FC = () => {
       </CardHeader>
       <CardContent>
         <div className="h-96 w-full rounded-lg overflow-hidden">
-          <MapContainer
-            center={[36.8065, 10.1815]} // Coordonnées par défaut (Tunis)
-            zoom={10}
-            style={{ height: '100%', width: '100%' }}
-          >
-            <>
+          <Suspense fallback={<div className="flex items-center justify-center h-full">Chargement de la carte...</div>}>
+            <MapContainer
+              center={[36.8065, 10.1815]} // Coordonnées par défaut (Tunis)
+              zoom={10}
+              style={{ height: '100%', width: '100%' }}
+            >
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -148,8 +152,8 @@ const PropertyMap: React.FC = () => {
                   </Popup>
                 </Marker>
               ))}
-            </>
-          </MapContainer>
+            </MapContainer>
+          </Suspense>
         </div>
         <div className="mt-4 text-sm text-muted-foreground">
           {filteredProperties.length} bien(s) affiché(s) sur la carte
