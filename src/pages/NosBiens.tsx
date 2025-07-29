@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
-import PropertyMap from "@/components/PropertyMap";
+import GoogleMapAppartements from "@/components/GoogleMapAppartements";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
@@ -218,7 +218,7 @@ const NosBiens = () => {
               Explorez la carte interactive pour voir l'emplacement de nos propriétés
             </p>
           </div>
-          <PropertyMap />
+          <GoogleMapAppartements />
         </div>
       </section>
 
