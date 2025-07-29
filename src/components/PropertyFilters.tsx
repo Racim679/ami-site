@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
 
 interface PropertyFiltersProps {
   onSearch?: (filters: FilterState) => void;
@@ -17,6 +16,7 @@ export interface FilterState {
 }
 
 const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => {
+  const navigate = useNavigate();
   const [filters, setFilters] = useState<FilterState>({
     typeOffre: "",
     type: "",
@@ -31,7 +31,16 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
   };
 
   const handleSearch = () => {
-    onSearch?.(filters);
+    // Créer les paramètres d'URL
+    const searchParams = new URLSearchParams();
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) {
+        searchParams.set(key, value);
+      }
+    });
+    
+    // Rediriger vers la page nos-biens avec les filtres
+    navigate(`/nos-biens?${searchParams.toString()}`);
   };
 
   const resetFilters = () => {

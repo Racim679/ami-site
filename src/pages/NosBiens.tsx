@@ -1,12 +1,14 @@
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import PropertyMap from "@/components/PropertyMap";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
 import PropertyFilters, { FilterState } from "@/components/PropertyFilters";
 
 const NosBiens = () => {
+  const [searchParams] = useSearchParams();
   const [filters, setFilters] = useState<FilterState>({
     typeOffre: "",
     type: "",
@@ -14,6 +16,17 @@ const NosBiens = () => {
     localite: ""
   });
   const [visibleResidences, setVisibleResidences] = useState(9);
+
+  // Appliquer les filtres depuis l'URL au chargement
+  useEffect(() => {
+    const urlFilters: FilterState = {
+      typeOffre: searchParams.get("typeOffre") || "",
+      type: searchParams.get("type") || "",
+      etat: searchParams.get("etat") || "",
+      localite: searchParams.get("localite") || ""
+    };
+    setFilters(urlFilters);
+  }, [searchParams]);
 
   const residences = [
     {
