@@ -47,7 +47,7 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
 
   return (
     <div className={`bg-emerald-700 p-6 rounded-lg ${className}`}>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
         {/* Typologie */}
         <div className="space-y-2">
           <label className="text-white text-sm font-medium block">Typologie</label>
@@ -128,6 +128,16 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
               <SelectItem value="à rénover">À rénover</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+
+        {/* Bouton Rechercher */}
+        <div className="mt-6">
+          <Button 
+            onClick={handleSearch}
+            className="bg-amber-500 hover:bg-amber-600 text-white h-12 w-full font-medium"
+          >
+            Rechercher
+          </Button>
         </div>
       </div>
     </div>
