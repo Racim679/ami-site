@@ -10,22 +10,18 @@ interface PropertyFiltersProps {
 }
 
 export interface FilterState {
-  keyword: string;
   typeOffre: string;
   type: string;
   etat: string;
-  prixMin: string;
-  prixMax: string;
+  localite: string;
 }
 
 const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => {
   const [filters, setFilters] = useState<FilterState>({
-    keyword: "",
     typeOffre: "",
     type: "",
     etat: "",
-    prixMin: "",
-    prixMax: ""
+    localite: ""
   });
 
   const handleFilterChange = (key: keyof FilterState, value: string) => {
@@ -40,59 +36,26 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
 
   const resetFilters = () => {
     const resetState = {
-      keyword: "",
       typeOffre: "",
       type: "",
       etat: "",
-      prixMin: "",
-      prixMax: ""
+      localite: ""
     };
     setFilters(resetState);
     onSearch?.(resetState);
   };
 
   return (
-    <div className={`bg-slate-800 p-6 rounded-xl shadow-lg ${className}`}>
-      <div className="grid grid-cols-1 lg:grid-cols-6 gap-4 items-end">
-        {/* Mot-clé */}
+    <div className={`bg-emerald-700 p-6 rounded-lg ${className}`}>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {/* Typologie */}
         <div className="space-y-2">
-          <label className="text-white text-sm font-medium block">Mot-clé</label>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input
-              type="text"
-              placeholder="Rechercher par mot-clé"
-              value={filters.keyword}
-              onChange={(e) => handleFilterChange("keyword", e.target.value)}
-              className="bg-white border-0 h-12 pl-10 text-slate-800"
-            />
-          </div>
-        </div>
-
-        {/* Type d'offre */}
-        <div className="space-y-2">
-          <label className="text-white text-sm font-medium block">Type d'offre</label>
-          <Select value={filters.typeOffre} onValueChange={(value) => handleFilterChange("typeOffre", value)}>
-            <SelectTrigger className="bg-white border-0 h-12 text-slate-800">
-              <SelectValue placeholder="Type d'offre" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="à vendre">À vendre</SelectItem>
-              <SelectItem value="fondu">Fondu</SelectItem>
-              <SelectItem value="alloué">Alloué</SelectItem>
-              <SelectItem value="loué">Loué</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Type */}
-        <div className="space-y-2">
-          <label className="text-white text-sm font-medium block">Type</label>
+          <label className="text-white text-sm font-medium block">Typologie</label>
           <Select value={filters.type} onValueChange={(value) => handleFilterChange("type", value)}>
             <SelectTrigger className="bg-white border-0 h-12 text-slate-800">
-              <SelectValue placeholder="Type" />
+              <SelectValue placeholder="Sélectionner la typologie" />
             </SelectTrigger>
-            <SelectContent className="max-h-60">
+            <SelectContent className="max-h-60 bg-white z-50">
               <SelectItem value="appartement">Appartement</SelectItem>
               <SelectItem value="maison">Maison</SelectItem>
               <SelectItem value="villa">Villa</SelectItem>
@@ -112,58 +75,59 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
           </Select>
         </div>
 
+        {/* Statut */}
+        <div className="space-y-2">
+          <label className="text-white text-sm font-medium block">Statut</label>
+          <Select value={filters.typeOffre} onValueChange={(value) => handleFilterChange("typeOffre", value)}>
+            <SelectTrigger className="bg-white border-0 h-12 text-slate-800">
+              <SelectValue placeholder="Sélectionner le statut" />
+            </SelectTrigger>
+            <SelectContent className="bg-white z-50">
+              <SelectItem value="à vendre">À vendre</SelectItem>
+              <SelectItem value="fondu">Fondu</SelectItem>
+              <SelectItem value="alloué">Alloué</SelectItem>
+              <SelectItem value="loué">Loué</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Localité */}
+        <div className="space-y-2">
+          <label className="text-white text-sm font-medium block">Localité</label>
+          <Select value={filters.localite} onValueChange={(value) => handleFilterChange("localite", value)}>
+            <SelectTrigger className="bg-white border-0 h-12 text-slate-800">
+              <SelectValue placeholder="Sélectionner la localité" />
+            </SelectTrigger>
+            <SelectContent className="bg-white z-50">
+              <SelectItem value="hydra">Hydra</SelectItem>
+              <SelectItem value="kouba">Kouba</SelectItem>
+              <SelectItem value="birkhadem">Birkhadem</SelectItem>
+              <SelectItem value="dar el beida">Dar El Beida</SelectItem>
+              <SelectItem value="said hamdine">Said Hamdine</SelectItem>
+              <SelectItem value="dely ibrahim">Dely Ibrahim</SelectItem>
+              <SelectItem value="el biar">El Biar</SelectItem>
+              <SelectItem value="ain benian">Ain Benian</SelectItem>
+              <SelectItem value="cheraga">Cheraga</SelectItem>
+              <SelectItem value="ben aknoun">Ben Aknoun</SelectItem>
+              <SelectItem value="bouzareah">Bouzareah</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
         {/* État */}
         <div className="space-y-2">
           <label className="text-white text-sm font-medium block">État</label>
           <Select value={filters.etat} onValueChange={(value) => handleFilterChange("etat", value)}>
             <SelectTrigger className="bg-white border-0 h-12 text-slate-800">
-              <SelectValue placeholder="État" />
+              <SelectValue placeholder="Sélectionner l'état" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white z-50">
               <SelectItem value="neuf">Neuf</SelectItem>
               <SelectItem value="rénové">Rénové</SelectItem>
               <SelectItem value="bon état">Bon état</SelectItem>
               <SelectItem value="à rénover">À rénover</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-
-        {/* Prix */}
-        <div className="space-y-2">
-          <label className="text-white text-sm font-medium block">Prix</label>
-          <div className="flex gap-2">
-            <Input
-              type="number"
-              placeholder="Min"
-              value={filters.prixMin}
-              onChange={(e) => handleFilterChange("prixMin", e.target.value)}
-              className="bg-white border-0 h-12 text-slate-800"
-            />
-            <Input
-              type="number"
-              placeholder="Max"
-              value={filters.prixMax}
-              onChange={(e) => handleFilterChange("prixMax", e.target.value)}
-              className="bg-white border-0 h-12 text-slate-800"
-            />
-          </div>
-        </div>
-
-        {/* Boutons */}
-        <div className="flex gap-2 lg:flex-col">
-          <Button 
-            onClick={handleSearch}
-            className="bg-amber-500 hover:bg-amber-600 text-white h-12 px-6 font-medium"
-          >
-            Rechercher
-          </Button>
-          <Button 
-            onClick={resetFilters}
-            variant="outline"
-            className="bg-transparent border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-white h-12 px-4"
-          >
-            Réinitialiser les filtres
-          </Button>
         </div>
       </div>
     </div>

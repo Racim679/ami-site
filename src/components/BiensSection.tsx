@@ -5,12 +5,10 @@ import { MapPin } from "lucide-react";
 import PropertyFilters, { FilterState } from "@/components/PropertyFilters";
 const BiensSection = () => {
   const [filters, setFilters] = useState<FilterState>({
-    keyword: "",
     typeOffre: "",
     type: "",
     etat: "",
-    prixMin: "",
-    prixMax: ""
+    localite: ""
   });
   const [visibleResidences, setVisibleResidences] = useState(9);
   const residences = [{
@@ -105,16 +103,12 @@ const BiensSection = () => {
     city: "Alger"
   }];
   const filteredResidences = residences.filter(residence => {
-    const matchesKeyword = !filters.keyword || 
-      residence.title.toLowerCase().includes(filters.keyword.toLowerCase()) ||
-      residence.location.toLowerCase().includes(filters.keyword.toLowerCase()) ||
-      residence.description.toLowerCase().includes(filters.keyword.toLowerCase());
-    
     const matchesTypeOffre = !filters.typeOffre || residence.status.toLowerCase() === filters.typeOffre.toLowerCase();
     const matchesType = !filters.type || residence.typology.toLowerCase().includes(filters.type.toLowerCase());
     const matchesEtat = !filters.etat || residence.etat.toLowerCase() === filters.etat.toLowerCase();
+    const matchesLocalite = !filters.localite || residence.location.toLowerCase().includes(filters.localite.toLowerCase());
     
-    return matchesKeyword && matchesTypeOffre && matchesType && matchesEtat;
+    return matchesTypeOffre && matchesType && matchesEtat && matchesLocalite;
   });
   const displayedResidences = filteredResidences.slice(0, visibleResidences);
   const loadMore = () => {
