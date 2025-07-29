@@ -1,0 +1,51 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "rag-agent",
+        "responseMode": "onReceived",
+        "options": {
+          "responseContentType": "json"
+        }
+      },
+      "id": "Webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        300,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const question = $json[\"question\"] || \"\";\n// Ici tu peux appeler ton agent RAG ou faire le traitement que tu veux\n// Pour l'exemple, on renvoie juste la question reçue\nreturn [{ answer: `Vous avez demandé : ${question}` }];"
+      },
+      "id": "Function",
+      "name": "Agent RAG (exemple)",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        500,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Agent RAG (exemple)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "name": "Agent RAG pour Chatbot Web"
+}
