@@ -30,7 +30,7 @@ export default defineConfig(({ mode }) => ({
         manualChunks: {
           vendor: ['react', 'react-dom'],
           ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-accordion'],
-          maps: ['mapbox-gl', 'leaflet'],
+          maps: ['@googlemaps/js-api-loader'],
           charts: ['@radix-ui/react-progress', '@radix-ui/react-slider'],
         },
       },
