@@ -5,6 +5,7 @@ import ApartmentExplorer from "@/components/ApartmentExplorer";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
+import Chatbot from "@/components/Chatbot";
 
 const Index = () => {
   return (
@@ -29,6 +30,9 @@ const Index = () => {
       
       {/* Scroll to Top Button */}
       <ScrollToTop />
+      
+      {/* Chatbot */}
+      <Chatbot />
     </div>
   );
 };
