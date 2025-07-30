@@ -89,12 +89,18 @@ const PropertyMap: React.FC = () => {
       if (!mapContainer.current || map.current) return;
 
       try {
+        console.log('Starting Google Maps initialization...');
         // Get Google Maps API key from edge function
         const { data: configData, error: configError } = await supabase.functions.invoke('google-maps-config');
         
+        console.log('Edge function response:', { configData, configError });
+        
         if (configError || !configData?.apiKey) {
+          console.error('Failed to get API key:', configError);
           throw new Error('Impossible de récupérer la clé API Google Maps');
         }
+
+        console.log('API key retrieved successfully');
 
         const loader = new Loader({
           apiKey: configData.apiKey,
