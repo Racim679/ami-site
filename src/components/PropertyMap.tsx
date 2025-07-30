@@ -96,10 +96,17 @@ const PropertyMap: React.FC = () => {
         const { data: configData, error: configError } = await supabase.functions.invoke('google-maps-config');
         
         console.log('Edge function response:', { configData, configError });
+        console.log('Response data type:', typeof configData);
+        console.log('Response data structure:', JSON.stringify(configData, null, 2));
         
-        if (configError || !configData?.apiKey) {
-          console.error('Failed to get API key:', configError);
-          throw new Error('Impossible de récupérer la clé API Google Maps');
+        if (configError) {
+          console.error('Edge function error:', configError);
+          throw new Error(`Erreur de fonction edge: ${configError.message || 'Erreur inconnue'}`);
+        }
+        
+        if (!configData?.apiKey) {
+          console.error('API key not found in response:', configData);
+          throw new Error('Clé API Google Maps non trouvée dans la réponse');
         }
 
         console.log('API key retrieved successfully');
