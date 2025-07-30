@@ -55,7 +55,7 @@ const Chatbot = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://n8n.srv933307.hstgr.cloud/webhook/rag-agent', {
+      const response = await fetch('https://n8n.srv933307.hstgr.cloud/webhook-test/rag-agent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ const Chatbot = () => {
       }
 
       const data = await response.json();
-      
+
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
         text: data.response || data.message || 'Désolé, je n\'ai pas pu traiter votre demande.',
@@ -122,8 +122,8 @@ const Chatbot = () => {
         className={cn(
           "fixed bottom-24 right-6 w-96 h-[500px] transition-all duration-300 z-40",
           "transform origin-bottom-right",
-          isOpen 
-            ? "scale-100 opacity-100 translate-y-0" 
+          isOpen
+            ? "scale-100 opacity-100 translate-y-0"
             : "scale-0 opacity-0 translate-y-4 pointer-events-none"
         )}
       >
@@ -170,7 +170,7 @@ const Chatbot = () => {
                   </div>
                 </div>
               ))}
-              
+
               {/* Loading indicator */}
               {isLoading && (
                 <div className="flex justify-start animate-in slide-in-from-bottom-2 duration-300">

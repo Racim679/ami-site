@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface PropertyFiltersProps {
   onSearch?: (filters: FilterState) => void;
@@ -13,6 +14,8 @@ export interface FilterState {
   type: string;
   etat: string;
   localite: string;
+  minPrice: string;
+  maxPrice: string;
 }
 
 const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => {
@@ -21,7 +24,9 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
     typeOffre: "",
     type: "",
     etat: "",
-    localite: ""
+    localite: "",
+    minPrice: "",
+    maxPrice: ""
   });
 
   const handleFilterChange = (key: keyof FilterState, value: string) => {
@@ -38,7 +43,7 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
         searchParams.set(key, value);
       }
     });
-    
+
     // Rediriger vers la page nos-biens avec les filtres
     navigate(`/nos-biens?${searchParams.toString()}`);
   };
@@ -48,7 +53,9 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
       typeOffre: "",
       type: "",
       etat: "",
-      localite: ""
+      localite: "",
+      minPrice: "",
+      maxPrice: ""
     };
     setFilters(resetState);
     onSearch?.(resetState);
@@ -56,7 +63,7 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
 
   return (
     <div className={`bg-emerald-700 p-6 rounded-lg ${className}`}>
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+      <div className="grid grid-cols-1 md:grid-cols-7 gap-4 items-end">
         {/* Typologie */}
         <div className="space-y-2">
           <label className="text-white text-sm font-medium block">Typologie</label>
@@ -139,9 +146,33 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
           </Select>
         </div>
 
+        {/* Prix minimum */}
+        <div className="space-y-2">
+          <label className="text-white text-sm font-medium block">Prix min (€)</label>
+          <Input
+            type="number"
+            placeholder="Prix minimum"
+            value={filters.minPrice}
+            onChange={(e) => handleFilterChange("minPrice", e.target.value)}
+            className="bg-white border-0 h-12 text-slate-800"
+          />
+        </div>
+
+        {/* Prix maximum */}
+        <div className="space-y-2">
+          <label className="text-white text-sm font-medium block">Prix max (€)</label>
+          <Input
+            type="number"
+            placeholder="Prix maximum"
+            value={filters.maxPrice}
+            onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
+            className="bg-white border-0 h-12 text-slate-800"
+          />
+        </div>
+
         {/* Bouton Rechercher */}
         <div className="mt-6">
-          <Button 
+          <Button
             onClick={handleSearch}
             className="bg-amber-500 hover:bg-amber-600 text-white h-12 w-full font-medium"
           >
