@@ -112,8 +112,8 @@ const PropertyMap: React.FC = () => {
         await loader.load();
 
         map.current = new google.maps.Map(mapContainer.current, {
-          center: { lat: 36.8065, lng: 10.1815 }, // Tunis coordinates
-          zoom: 10,
+          center: { lat: 36.7538, lng: 3.0588 }, // Alger centre coordinates
+          zoom: 11,
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           styles: [
             {
