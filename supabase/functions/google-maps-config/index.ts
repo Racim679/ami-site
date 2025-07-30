@@ -1,4 +1,4 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+// No imports needed for simple environment variable access
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -12,20 +12,11 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // Initialize Supabase client
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    // Get Google Maps API key from environment (Supabase secrets)
+    const googleMapsApiKey = Deno.env.get('GOOGLE_MAPS_API_KEY');
 
-    // Get Google Maps API key from Supabase secrets
-    const { data: secrets, error } = await supabase
-      .from('vault.secrets')
-      .select('secret')
-      .eq('name', 'GOOGLE_MAPS_API_KEY')
-      .single();
-
-    if (error || !secrets) {
-      console.error('Error fetching Google Maps API key:', error);
+    if (!googleMapsApiKey) {
+      console.error('Google Maps API key not found in environment variables');
       return new Response(
         JSON.stringify({ error: 'Google Maps API key not configured' }),
         { 
@@ -35,8 +26,10 @@ Deno.serve(async (req) => {
       );
     }
 
+    console.log('Google Maps API key found, returning to client');
+
     return new Response(
-      JSON.stringify({ apiKey: secrets.secret }),
+      JSON.stringify({ apiKey: googleMapsApiKey }),
       { 
         status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
