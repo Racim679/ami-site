@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 
 interface Property {
   id: string;
@@ -26,12 +27,19 @@ interface Property {
   };
 }
 
+// Cache pour l'API key Google Maps
+const getCachedApiKey = () => localStorage.getItem('google_maps_api_key');
+const setCachedApiKey = (key: string) => localStorage.setItem('google_maps_api_key', key);
+const clearCachedApiKey = () => localStorage.removeItem('google_maps_api_key');
+
 const PropertyMap: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [filteredProperties, setFilteredProperties] = useState<Property[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [loading, setLoading] = useState(true);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [mapError, setMapError] = useState<string | null>(null);
+  const [mapLoadingProgress, setMapLoadingProgress] = useState(0);
   
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<google.maps.Map | null>(null);
@@ -85,41 +93,69 @@ const PropertyMap: React.FC = () => {
     }
   }, [selectedStatus, properties]);
 
-  // Initialize Google Maps
+  // Initialize Google Maps avec timeouts et cache
   useEffect(() => {
     const initializeMap = async () => {
       if (!mapContainer.current || map.current) return;
 
       try {
+        setMapError(null);
+        setMapLoadingProgress(10);
         console.log('Starting Google Maps initialization...');
-        // Get Google Maps API key from edge function
-        const { data: configData, error: configError } = await supabase.functions.invoke('google-maps-config');
+
+        // Vérifier le cache d'abord
+        let apiKey = getCachedApiKey();
         
-        console.log('Edge function response:', { configData, configError });
-        console.log('Response data type:', typeof configData);
-        console.log('Response data structure:', JSON.stringify(configData, null, 2));
-        
-        if (configError) {
-          console.error('Edge function error:', configError);
-          throw new Error(`Erreur de fonction edge: ${configError.message || 'Erreur inconnue'}`);
-        }
-        
-        if (!configData?.apiKey) {
-          console.error('API key not found in response:', configData);
-          throw new Error('Clé API Google Maps non trouvée dans la réponse');
+        if (!apiKey) {
+          setMapLoadingProgress(30);
+          console.log('API key not cached, fetching from edge function...');
+          
+          // Timeout pour l'appel à la fonction edge (5 secondes)
+          const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Timeout: Impossible de récupérer la clé API')), 5000)
+          );
+          
+          const apiCallPromise = supabase.functions.invoke('google-maps-config');
+          
+          const { data: configData, error: configError } = await Promise.race([
+            apiCallPromise,
+            timeoutPromise
+          ]) as any;
+          
+          if (configError) {
+            clearCachedApiKey();
+            throw new Error(`Erreur de fonction edge: ${configError.message || 'Erreur inconnue'}`);
+          }
+          
+          if (!configData?.apiKey) {
+            clearCachedApiKey();
+            throw new Error('Clé API Google Maps non trouvée');
+          }
+
+          apiKey = configData.apiKey;
+          setCachedApiKey(apiKey);
+          console.log('API key retrieved and cached successfully');
+        } else {
+          console.log('Using cached API key');
         }
 
-        console.log('API key retrieved successfully');
+        setMapLoadingProgress(60);
 
+        // Timeout pour le chargement de Google Maps (10 secondes)
         const loader = new Loader({
-          apiKey: configData.apiKey,
+          apiKey,
           version: 'weekly',
         });
 
-        await loader.load();
+        const mapLoadTimeout = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Timeout: Chargement de Google Maps trop lent')), 10000)
+        );
+
+        await Promise.race([loader.load(), mapLoadTimeout]);
+        setMapLoadingProgress(90);
 
         map.current = new google.maps.Map(mapContainer.current, {
-          center: { lat: 36.7538, lng: 3.0588 }, // Alger centre coordinates
+          center: { lat: 36.7538, lng: 3.0588 },
           zoom: 11,
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           styles: [
@@ -130,23 +166,22 @@ const PropertyMap: React.FC = () => {
           ]
         });
 
+        setMapLoadingProgress(100);
         setMapLoaded(true);
-        toast({
-          title: "Succès",
-          description: "Carte Google Maps chargée avec succès",
-        });
+        console.log('Google Maps loaded successfully');
       } catch (error) {
         console.error('Erreur lors de l\'initialisation de Google Maps:', error);
-        toast({
-          title: "Erreur",
-          description: "Impossible de charger Google Maps",
-          variant: "destructive",
-        });
+        setMapError(error instanceof Error ? error.message : 'Erreur inconnue');
+        
+        // En cas d'erreur de timeout, nettoyer le cache
+        if (error instanceof Error && error.message.includes('Timeout')) {
+          clearCachedApiKey();
+        }
       }
     };
 
     initializeMap();
-  }, [toast]);
+  }, []);
 
   // Update markers when filtered properties change
   useEffect(() => {
@@ -232,11 +267,20 @@ const PropertyMap: React.FC = () => {
   // Get unique statuses
   const uniqueStatuses = [...new Set(properties.map(p => p.status))];
 
+  const retryMapLoad = () => {
+    setMapError(null);
+    setMapLoaded(false);
+    setMapLoadingProgress(0);
+    clearCachedApiKey();
+    // Force re-render to trigger useEffect
+    map.current = null;
+  };
+
   if (loading) {
     return (
       <Card>
         <CardContent className="p-6">
-          <div className="text-center">Chargement de la carte...</div>
+          <div className="text-center">Chargement des données...</div>
         </CardContent>
       </Card>
     );
@@ -264,14 +308,37 @@ const PropertyMap: React.FC = () => {
         </div>
       </CardHeader>
       <CardContent>
-        {!mapLoaded && (
+        {mapError ? (
+          <div className="h-96 w-full rounded-lg bg-muted flex items-center justify-center">
+            <div className="text-center max-w-md">
+              <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-4" />
+              <h3 className="text-lg font-semibold mb-2">Erreur de chargement</h3>
+              <p className="text-sm text-muted-foreground mb-4">{mapError}</p>
+              <Button onClick={retryMapLoad} variant="outline" className="gap-2">
+                <RefreshCw className="h-4 w-4" />
+                Réessayer
+              </Button>
+            </div>
+          </div>
+        ) : !mapLoaded ? (
           <div className="h-96 w-full rounded-lg bg-muted flex items-center justify-center">
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-              <p className="text-sm text-muted-foreground">Chargement de Google Maps...</p>
+              <div className="w-48 bg-muted-foreground/20 rounded-full h-2 mx-auto mb-3">
+                <div 
+                  className="bg-primary h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${mapLoadingProgress}%` }}
+                ></div>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {mapLoadingProgress < 30 ? 'Initialisation...' :
+                 mapLoadingProgress < 60 ? 'Récupération de la configuration...' :
+                 mapLoadingProgress < 90 ? 'Chargement de Google Maps...' :
+                 'Finalisation...'}
+              </p>
             </div>
           </div>
-        )}
+        ) : null}
         <div 
           ref={mapContainer} 
           className={`w-full h-96 rounded-lg overflow-hidden ${!mapLoaded ? 'hidden' : ''}`}
