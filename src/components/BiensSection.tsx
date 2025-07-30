@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
 import PropertyFilters, { FilterState } from "@/components/PropertyFilters";
-import FavoritesSystem from "./FavoritesSystem";
 const BiensSection = () => {
   const [filters, setFilters] = useState<FilterState>({
     typeOffre: "",
@@ -108,7 +107,7 @@ const BiensSection = () => {
     const matchesType = !filters.type || residence.typology.toLowerCase().includes(filters.type.toLowerCase());
     const matchesEtat = !filters.etat || residence.etat.toLowerCase() === filters.etat.toLowerCase();
     const matchesLocalite = !filters.localite || residence.location.toLowerCase().includes(filters.localite.toLowerCase());
-
+    
     return matchesTypeOffre && matchesType && matchesEtat && matchesLocalite;
   });
   const displayedResidences = filteredResidences.slice(0, visibleResidences);
@@ -117,68 +116,55 @@ const BiensSection = () => {
     setVisibleResidences(prev => prev + increment);
   };
   return <>
-    {/* Hero Section */}
+      {/* Hero Section */}
+      
 
-
-    {/* Filters Section */}
-    <section className="py-8">
-      <div className="container mx-auto px-4">
-        <PropertyFilters onSearch={setFilters} />
-      </div>
-    </section>
-
-    {/* Residences Section */}
-    <section className="py-16">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {displayedResidences.map(residence => <Card key={residence.id} className="group overflow-hidden hover:shadow-xl transition-all duration-300">
-            <div className="relative overflow-hidden">
-              <img src={residence.image} alt={residence.title} className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300" />
-              <div className="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
-                {residence.typology}
-              </div>
-              <div className="absolute top-4 right-4">
-                <FavoritesSystem
-                  property={{
-                    id: residence.id.toString(),
-                    title: residence.title,
-                    price: 0, // À remplacer par le vrai prix
-                    surface: 0, // À remplacer par la vraie surface
-                    location: residence.location,
-                    image: residence.image,
-                    type: residence.typology
-                  }}
-                />
-              </div>
-            </div>
-            <CardContent className="p-6">
-              <h3 className="text-xl font-bold mb-2 text-foreground">{residence.title}</h3>
-              <div className="flex items-center text-muted-foreground mb-3">
-                <MapPin className="h-4 w-4 mr-1" />
-                <span className="text-sm">{residence.location}</span>
-              </div>
-              <p className="text-muted-foreground mb-4 line-clamp-3">
-                {residence.description}
-              </p>
-              <div className="flex justify-between items-center">
-                <span className="text-sm px-3 py-1 bg-muted rounded-full">
-                  {residence.status}
-                </span>
-                <Button variant="outline" size="sm">
-                  En savoir plus
-                </Button>
-              </div>
-            </CardContent>
-          </Card>)}
+      {/* Filters Section */}
+      <section className="py-8">
+        <div className="container mx-auto px-4">
+          <PropertyFilters onSearch={setFilters} />
         </div>
+      </section>
 
-        {visibleResidences < filteredResidences.length && <div className="text-center mt-12">
-          <Button onClick={loadMore} size="lg" className="px-8">
-            Voir plus
-          </Button>
-        </div>}
-      </div>
-    </section>
-  </>;
+      {/* Residences Section */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {displayedResidences.map(residence => <Card key={residence.id} className="group overflow-hidden hover:shadow-xl transition-all duration-300">
+                <div className="relative overflow-hidden">
+                  <img src={residence.image} alt={residence.title} className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300" />
+                  <div className="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
+                    {residence.typology}
+                  </div>
+                </div>
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-bold mb-2 text-foreground">{residence.title}</h3>
+                  <div className="flex items-center text-muted-foreground mb-3">
+                    <MapPin className="h-4 w-4 mr-1" />
+                    <span className="text-sm">{residence.location}</span>
+                  </div>
+                  <p className="text-muted-foreground mb-4 line-clamp-3">
+                    {residence.description}
+                  </p>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm px-3 py-1 bg-muted rounded-full">
+                      {residence.status}
+                    </span>
+                    <Button variant="outline" size="sm">
+                      En savoir plus
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>)}
+          </div>
+          
+          {visibleResidences < filteredResidences.length && <div className="text-center mt-12">
+              <Button onClick={loadMore} size="lg" className="px-8">
+                Voir plus
+              </Button>
+            </div>}
+        </div>
+      </section>
+    </>;
 };
 export default BiensSection;

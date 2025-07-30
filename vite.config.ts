@@ -8,7 +8,6 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
-    open: true, // Ouvre automatiquement le navigateur
   },
   plugins: [
     react(),
@@ -19,24 +18,5 @@ export default defineConfig(({ mode }) => ({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
-  },
-  build: {
-    outDir: "dist",
-    sourcemap: mode === 'development',
-    minify: mode === 'production',
-    chunkSizeWarningLimit: 1000,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-accordion'],
-          maps: ['mapbox-gl', 'leaflet'],
-          charts: ['@radix-ui/react-progress', '@radix-ui/react-slider'],
-        },
-      },
-    },
-  },
-  optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom'],
   },
 }));
