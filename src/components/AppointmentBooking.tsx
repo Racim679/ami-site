@@ -39,14 +39,14 @@ const agents: Agent[] = [
     available_hours: ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"]
   },
   {
-    id: "2", 
+    id: "2",
     name: "Sarah Messaoudi",
     speciality: "Location & Gestion",
     available_hours: ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"]
   },
   {
     id: "3",
-    name: "Karim Zerrouki", 
+    name: "Karim Zerrouki",
     speciality: "Nouveautés & Promotion",
     available_hours: ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"]
   },
@@ -81,7 +81,7 @@ const AppointmentBooking: React.FC = () => {
   const generateAvailableDates = () => {
     const dates = [];
     const today = startOfDay(new Date());
-    
+
     for (let i = 1; i <= 14; i++) {
       const date = addDays(today, i);
       // Exclure les weekends
@@ -120,8 +120,8 @@ const AppointmentBooking: React.FC = () => {
 
     try {
       // Validation
-      if (!appointment.name || !appointment.email || !appointment.phone || 
-          !appointment.date || !appointment.time || !appointment.agent) {
+      if (!appointment.name || !appointment.email || !appointment.phone ||
+        !appointment.date || !appointment.time || !appointment.agent) {
         throw new Error("Veuillez remplir tous les champs obligatoires");
       }
 
@@ -164,8 +164,9 @@ const AppointmentBooking: React.FC = () => {
       });
       setSelectedDate(null);
 
-    } catch (err: any) {
-      setError(err.message || "Une erreur est survenue");
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Une erreur est survenue";
+      setError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -175,7 +176,7 @@ const AppointmentBooking: React.FC = () => {
     // Simulation de l'envoi à Google Calendar
     // En production, vous utiliseriez l'API Google Calendar
     console.log("Envoi à Google Calendar:", appointment);
-    
+
     // Exemple d'intégration Google Calendar :
     /*
     const event = {
@@ -207,7 +208,7 @@ const AppointmentBooking: React.FC = () => {
             Rendez-vous confirmé !
           </h2>
           <p className="text-gray-600 mb-6">
-            Votre demande de rendez-vous a été enregistrée avec succès. 
+            Votre demande de rendez-vous a été enregistrée avec succès.
             Nous vous contacterons dans les plus brefs délais pour confirmer.
           </p>
           <Button onClick={() => setIsSuccess(false)}>

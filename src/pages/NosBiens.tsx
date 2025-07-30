@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Heart, BarChart3 } from "lucide-react";
 import PropertyFilters, { FilterState } from "@/components/PropertyFilters";
-import GoogleMapAppartements from "@/components/GoogleMapAppartements";
 import { useFavorites } from "@/components/FavoritesSystem";
 import { useComparison } from "@/components/ComparisonSystem";
 import Footer from "@/components/Footer";
@@ -195,11 +194,11 @@ const NosBiens = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       {/* Hero Section */}
       <AnimatedSection className="bg-primary text-primary-foreground py-16">
         <div className="container mx-auto px-4 text-center">
-          <motion.h1 
+          <motion.h1
             className="text-4xl md:text-6xl font-bold mb-4"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -207,7 +206,7 @@ const NosBiens = () => {
           >
             Nos Biens Immobiliers
           </motion.h1>
-          <motion.p 
+          <motion.p
             className="text-xl text-primary-foreground/90 max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -228,14 +227,14 @@ const NosBiens = () => {
       {/* Carte Google Maps */}
       <AnimatedSection className="py-8">
         <div className="container mx-auto px-4">
-          <GoogleMapAppartements />
+          <PropertyMap />
         </div>
       </AnimatedSection>
 
       {/* Liste des biens */}
       <AnimatedSection className="py-16">
         <div className="container mx-auto px-4">
-          <motion.div 
+          <motion.div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             variants={{
               hidden: { opacity: 0 },
@@ -274,8 +273,8 @@ const NosBiens = () => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => isFavorite(residence.id) 
-                          ? removeFromFavorites(residence.id) 
+                        onClick={() => isFavorite(residence.id)
+                          ? removeFromFavorites(residence.id)
                           : addToFavorites(residence)
                         }
                         className="w-8 h-8 p-0 rounded-full bg-white/80 hover:bg-white"
@@ -331,7 +330,7 @@ const NosBiens = () => {
 
           {/* Bouton "Voir plus" */}
           {visibleResidences < filteredResidences.length && (
-            <motion.div 
+            <motion.div
               className="text-center mt-12"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -347,7 +346,7 @@ const NosBiens = () => {
 
       {/* Footer */}
       <Footer />
-      
+
       {/* Scroll to Top Button */}
       <ScrollToTop />
     </div>

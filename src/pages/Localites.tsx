@@ -11,7 +11,6 @@ import elKhroubImage from "@/assets/el-khroub.jpg";
 import belgaidImage from "@/assets/belgaid.jpg";
 import birElDjirImage from "@/assets/bir-el-djir.jpg";
 
-
 interface Locality {
   id: string;
   name: string;
@@ -110,8 +109,6 @@ const Localites = () => {
           </div>
         </div>
       </section>
-
-
 
       {/* Localities Section */}
       <main className="container mx-auto px-4 py-16">

@@ -12,6 +12,7 @@ import Contact from "./pages/Contact";
 import Outils from "./pages/Outils";
 import Favoris from "./pages/Favoris";
 import Comparaison from "./pages/Comparaison";
+import PropertyDetail from "./pages/PropertyDetail";
 import NotFound from "./pages/NotFound";
 import Chatbot from "./components/Chatbot";
 import ComparisonSystem from "./components/ComparisonSystem";
@@ -35,6 +36,7 @@ const App = () => (
           <Route path="/outils" element={<Outils />} />
           <Route path="/favoris" element={<Favoris />} />
           <Route path="/comparaison" element={<Comparaison />} />
+          <Route path="/bien/:id" element={<PropertyDetail />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
