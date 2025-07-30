@@ -57,6 +57,8 @@ const PropertyMap: React.FC = () => {
           .limit(50);
 
         if (error) throw error;
+        console.log('Properties fetched from database:', data);
+        console.log('Number of properties:', data?.length);
         setProperties(data || []);
         setFilteredProperties(data || []);
       } catch (error) {
@@ -150,6 +152,7 @@ const PropertyMap: React.FC = () => {
     infoWindows.current = [];
 
     // Add new markers
+    console.log('Adding markers for properties:', filteredProperties);
     filteredProperties.forEach((property) => {
       const formatPrice = (price?: number) => {
         if (!price) return 'Prix sur demande';
@@ -159,6 +162,7 @@ const PropertyMap: React.FC = () => {
         }).format(price) + ' DT';
       };
 
+      console.log('Creating marker for property:', property.title, 'at coordinates:', property.latitude, property.longitude);
       const marker = new google.maps.Marker({
         position: { lat: property.latitude, lng: property.longitude },
         map: map.current!,
