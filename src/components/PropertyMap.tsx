@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import { Loader } from '@googlemaps/js-api-loader';
 import { supabase } from '@/integrations/supabase/client';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 interface Property {
   id: string;
@@ -14,49 +13,52 @@ interface Property {
   status: string;
   latitude: number;
   longitude: number;
+  surface_m2?: number;
+  prix_dinar?: number;
+  image_url?: string;
   locality_id?: string;
-}
-
-interface Locality {
-  id: string;
-  name: string;
+  typology_id?: string;
+  locality?: {
+    name: string;
+  };
+  typology?: {
+    label: string;
+  };
 }
 
 const PropertyMap: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
-  const [localities, setLocalities] = useState<Locality[]>([]);
   const [filteredProperties, setFilteredProperties] = useState<Property[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [loading, setLoading] = useState(true);
-  const [mapboxToken, setMapboxToken] = useState<string>('');
-  const [showTokenInput, setShowTokenInput] = useState(true);
+  const [mapLoaded, setMapLoaded] = useState(false);
   
   const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const markers = useRef<mapboxgl.Marker[]>([]);
+  const map = useRef<google.maps.Map | null>(null);
+  const markers = useRef<google.maps.Marker[]>([]);
+  const infoWindows = useRef<google.maps.InfoWindow[]>([]);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
-  // Fetch properties and localities from Supabase
+  // Fetch properties from Supabase
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchProperties = async () => {
       try {
-        const [propertiesResult, localitiesResult] = await Promise.all([
-          supabase
-            .from('properties')
-            .select('id, title, status, latitude, longitude, locality_id')
-            .not('latitude', 'is', null)
-            .not('longitude', 'is', null),
-          supabase
-            .from('localities')
-            .select('id, name')
-        ]);
+        const { data, error } = await supabase
+          .from('properties')
+          .select(`
+            id, title, status, latitude, longitude, surface_m2, prix_dinar, image_url,
+            locality:localities(name),
+            typology:typologies(label)
+          `)
+          .not('latitude', 'is', null)
+          .not('longitude', 'is', null)
+          .order('created_at', { ascending: false })
+          .limit(50);
 
-        if (propertiesResult.error) throw propertiesResult.error;
-        if (localitiesResult.error) throw localitiesResult.error;
-
-        setProperties(propertiesResult.data || []);
-        setLocalities(localitiesResult.data || []);
-        setFilteredProperties(propertiesResult.data || []);
+        if (error) throw error;
+        setProperties(data || []);
+        setFilteredProperties(data || []);
       } catch (error) {
         console.error('Erreur lors du chargement des données:', error);
         toast({
@@ -69,7 +71,7 @@ const PropertyMap: React.FC = () => {
       }
     };
 
-    fetchData();
+    fetchProperties();
   }, [toast]);
 
   // Filter properties by status
@@ -81,87 +83,137 @@ const PropertyMap: React.FC = () => {
     }
   }, [selectedStatus, properties]);
 
-  // Initialize map
-  const initializeMap = (token: string) => {
-    if (!mapContainer.current || map.current) return;
+  // Initialize Google Maps
+  useEffect(() => {
+    const initializeMap = async () => {
+      if (!mapContainer.current || map.current) return;
 
-    mapboxgl.accessToken = token;
-    
-    try {
-      map.current = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: 'mapbox://styles/mapbox/light-v11',
-        center: [10.1815, 36.8065], // Tunis coordinates
-        zoom: 10,
-      });
+      try {
+        // Get Google Maps API key from edge function
+        const { data: configData, error: configError } = await supabase.functions.invoke('google-maps-config');
+        
+        if (configError || !configData?.apiKey) {
+          throw new Error('Impossible de récupérer la clé API Google Maps');
+        }
 
-      map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
-      
-      setShowTokenInput(false);
-      toast({
-        title: "Succès",
-        description: "Carte chargée avec succès",
-      });
-    } catch (error) {
-      console.error('Erreur lors de l\'initialisation de la carte:', error);
-      toast({
-        title: "Erreur",
-        description: "Token Mapbox invalide",
-        variant: "destructive",
-      });
-    }
-  };
+        const loader = new Loader({
+          apiKey: configData.apiKey,
+          version: 'weekly',
+        });
+
+        await loader.load();
+
+        map.current = new google.maps.Map(mapContainer.current, {
+          center: { lat: 36.8065, lng: 10.1815 }, // Tunis coordinates
+          zoom: 10,
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          styles: [
+            {
+              featureType: 'poi',
+              stylers: [{ visibility: 'off' }]
+            }
+          ]
+        });
+
+        setMapLoaded(true);
+        toast({
+          title: "Succès",
+          description: "Carte Google Maps chargée avec succès",
+        });
+      } catch (error) {
+        console.error('Erreur lors de l\'initialisation de Google Maps:', error);
+        toast({
+          title: "Erreur",
+          description: "Impossible de charger Google Maps",
+          variant: "destructive",
+        });
+      }
+    };
+
+    initializeMap();
+  }, [toast]);
 
   // Update markers when filtered properties change
   useEffect(() => {
-    if (!map.current) return;
+    if (!map.current || !mapLoaded) return;
 
-    // Remove existing markers
-    markers.current.forEach(marker => marker.remove());
+    // Remove existing markers and info windows
+    markers.current.forEach(marker => marker.setMap(null));
+    infoWindows.current.forEach(infoWindow => infoWindow.close());
     markers.current = [];
+    infoWindows.current = [];
 
     // Add new markers
     filteredProperties.forEach((property) => {
-      const localityName = getLocalityName(property.locality_id);
-      
-      const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
-        <div style="padding: 8px;">
-          <h3 style="font-weight: bold; margin-bottom: 4px; font-size: 14px;">${property.title}</h3>
-          <p style="font-size: 12px; margin: 2px 0; color: #666;">Status: ${property.status}</p>
-          ${localityName ? `<p style="font-size: 12px; margin: 2px 0; color: #666;">Localité: ${localityName}</p>` : ''}
-        </div>
-      `);
+      const formatPrice = (price?: number) => {
+        if (!price) return 'Prix sur demande';
+        return new Intl.NumberFormat('fr-TN', {
+          style: 'decimal',
+          minimumFractionDigits: 0,
+        }).format(price) + ' DT';
+      };
 
-      const marker = new mapboxgl.Marker()
-        .setLngLat([property.longitude, property.latitude])
-        .setPopup(popup)
-        .addTo(map.current!);
+      const marker = new google.maps.Marker({
+        position: { lat: property.latitude, lng: property.longitude },
+        map: map.current!,
+        title: property.title,
+        icon: {
+          url: `data:image/svg+xml,${encodeURIComponent(`
+            <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="20" cy="20" r="18" fill="#3b82f6" stroke="#ffffff" stroke-width="2"/>
+              <circle cx="20" cy="20" r="6" fill="#ffffff"/>
+            </svg>
+          `)}`,
+          scaledSize: new google.maps.Size(40, 40),
+          anchor: new google.maps.Point(20, 20)
+        }
+      });
+
+      const infoWindowContent = `
+        <div style="max-width: 250px; padding: 12px; font-family: system-ui;">
+          ${property.image_url ? `
+            <img src="${property.image_url}" alt="${property.title}" 
+                 style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;">
+          ` : ''}
+          <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #1f2937;">${property.title}</h3>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
+            ${property.typology?.label ? `<span style="background: #dbeafe; color: #1e40af; padding: 2px 8px; border-radius: 12px; font-size: 12px;">${property.typology.label}</span>` : ''}
+            <span style="background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 12px; font-size: 12px;">${property.status}</span>
+          </div>
+          <div style="margin-bottom: 8px;">
+            ${property.surface_m2 ? `<p style="margin: 2px 0; font-size: 14px; color: #4b5563;">📐 ${property.surface_m2} m²</p>` : ''}
+            <p style="margin: 2px 0; font-size: 14px; color: #4b5563;">💰 ${formatPrice(property.prix_dinar)}</p>
+            ${property.locality?.name ? `<p style="margin: 2px 0; font-size: 14px; color: #4b5563;">📍 ${property.locality.name}</p>` : ''}
+          </div>
+          <button onclick="window.showPropertyDetail('${property.id}')" 
+                  style="width: 100%; background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 14px; cursor: pointer; margin-top: 8px;">
+            Voir les détails
+          </button>
+        </div>
+      `;
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: infoWindowContent,
+      });
+
+      marker.addListener('click', () => {
+        // Close all other info windows
+        infoWindows.current.forEach(iw => iw.close());
+        infoWindow.open(map.current!, marker);
+      });
 
       markers.current.push(marker);
+      infoWindows.current.push(infoWindow);
     });
-  }, [filteredProperties, localities]);
 
-  // Get locality name
-  const getLocalityName = (localityId?: string) => {
-    if (!localityId) return '';
-    const locality = localities.find(l => l.id === localityId);
-    return locality ? locality.name : '';
-  };
+    // Add global function for navigation
+    (window as any).showPropertyDetail = (propertyId: string) => {
+      navigate(`/bien/${propertyId}`);
+    };
+  }, [filteredProperties, mapLoaded, navigate]);
 
   // Get unique statuses
   const uniqueStatuses = [...new Set(properties.map(p => p.status))];
-
-  const handleTokenSubmit = () => {
-    if (!mapboxToken.trim()) {
-      toast({
-        title: "Erreur",
-        description: "Veuillez saisir votre token Mapbox",
-        variant: "destructive",
-      });
-      return;
-    }
-    initializeMap(mapboxToken);
-  };
 
   if (loading) {
     return (
@@ -176,61 +228,41 @@ const PropertyMap: React.FC = () => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Carte des Biens Immobiliers</CardTitle>
-        {showTokenInput && (
-          <div className="space-y-4 p-4 bg-muted rounded-lg">
-            <p className="text-sm text-muted-foreground">
-              Pour afficher la carte, vous devez saisir votre token public Mapbox. 
-              Vous pouvez obtenir votre token sur{' '}
-              <a 
-                href="https://mapbox.com/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                mapbox.com
-              </a>
-            </p>
-            <div className="flex gap-2">
-              <Input
-                type="text"
-                placeholder="Votre token public Mapbox..."
-                value={mapboxToken}
-                onChange={(e) => setMapboxToken(e.target.value)}
-                className="flex-1"
-              />
-              <Button onClick={handleTokenSubmit}>Charger la carte</Button>
+        <CardTitle>Carte Interactive des Biens Immobiliers</CardTitle>
+        <div className="flex items-center gap-4">
+          <label className="text-sm font-medium">Filtrer par status:</label>
+          <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+            <SelectTrigger className="w-48">
+              <SelectValue placeholder="Sélectionner un status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tous les status</SelectItem>
+              {uniqueStatuses.map(status => (
+                <SelectItem key={status} value={status}>
+                  {status}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {!mapLoaded && (
+          <div className="h-96 w-full rounded-lg bg-muted flex items-center justify-center">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+              <p className="text-sm text-muted-foreground">Chargement de Google Maps...</p>
             </div>
           </div>
         )}
-        {!showTokenInput && (
-          <div className="flex items-center gap-4">
-            <label className="text-sm font-medium">Filtrer par status:</label>
-            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Sélectionner un status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tous les status</SelectItem>
-                {uniqueStatuses.map(status => (
-                  <SelectItem key={status} value={status}>
-                    {status}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        )}
-      </CardHeader>
-      <CardContent>
-        <div className="h-96 w-full rounded-lg overflow-hidden">
-          <div ref={mapContainer} className="w-full h-full" />
+        <div 
+          ref={mapContainer} 
+          className={`w-full h-96 rounded-lg overflow-hidden ${!mapLoaded ? 'hidden' : ''}`}
+        />
+        <div className="mt-4 text-sm text-muted-foreground">
+          {filteredProperties.length} bien(s) affiché(s) sur la carte
+          {filteredProperties.length > 0 && " • Cliquez sur un marqueur pour plus d'informations"}
         </div>
-        {!showTokenInput && (
-          <div className="mt-4 text-sm text-muted-foreground">
-            {filteredProperties.length} bien(s) affiché(s) sur la carte
-          </div>
-        )}
       </CardContent>
     </Card>
   );

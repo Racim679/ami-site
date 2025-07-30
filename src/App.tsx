@@ -9,6 +9,7 @@ import Services from "./pages/Services";
 import APropos from "./pages/APropos";
 import Localites from "./pages/Localites";
 import Contact from "./pages/Contact";
+import PropertyDetail from "./pages/PropertyDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/a-propos" element={<APropos />} />
           <Route path="/localites" element={<Localites />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/bien/:id" element={<PropertyDetail />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
