@@ -1,32 +1,17 @@
-import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
-import GoogleMapAppartements from "@/components/GoogleMapAppartements";
+import PropertyMap from "@/components/PropertyMap";
+import { useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
-import PropertyFilters, { FilterState } from "@/components/PropertyFilters";
 
 const NosBiens = () => {
-  const [searchParams] = useSearchParams();
-  const [filters, setFilters] = useState<FilterState>({
-    typeOffre: "",
-    type: "",
-    etat: "",
-    localite: ""
-  });
+  const [selectedTypology, setSelectedTypology] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [selectedEtat, setSelectedEtat] = useState("");
   const [visibleResidences, setVisibleResidences] = useState(9);
-
-  // Appliquer les filtres depuis l'URL au chargement
-  useEffect(() => {
-    const urlFilters: FilterState = {
-      typeOffre: searchParams.get("typeOffre") || "",
-      type: searchParams.get("type") || "",
-      etat: searchParams.get("etat") || "",
-      localite: searchParams.get("localite") || ""
-    };
-    setFilters(urlFilters);
-  }, [searchParams]);
 
   const residences = [
     {
@@ -164,12 +149,12 @@ const NosBiens = () => {
   ];
 
   const filteredResidences = residences.filter(residence => {
-    const matchesTypeOffre = !filters.typeOffre || residence.status.toLowerCase() === filters.typeOffre.toLowerCase();
-    const matchesType = !filters.type || residence.typology.toLowerCase().includes(filters.type.toLowerCase());
-    const matchesEtat = !filters.etat || residence.etat.toLowerCase() === filters.etat.toLowerCase();
-    const matchesLocalite = !filters.localite || residence.location.toLowerCase().includes(filters.localite.toLowerCase());
-    
-    return matchesTypeOffre && matchesType && matchesEtat && matchesLocalite;
+    return (
+      (!selectedTypology || residence.typology === selectedTypology) &&
+      (!selectedStatus || residence.status === selectedStatus) &&
+      (!selectedLocation || residence.city === selectedLocation) &&
+      (!selectedEtat || residence.etat === selectedEtat)
+    );
   });
 
   const displayedResidences = filteredResidences.slice(0, visibleResidences);
@@ -205,7 +190,74 @@ const NosBiens = () => {
       {/* Filters Section */}
       <section className="py-8">
         <div className="container mx-auto px-4">
-          <PropertyFilters onSearch={setFilters} />
+          <div className="bg-emerald-800 p-6 rounded-2xl shadow-lg">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="space-y-2">
+                <label className="text-white text-sm font-medium">Typologie</label>
+                <Select value={selectedTypology} onValueChange={setSelectedTypology}>
+                  <SelectTrigger className="bg-white border-0 h-12">
+                    <SelectValue placeholder="Sélectionner la typologie" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="F2">F2</SelectItem>
+                    <SelectItem value="F3">F3</SelectItem>
+                    <SelectItem value="F4">F4</SelectItem>
+                    <SelectItem value="F5">F5</SelectItem>
+                    <SelectItem value="Duplex">Duplex</SelectItem>
+                    <SelectItem value="Studio">Studio</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <label className="text-white text-sm font-medium">Statut</label>
+                <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                  <SelectTrigger className="bg-white border-0 h-12">
+                    <SelectValue placeholder="Sélectionner le statut" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="À vendre">À vendre</SelectItem>
+                    <SelectItem value="Vendu">Vendu</SelectItem>
+                    <SelectItem value="À louer">À louer</SelectItem>
+                    <SelectItem value="Loué">Loué</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <label className="text-white text-sm font-medium">Localité</label>
+                <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                  <SelectTrigger className="bg-white border-0 h-12">
+                    <SelectValue placeholder="Sélectionner la localité" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Alger">Alger</SelectItem>
+                    <SelectItem value="Oran">Oran</SelectItem>
+                    <SelectItem value="Constantine">Constantine</SelectItem>
+                    <SelectItem value="Annaba">Annaba</SelectItem>
+                    <SelectItem value="Tizi Ouzou">Tizi Ouzou</SelectItem>
+                    <SelectItem value="Sétif">Sétif</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <label className="text-white text-sm font-medium">État</label>
+                <Select value={selectedEtat} onValueChange={setSelectedEtat}>
+                  <SelectTrigger className="bg-white border-0 h-12">
+                    <SelectValue placeholder="Sélectionner l'état" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Neuf">Neuf</SelectItem>
+                    <SelectItem value="Rénové">Rénové</SelectItem>
+                    <SelectItem value="Bon état">Bon état</SelectItem>
+                    <SelectItem value="À rénover">À rénover</SelectItem>
+                    <SelectItem value="À démolir">À démolir</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -218,7 +270,7 @@ const NosBiens = () => {
               Explorez la carte interactive pour voir l'emplacement de nos propriétés
             </p>
           </div>
-          <GoogleMapAppartements />
+          <PropertyMap />
         </div>
       </section>
 

@@ -19,16 +19,4 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  build: {
-    rollupOptions: {
-      external: (id) => {
-        // Skip problematic rollup binaries
-        if (id.includes('@rollup/rollup-')) return false;
-        return false;
-      }
-    }
-  },
-  optimizeDeps: {
-    exclude: ['@rollup/rollup-linux-x64-gnu']
-  }
 }));
