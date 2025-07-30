@@ -4,9 +4,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { AlertTriangle, RefreshCw, MapPin } from 'lucide-react';
 import { useAsyncMapLoader } from '@/hooks/useAsyncMapLoader';
 import { useOptimizedMarkers } from '@/hooks/useOptimizedMarkers';
+import ProgressiveLoading from '@/components/ProgressiveLoading';
+import FallbackMapView from '@/components/FallbackMapView';
 
 interface Property {
   id: string;
@@ -33,6 +35,7 @@ const PropertyMap: React.FC = React.memo(() => {
   const [filteredProperties, setFilteredProperties] = useState<Property[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [loading, setLoading] = useState(true);
+  const [showFallback, setShowFallback] = useState(false);
   
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<google.maps.Map | null>(null);
@@ -134,18 +137,37 @@ const PropertyMap: React.FC = React.memo(() => {
   }, [properties]);
 
   const handleRetryMapLoad = () => {
+    setShowFallback(false);
     retryMapLoad();
     // Force re-render en réinitialisant la référence
     map.current = null;
   };
 
+  const handleShowFallback = () => {
+    setShowFallback(true);
+  };
+
+  // Mode dégradé ou chargement progressif
+  if (showFallback) {
+    return (
+      <FallbackMapView 
+        properties={filteredProperties}
+        selectedStatus={selectedStatus}
+        onStatusChange={setSelectedStatus}
+        uniqueStatuses={uniqueStatuses}
+      />
+    );
+  }
+
   if (loading) {
     return (
-      <Card>
-        <CardContent className="p-6">
-          <div className="text-center">Chargement des données...</div>
-        </CardContent>
-      </Card>
+      <ProgressiveLoading 
+        dataLoading={loading}
+        dataLoaded={!loading}
+        mapLoadingProgress={state.mapLoadingProgress}
+        isMapLoading={state.isLoading}
+        propertiesCount={properties.length}
+      />
     );
   }
 
@@ -171,44 +193,67 @@ const PropertyMap: React.FC = React.memo(() => {
         </div>
       </CardHeader>
       <CardContent>
+        {!loading && (
+          <ProgressiveLoading 
+            dataLoading={false}
+            dataLoaded={true}
+            mapLoadingProgress={state.mapLoadingProgress}
+            isMapLoading={state.isLoading}
+            propertiesCount={filteredProperties.length}
+          />
+        )}
+        
         {state.mapError ? (
           <div className="h-96 w-full rounded-lg bg-muted flex items-center justify-center">
             <div className="text-center max-w-md">
               <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Erreur de chargement</h3>
+              <h3 className="text-lg font-semibold mb-2">Erreur de chargement de la carte</h3>
               <p className="text-sm text-muted-foreground mb-4">{state.mapError}</p>
-              <Button onClick={handleRetryMapLoad} variant="outline" className="gap-2">
-                <RefreshCw className="h-4 w-4" />
-                Réessayer
-              </Button>
-            </div>
-          </div>
-        ) : !state.mapLoaded ? (
-          <div className="h-96 w-full rounded-lg bg-muted flex items-center justify-center">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-              <div className="w-48 bg-muted-foreground/20 rounded-full h-2 mx-auto mb-3">
-                <div 
-                  className="bg-primary h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${state.mapLoadingProgress}%` }}
-                ></div>
+              <div className="flex gap-2 justify-center">
+                <Button onClick={handleRetryMapLoad} variant="outline" className="gap-2">
+                  <RefreshCw className="h-4 w-4" />
+                  Réessayer
+                </Button>
+                <Button onClick={handleShowFallback} variant="secondary" className="gap-2">
+                  <MapPin className="h-4 w-4" />
+                  Mode Liste
+                </Button>
               </div>
-              <p className="text-sm text-muted-foreground">
-                {state.mapLoadingProgress < 30 ? 'Initialisation...' :
-                 state.mapLoadingProgress < 60 ? 'Récupération de la configuration...' :
-                 state.mapLoadingProgress < 90 ? 'Chargement de Google Maps...' :
-                 'Finalisation...'}
+              <p className="text-xs text-muted-foreground mt-3">
+                Vous pouvez utiliser le mode liste pour voir les propriétés avec des liens vers des cartes externes
               </p>
             </div>
           </div>
+        ) : !state.mapLoaded && !loading ? (
+          <ProgressiveLoading 
+            dataLoading={false}
+            dataLoaded={true}
+            mapLoadingProgress={state.mapLoadingProgress}
+            isMapLoading={state.isLoading}
+            propertiesCount={filteredProperties.length}
+          />
         ) : null}
+        
         <div 
           ref={mapContainer} 
           className={`w-full h-96 rounded-lg overflow-hidden ${!state.mapLoaded ? 'hidden' : ''}`}
         />
-        <div className="mt-4 text-sm text-muted-foreground">
-          {filteredProperties.length} bien(s) affiché(s) sur la carte
-          {filteredProperties.length > 0 && " • Cliquez sur un marqueur pour plus d'informations"}
+        
+        <div className="mt-4 flex justify-between items-center">
+          <div className="text-sm text-muted-foreground">
+            {filteredProperties.length} bien(s) affiché(s) sur la carte
+            {filteredProperties.length > 0 && " • Cliquez sur un marqueur pour plus d'informations"}
+          </div>
+          {state.mapLoaded && (
+            <Button 
+              onClick={handleShowFallback} 
+              variant="ghost" 
+              size="sm" 
+              className="text-xs"
+            >
+              Voir en mode liste
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>
