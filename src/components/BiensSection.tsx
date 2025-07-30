@@ -9,7 +9,9 @@ const BiensSection = () => {
     typeOffre: "",
     type: "",
     etat: "",
-    localite: ""
+    localite: "",
+    minPrice: "",
+    maxPrice: ""
   });
   const [visibleResidences, setVisibleResidences] = useState(9);
   const residences = [{

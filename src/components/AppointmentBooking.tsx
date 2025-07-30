@@ -6,9 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { format, addDays, startOfDay, isBefore, isAfter } from "date-fns";
+import { format, addDays, startOfDay } from "date-fns";
 import { fr } from "date-fns/locale";
-import { supabase } from "@/integrations/supabase/client";
 
 interface Appointment {
   id?: string;
@@ -125,30 +124,11 @@ const AppointmentBooking: React.FC = () => {
         throw new Error("Veuillez remplir tous les champs obligatoires");
       }
 
-      // Vérifier si le créneau est disponible
-      const { data: existingAppointments } = await supabase
-        .from('appointments')
-        .select('*')
-        .eq('date', appointment.date)
-        .eq('time', appointment.time)
-        .eq('agent', appointment.agent)
-        .eq('status', 'confirmed');
-
-      if (existingAppointments && existingAppointments.length > 0) {
-        throw new Error("Ce créneau n'est plus disponible. Veuillez en choisir un autre.");
-      }
-
-      // Insérer le rendez-vous
-      const { data, error: insertError } = await supabase
-        .from('appointments')
-        .insert([appointment])
-        .select()
-        .single();
-
-      if (insertError) throw insertError;
-
-      // Envoyer à Google Calendar (simulation)
-      await sendToGoogleCalendar(appointment);
+      // Simulation de l'envoi - remplacez par votre logique Supabase
+      console.log("Rendez-vous soumis:", appointment);
+      
+      // Simuler un délai d'envoi
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       setIsSuccess(true);
       setAppointment({
@@ -170,33 +150,6 @@ const AppointmentBooking: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const sendToGoogleCalendar = async (appointment: Appointment) => {
-    // Simulation de l'envoi à Google Calendar
-    // En production, vous utiliseriez l'API Google Calendar
-    console.log("Envoi à Google Calendar:", appointment);
-
-    // Exemple d'intégration Google Calendar :
-    /*
-    const event = {
-      summary: `Rendez-vous - ${appointment.name}`,
-      description: `Rendez-vous avec ${appointment.name}\nTéléphone: ${appointment.phone}\nEmail: ${appointment.email}\nMessage: ${appointment.message}`,
-      start: {
-        dateTime: `${appointment.date}T${appointment.time}:00`,
-        timeZone: 'Europe/Paris',
-      },
-      end: {
-        dateTime: `${appointment.date}T${appointment.time}:00`,
-        timeZone: 'Europe/Paris',
-      },
-    };
-    
-    await gapi.client.calendar.events.insert({
-      calendarId: 'primary',
-      resource: event,
-    });
-    */
   };
 
   if (isSuccess) {
@@ -385,4 +338,4 @@ const AppointmentBooking: React.FC = () => {
   );
 };
 
-export default AppointmentBooking; 
+export default AppointmentBooking;

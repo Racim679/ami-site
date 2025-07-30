@@ -220,7 +220,7 @@ const NosBiens = () => {
       {/* Filtres */}
       <AnimatedSection className="py-8 bg-muted/30">
         <div className="container mx-auto px-4">
-          <PropertyFilters filters={filters} setFilters={setFilters} />
+          <PropertyFilters onSearch={setFilters} />
         </div>
       </AnimatedSection>
 
@@ -273,22 +273,40 @@ const NosBiens = () => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => isFavorite(residence.id)
-                          ? removeFromFavorites(residence.id)
-                          : addToFavorites(residence)
+                        onClick={() => isFavorite(residence.id.toString())
+                          ? removeFromFavorites(residence.id.toString())
+                          : addToFavorites({
+                              id: residence.id.toString(),
+                              title: residence.title,
+                              price: residence.price,
+                              surface: 100, // Valeur par défaut
+                              location: residence.location,
+                              image: residence.image,
+                              type: residence.typology
+                            })
                         }
                         className="w-8 h-8 p-0 rounded-full bg-white/80 hover:bg-white"
                       >
-                        <Heart className={`w-4 h-4 ${isFavorite(residence.id) ? "fill-red-500 text-red-500" : "text-gray-600"}`} />
+                        <Heart className={`w-4 h-4 ${isFavorite(residence.id.toString()) ? "fill-red-500 text-red-500" : "text-gray-600"}`} />
                       </Button>
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => addToComparison(residence)}
-                        disabled={isInComparison(residence.id)}
+                        onClick={() => addToComparison({
+                          id: residence.id.toString(),
+                          title: residence.title,
+                          price: residence.price,
+                          surface: 100, // Valeur par défaut
+                          location: residence.location,
+                          image: residence.image,
+                          type: residence.typology,
+                          status: residence.status,
+                          etat: residence.etat
+                        })}
+                        disabled={isInComparison(residence.id.toString())}
                         className="w-8 h-8 p-0 rounded-full bg-white/80 hover:bg-white"
                       >
-                        <BarChart3 className={`w-4 h-4 ${isInComparison(residence.id) ? "text-primary" : "text-gray-600"}`} />
+                        <BarChart3 className={`w-4 h-4 ${isInComparison(residence.id.toString()) ? "text-primary" : "text-gray-600"}`} />
                       </Button>
                     </div>
                     {residence.price > 0 && (
