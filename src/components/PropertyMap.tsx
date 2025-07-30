@@ -32,7 +32,7 @@ const PropertyMap: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [loading, setLoading] = useState(true);
   const [mapLoaded, setMapLoaded] = useState(false);
-  
+
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<google.maps.Map | null>(null);
   const markers = useRef<google.maps.Marker[]>([]);
@@ -62,7 +62,9 @@ const PropertyMap: React.FC = () => {
         setProperties(data || []);
         setFilteredProperties(data || []);
       } catch (error) {
-        console.error('Erreur lors du chargement des données:', error);
+        if (import.meta.env.DEV) {
+          console.error('Erreur lors du chargement des données:', error);
+        }
         toast({
           title: "Erreur",
           description: "Impossible de charger les données des propriétés",
@@ -94,9 +96,9 @@ const PropertyMap: React.FC = () => {
         console.log('Starting Google Maps initialization...');
         // Get Google Maps API key from edge function
         const { data: configData, error: configError } = await supabase.functions.invoke('google-maps-config');
-        
+
         console.log('Edge function response:', { configData, configError });
-        
+
         if (configError || !configData?.apiKey) {
           console.error('Failed to get API key:', configError);
           throw new Error('Impossible de récupérer la clé API Google Maps');
@@ -217,7 +219,7 @@ const PropertyMap: React.FC = () => {
     });
 
     // Add global function for navigation
-    (window as any).showPropertyDetail = (propertyId: string) => {
+    (window as typeof window & { showPropertyDetail: (propertyId: string) => void }).showPropertyDetail = (propertyId: string) => {
       navigate(`/bien/${propertyId}`);
     };
   }, [filteredProperties, mapLoaded, navigate]);
@@ -265,8 +267,8 @@ const PropertyMap: React.FC = () => {
             </div>
           </div>
         )}
-        <div 
-          ref={mapContainer} 
+        <div
+          ref={mapContainer}
           className={`w-full h-96 rounded-lg overflow-hidden ${!mapLoaded ? 'hidden' : ''}`}
         />
         <div className="mt-4 text-sm text-muted-foreground">

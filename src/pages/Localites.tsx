@@ -65,7 +65,9 @@ const Localites = () => {
 
         setCitiesWithLocalities(citiesWithLocalitiesData);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        if (import.meta.env.DEV) {
+          console.error("Error fetching data:", error);
+        }
       } finally {
         setLoading(false);
       }
@@ -88,10 +90,10 @@ const Localites = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="relative h-[80vh] overflow-hidden">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${heroImage})` }}
         />
@@ -115,11 +117,11 @@ const Localites = () => {
             <h2 className="text-3xl font-bold mb-8 text-foreground text-center">
               {city.name}
             </h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {city.localities.map((locality) => (
-                <Card 
-                  key={locality.id} 
+                <Card
+                  key={locality.id}
                   className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer"
                 >
                   <div className="relative h-64 overflow-hidden">
