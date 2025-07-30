@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { useState } from "react";
 
-
 const Header = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -15,13 +14,11 @@ const Header = () => {
   const centerNavItems = [
     { path: "/nos-biens", label: "Nos biens", hasDropdown: false },
     { path: "/services", label: "Services", hasDropdown: true },
-    { path: "/outils", label: "Outils", hasDropdown: false },
     { path: "/a-propos", label: "À propos", hasDropdown: false },
     { path: "/localites", label: "Localités", hasDropdown: false },
   ];
 
   const rightNavItems = [
-    { path: "/favoris", label: "Favoris", hasDropdown: false },
     { path: "/contact", label: "Contact", hasDropdown: true },
   ];
 
@@ -77,7 +74,7 @@ const Header = () => {
             </nav>
 
             {/* Navigation droite - Desktop seulement */}
-            <nav className="hidden lg:flex items-center space-x-4">
+            <nav className="hidden lg:flex items-center">
               {rightNavItems.map((item) => (
                 <div key={item.path} className="relative group">
                   <Link
@@ -94,7 +91,6 @@ const Header = () => {
                   </Link>
                 </div>
               ))}
-
             </nav>
 
             {/* Logo mobile (visible seulement sur mobile) */}
