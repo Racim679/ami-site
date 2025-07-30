@@ -58,7 +58,9 @@ const PropertyMap: React.FC = () => {
         setLocalities(localitiesResult.data || []);
         setFilteredProperties(propertiesResult.data || []);
       } catch (error) {
-        console.error('Erreur lors du chargement des données:', error);
+        if (import.meta.env.DEV) {
+          console.error('Erreur lors du chargement des données:', error);
+        }
         toast({
           title: "Erreur",
           description: "Impossible de charger les données des propriétés",
@@ -103,7 +105,9 @@ const PropertyMap: React.FC = () => {
         description: "Carte chargée avec succès",
       });
     } catch (error) {
-      console.error('Erreur lors de l\'initialisation de la carte:', error);
+      if (import.meta.env.DEV) {
+        console.error('Erreur lors de l\'initialisation de la carte:', error);
+      }
       toast({
         title: "Erreur",
         description: "Token Mapbox invalide",

@@ -10,7 +10,7 @@ import hydraImage from "@/assets/hydra.jpg";
 import elKhroubImage from "@/assets/el-khroub.jpg";
 import belgaidImage from "@/assets/belgaid.jpg";
 import birElDjirImage from "@/assets/bir-el-djir.jpg";
-import GoogleMapAppartements from "@/components/GoogleMapAppartements";
+
 
 interface Locality {
   id: string;
@@ -66,7 +66,9 @@ const Localites = () => {
 
         setCitiesWithLocalities(citiesWithLocalitiesData);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        if (import.meta.env.DEV) {
+          console.error("Error fetching data:", error);
+        }
       } finally {
         setLoading(false);
       }
@@ -109,10 +111,7 @@ const Localites = () => {
         </div>
       </section>
 
-      {/* Carte Google Maps des appartements */}
-      <div className="my-12 max-w-4xl mx-auto">
-        <GoogleMapAppartements />
-      </div>
+
 
       {/* Localities Section */}
       <main className="container mx-auto px-4 py-16">
