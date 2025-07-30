@@ -209,6 +209,18 @@ const NosBiens = () => {
         </div>
       </section>
 
+      {/* Map Section */}
+      <section className="py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4 text-foreground">Localisation des biens</h2>
+            <p className="text-xl text-muted-foreground">
+              Explorez la carte interactive pour voir l'emplacement de nos propriétés
+            </p>
+          </div>
+          <PropertyMap />
+        </div>
+      </section>
 
       {/* Residences Section */}
       <section className="py-16">
