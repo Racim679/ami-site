@@ -78,10 +78,10 @@ const CRM = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.title || !formData.status) {
+    if (!formData.title || !formData.status || !formData.surface_m2 || !formData.locality_id) {
       toast({
         title: "Erreur",
-        description: "Le titre et le statut sont obligatoires",
+        description: "Le titre, le statut, la surface et la localité sont obligatoires",
         variant: "destructive",
       });
       return;
@@ -217,7 +217,7 @@ const CRM = () => {
 
                   {/* Localité */}
                   <div className="space-y-2">
-                    <Label htmlFor="locality">Localité</Label>
+                    <Label htmlFor="locality">Localité *</Label>
                     <Select
                       value={formData.locality_id}
                       onValueChange={(value) => handleInputChange("locality_id", value)}
@@ -237,13 +237,14 @@ const CRM = () => {
 
                   {/* Surface */}
                   <div className="space-y-2">
-                    <Label htmlFor="surface">Surface (m²)</Label>
+                    <Label htmlFor="surface">Surface (m²) *</Label>
                     <Input
                       id="surface"
                       type="number"
                       value={formData.surface_m2}
                       onChange={(e) => handleInputChange("surface_m2", e.target.value)}
                       placeholder="Ex: 85"
+                      required
                     />
                   </div>
 
