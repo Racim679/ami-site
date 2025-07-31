@@ -14,6 +14,8 @@ import Favoris from "./pages/Favoris";
 import Comparaison from "./pages/Comparaison";
 import PropertyDetail from "./pages/PropertyDetail";
 import NotFound from "./pages/NotFound";
+import CRM from "./pages/CRM";
+import Login from "./pages/Login";
 import Chatbot from "./components/Chatbot";
 import ComparisonSystem from "./components/ComparisonSystem";
 import PWARegistration from "./components/PWARegistration";
@@ -36,6 +38,8 @@ const App = () => (
           <Route path="/vendre" element={<Vendre />} />
           <Route path="/favoris" element={<Favoris />} />
           <Route path="/comparaison" element={<Comparaison />} />
+            <Route path="/crm" element={<CRM />} />
+            <Route path="/login" element={<Login />} />
           <Route path="/bien/:id" element={<PropertyDetail />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

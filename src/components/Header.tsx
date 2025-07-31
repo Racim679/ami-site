@@ -15,12 +15,13 @@ const Header = () => {
   const centerNavItems = [
     { path: "/nos-biens", label: "Nos biens", hasDropdown: false },
     { path: "/services", label: "Services", hasDropdown: true },
-    { path: "/outils", label: "Outils", hasDropdown: false },
+    { path: "/vendre", label: "Vendre", hasDropdown: false },
     { path: "/a-propos", label: "À propos", hasDropdown: false },
     { path: "/localites", label: "Localités", hasDropdown: false },
   ];
 
   const rightNavItems = [
+    { path: "/crm", label: "CRM", hasDropdown: false },
     { path: "/favoris", label: "Favoris", hasDropdown: false },
     { path: "/contact", label: "Contact", hasDropdown: true },
   ];
