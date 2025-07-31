@@ -21,6 +21,7 @@ const Header = () => {
   ];
 
   const rightNavItems = [
+    { path: "/crm", label: "CRM", hasDropdown: false },
     { path: "/favoris", label: "Favoris", hasDropdown: false },
     { path: "/contact", label: "Contact", hasDropdown: true },
   ];
