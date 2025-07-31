@@ -1,0 +1,25 @@
+import Header from "@/components/Header";
+
+const APropos = () => {
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="container mx-auto px-4 py-8">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4 text-foreground">À Propos</h1>
+          <p className="text-xl text-muted-foreground">
+            Découvrez notre histoire et nos valeurs
+          </p>
+        </div>
+        
+        <div className="mt-16 max-w-4xl mx-auto">
+          <div className="prose prose-lg mx-auto">
+            {/* Contenu à propos à ajouter */}
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default APropos;
