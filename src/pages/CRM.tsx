@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Building, Plus } from "lucide-react";
+import { Building, Plus, LogOut } from "lucide-react";
 
 interface PropertyFormData {
   title: string;
@@ -25,6 +26,7 @@ interface PropertyFormData {
 }
 
 const CRM = () => {
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<PropertyFormData>({
@@ -67,6 +69,23 @@ const CRM = () => {
     { id: "1afdb5f8-8c53-4f9b-a3e8-da6ac04ffd3c", name: "El Madania" },
     { id: "f3933de3-7a81-4122-8198-314a4819e40f", name: "Hydra" },
   ];
+
+  // Vérification de l'authentification
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem("crmAuth");
+    if (!isAuthenticated) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("crmAuth");
+    toast({
+      title: "Déconnexion",
+      description: "Vous avez été déconnecté avec succès",
+    });
+    navigate("/login");
+  };
 
   const handleInputChange = (field: keyof PropertyFormData, value: string) => {
     setFormData(prev => ({
@@ -147,9 +166,15 @@ const CRM = () => {
       
       <main className="container mx-auto px-4 py-8 mt-16">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-3 mb-8">
-            <Building className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold text-foreground">CRM - Gestion des Biens</h1>
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <Building className="h-8 w-8 text-primary" />
+              <h1 className="text-3xl font-bold text-foreground">CRM - Gestion des Biens</h1>
+            </div>
+            <Button onClick={handleLogout} variant="outline" className="flex items-center gap-2">
+              <LogOut className="h-4 w-4" />
+              Se déconnecter
+            </Button>
           </div>
 
           <Card>
