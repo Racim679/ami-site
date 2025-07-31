@@ -234,7 +234,7 @@ const Home: React.FC = () => {
           >
             <AnimatedButton 
               className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-lg text-lg font-semibold transition-colors"
-              onClick={() => navigate('/outils')}
+              onClick={() => navigate('/vendre')}
             >
               Prendre rendez-vous
             </AnimatedButton>
