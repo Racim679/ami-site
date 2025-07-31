@@ -9,7 +9,7 @@ import Services from "./pages/Services";
 import APropos from "./pages/APropos";
 import Localites from "./pages/Localites";
 import Contact from "./pages/Contact";
-import Outils from "./pages/Outils";
+import Vendre from "./pages/Vendre";
 import Favoris from "./pages/Favoris";
 import Comparaison from "./pages/Comparaison";
 import PropertyDetail from "./pages/PropertyDetail";
@@ -33,7 +33,7 @@ const App = () => (
           <Route path="/a-propos" element={<APropos />} />
           <Route path="/localites" element={<Localites />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/outils" element={<Outils />} />
+          <Route path="/vendre" element={<Vendre />} />
           <Route path="/favoris" element={<Favoris />} />
           <Route path="/comparaison" element={<Comparaison />} />
           <Route path="/bien/:id" element={<PropertyDetail />} />
