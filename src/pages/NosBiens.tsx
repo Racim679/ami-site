@@ -12,6 +12,21 @@ import { useComparison } from "@/components/ComparisonSystem";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { AnimatedSection, AnimatedCard } from "@/components/AnimatedComponents";
+import { supabase } from "@/integrations/supabase/client";
+
+interface Property {
+  id: string;
+  title: string;
+  status: string;
+  latitude?: number;
+  longitude?: number;
+  surface_m2?: number;
+  prix_dinar?: number;
+  image_url?: string;
+  locality?: { name: string };
+  typology?: { label: string };
+  description?: string;
+}
 
 const NosBiens = () => {
   const [searchParams] = useSearchParams();
@@ -24,8 +39,46 @@ const NosBiens = () => {
     maxPrice: ""
   });
   const [visibleResidences, setVisibleResidences] = useState(9);
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [loading, setLoading] = useState(true);
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
   const { addToComparison, isInComparison } = useComparison();
+
+  // Récupérer les propriétés depuis Supabase
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('properties')
+          .select(`
+            id,
+            title,
+            status,
+            latitude,
+            longitude,
+            surface_m2,
+            prix_dinar,
+            image_url,
+            description,
+            locality:localities(name),
+            typology:typologies(label)
+          `)
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error('Erreur lors de la récupération des propriétés:', error);
+        } else {
+          setProperties(data || []);
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperties();
+  }, []);
 
   // Appliquer les filtres depuis l'URL au chargement
   useEffect(() => {
@@ -40,121 +93,23 @@ const NosBiens = () => {
     setFilters(urlFilters);
   }, [searchParams]);
 
-  const residences = [
-    {
-      id: 1,
-      title: "Résidence Al Manar",
-      location: "Said Hamdine, Alger",
-      description: "Un complexe résidentiel moderne offrant tout le confort nécessaire pour une vie paisible et luxueuse.",
-      image: "/placeholder.svg",
-      typology: "F3",
-      status: "À vendre",
-      etat: "Neuf",
-      city: "Alger",
-      price: 450000
-    },
-    {
-      id: 2,
-      title: "Complexe Andalous Garden",
-      location: "Hydra, Alger",
-      description: "Des appartements haut de gamme dans un cadre verdoyant avec toutes les commodités modernes.",
-      image: "/placeholder.svg",
-      typology: "F4",
-      status: "À louer",
-      etat: "Rénové",
-      city: "Alger",
-      price: 2800
-    },
-    {
-      id: 3,
-      title: "Villa Park Premium",
-      location: "Dely Ibrahim, Alger",
-      description: "Résidence de standing avec vue panoramique et finitions de qualité supérieure.",
-      image: "/placeholder.svg",
-      typology: "F5",
-      status: "Vendu",
-      etat: "Bon état",
-      city: "Alger",
-      price: 850000
-    },
-    {
-      id: 4,
-      title: "Tour Horizon City",
-      location: "El Biar, Alger",
-      description: "Une tour moderne au cœur de la ville avec tous les services à proximité.",
-      image: "/placeholder.svg",
-      typology: "F2",
-      status: "À vendre",
-      etat: "À rénover",
-      city: "Alger",
-      price: 320000
-    },
-    {
-      id: 5,
-      title: "Résidence Marina Bay",
-      location: "Ain Benian, Alger",
-      description: "Résidence en bord de mer offrant une vue exceptionnelle sur la baie d'Alger.",
-      image: "/placeholder.svg",
-      typology: "Duplex",
-      status: "Loué",
-      etat: "Neuf",
-      city: "Alger",
-      price: 4200
-    },
-    {
-      id: 6,
-      title: "Les Jardins de Bab El Oued",
-      location: "Bab El Oued, Alger",
-      description: "Complexe résidentiel avec jardins paysagers et espaces communs de qualité.",
-      image: "/placeholder.svg",
-      typology: "F3",
-      status: "À vendre",
-      etat: "Neuf",
-      city: "Alger",
-      price: 380000
-    },
-    {
-      id: 7,
-      title: "Résidence El Madania",
-      location: "El Madania, Alger",
-      description: "Appartements de standing dans un quartier résidentiel prisé d'Alger.",
-      image: "/placeholder.svg",
-      typology: "F4",
-      status: "À louer",
-      etat: "Rénové",
-      city: "Alger",
-      price: 3500
-    },
-    {
-      id: 8,
-      title: "Villa El Khroub",
-      location: "El Khroub, Constantine",
-      description: "Villa spacieuse avec jardin privé dans un environnement calme et familial.",
-      image: "/placeholder.svg",
-      typology: "Villa",
-      status: "À vendre",
-      etat: "Bon état",
-      city: "Constantine",
-      price: 650000
-    },
-    {
-      id: 9,
-      title: "Appartement Bir El Djir",
-      location: "Bir El Djir, Oran",
-      description: "Appartement moderne avec vue sur la mer dans un quartier en développement.",
-      image: "/placeholder.svg",
-      typology: "F2",
-      status: "À vendre",
-      etat: "Neuf",
-      city: "Oran",
-      price: 280000
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'lancement':
+        return 'À vendre';
+      case 'en_cours':
+        return 'En construction';
+      case 'livré':
+        return 'Livré';
+      default:
+        return status;
     }
-  ];
+  };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('fr-FR', {
+    return new Intl.NumberFormat('fr-DZ', {
       style: 'currency',
-      currency: 'EUR',
+      currency: 'DZD',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
     }).format(amount);
@@ -162,34 +117,46 @@ const NosBiens = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "À vendre":
+      case "lancement":
         return "bg-green-100 text-green-800";
-      case "À louer":
+      case "en_cours":
         return "bg-blue-100 text-blue-800";
-      case "Vendu":
-        return "bg-gray-100 text-gray-800";
-      case "Loué":
+      case "livré":
         return "bg-purple-100 text-purple-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
   };
 
-  const filteredResidences = residences.filter(residence => {
-    if (filters.typeOffre && residence.status !== filters.typeOffre) return false;
-    if (filters.type && residence.typology !== filters.type) return false;
-    if (filters.etat && residence.etat !== filters.etat) return false;
-    if (filters.localite && residence.city !== filters.localite) return false;
-    if (filters.minPrice && residence.price < parseInt(filters.minPrice)) return false;
-    if (filters.maxPrice && residence.price > parseInt(filters.maxPrice)) return false;
+  const filteredProperties = properties.filter(property => {
+    if (filters.typeOffre && property.status !== filters.typeOffre) return false;
+    if (filters.type && property.typology?.label !== filters.type) return false;
+    if (filters.localite && property.locality?.name !== filters.localite) return false;
+    if (filters.minPrice && property.prix_dinar && property.prix_dinar < parseInt(filters.minPrice)) return false;
+    if (filters.maxPrice && property.prix_dinar && property.prix_dinar > parseInt(filters.maxPrice)) return false;
     return true;
   });
 
-  const displayedResidences = filteredResidences.slice(0, visibleResidences);
+  const displayedProperties = filteredProperties.slice(0, visibleResidences);
 
   const loadMore = () => {
     setVisibleResidences(prev => prev + 6);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p>Chargement des propriétés...</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -248,9 +215,9 @@ const NosBiens = () => {
             initial="hidden"
             animate="show"
           >
-            {displayedResidences.map((residence, index) => (
+            {displayedProperties.map((property, index) => (
               <motion.div
-                key={residence.id}
+                key={property.id}
                 variants={{
                   hidden: { opacity: 0, y: 30 },
                   show: { opacity: 1, y: 0 }
@@ -260,81 +227,83 @@ const NosBiens = () => {
                 <AnimatedCard className="group overflow-hidden hover:shadow-xl transition-all duration-300 bg-card border border-border">
                   <div className="relative overflow-hidden">
                     <img
-                      src={residence.image}
-                      alt={residence.title}
+                      src={property.image_url || "/placeholder.svg"}
+                      alt={property.title}
                       className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <div className="absolute top-4 left-4">
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(residence.status)}`}>
-                        {residence.status}
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(property.status)}`}>
+                        {getStatusLabel(property.status)}
                       </span>
                     </div>
                     <div className="absolute top-4 right-4 flex gap-2">
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => isFavorite(residence.id.toString())
-                          ? removeFromFavorites(residence.id.toString())
+                        onClick={() => isFavorite(property.id)
+                          ? removeFromFavorites(property.id)
                           : addToFavorites({
-                              id: residence.id.toString(),
-                              title: residence.title,
-                              price: residence.price,
-                              surface: 100, // Valeur par défaut
-                              location: residence.location,
-                              image: residence.image,
-                              type: residence.typology
+                              id: property.id,
+                              title: property.title,
+                              price: property.prix_dinar || 0,
+                              surface: property.surface_m2 || 0,
+                              location: property.locality?.name || "",
+                              image: property.image_url || "/placeholder.svg",
+                              type: property.typology?.label || ""
                             })
                         }
                         className="w-8 h-8 p-0 rounded-full bg-white/80 hover:bg-white"
                       >
-                        <Heart className={`w-4 h-4 ${isFavorite(residence.id.toString()) ? "fill-red-500 text-red-500" : "text-gray-600"}`} />
+                        <Heart className={`w-4 h-4 ${isFavorite(property.id) ? "fill-red-500 text-red-500" : "text-gray-600"}`} />
                       </Button>
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => addToComparison({
-                          id: residence.id.toString(),
-                          title: residence.title,
-                          price: residence.price,
-                          surface: 100, // Valeur par défaut
-                          location: residence.location,
-                          image: residence.image,
-                          type: residence.typology,
-                          status: residence.status,
-                          etat: residence.etat
+                          id: property.id,
+                          title: property.title,
+                          price: property.prix_dinar || 0,
+                          surface: property.surface_m2 || 0,
+                          location: property.locality?.name || "",
+                          image: property.image_url || "/placeholder.svg",
+                          type: property.typology?.label || "",
+                          status: getStatusLabel(property.status),
+                          etat: "N/A"
                         })}
-                        disabled={isInComparison(residence.id.toString())}
+                        disabled={isInComparison(property.id)}
                         className="w-8 h-8 p-0 rounded-full bg-white/80 hover:bg-white"
                       >
-                        <BarChart3 className={`w-4 h-4 ${isInComparison(residence.id.toString()) ? "text-primary" : "text-gray-600"}`} />
+                        <BarChart3 className={`w-4 h-4 ${isInComparison(property.id) ? "text-primary" : "text-gray-600"}`} />
                       </Button>
                     </div>
-                    {residence.price > 0 && (
+                    {property.prix_dinar && property.prix_dinar > 0 && (
                       <div className="absolute bottom-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
-                        {formatCurrency(residence.price)}
+                        {formatCurrency(property.prix_dinar)}
                       </div>
                     )}
                   </div>
 
                   <CardContent className="p-6">
                     <h3 className="text-xl font-bold mb-2 text-foreground">
-                      {residence.title}
+                      {property.title}
                     </h3>
                     <div className="flex items-center text-muted-foreground mb-3">
                       <MapPin className="h-4 w-4 mr-1" />
-                      <span className="text-sm">{residence.location}</span>
+                      <span className="text-sm">{property.locality?.name || "N/A"}</span>
                     </div>
                     <p className="text-muted-foreground mb-4 line-clamp-2">
-                      {residence.description}
+                      {property.description || "Aucune description disponible"}
                     </p>
                     <div className="flex justify-between items-center">
                       <div className="flex gap-2">
                         <span className="text-sm px-3 py-1 bg-muted rounded-full text-muted-foreground">
-                          {residence.typology}
+                          {property.typology?.label || "N/A"}
                         </span>
-                        <span className="text-sm px-3 py-1 bg-muted rounded-full text-muted-foreground">
-                          {residence.etat}
-                        </span>
+                        {property.surface_m2 && (
+                          <span className="text-sm px-3 py-1 bg-muted rounded-full text-muted-foreground">
+                            {property.surface_m2} m²
+                          </span>
+                        )}
                       </div>
                       <Button variant="outline" size="sm">
                         Voir détails
@@ -347,7 +316,7 @@ const NosBiens = () => {
           </motion.div>
 
           {/* Bouton "Voir plus" */}
-          {visibleResidences < filteredResidences.length && (
+          {visibleResidences < filteredProperties.length && (
             <motion.div
               className="text-center mt-12"
               initial={{ opacity: 0, y: 20 }}
