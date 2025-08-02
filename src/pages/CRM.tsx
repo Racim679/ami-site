@@ -49,6 +49,8 @@ const CRM = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [properties, setProperties] = useState<Property[]>([]);
   const [editingProperty, setEditingProperty] = useState<Property | null>(null);
+  const [newPropertyId, setNewPropertyId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<string>("list");
   const [formData, setFormData] = useState<PropertyFormData>({
     title: "",
     description: "",
@@ -162,9 +164,11 @@ const CRM = () => {
         longitude: formData.longitude ? parseFloat(formData.longitude) : null,
       };
 
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("properties")
-        .insert([propertyData]);
+        .insert([propertyData])
+        .select()
+        .single();
 
       if (error) {
         throw error;
@@ -172,7 +176,7 @@ const CRM = () => {
 
       toast({
         title: "Succès",
-        description: "Le bien a été ajouté avec succès",
+        description: "Le bien a été ajouté avec succès. Vous pouvez maintenant ajouter les détails avancés.",
       });
 
       // Reset form and reload properties
@@ -188,7 +192,13 @@ const CRM = () => {
         latitude: "",
         longitude: "",
       });
+      
+      // Set the new property for details editing
+      setNewPropertyId(data.id);
       loadProperties();
+      
+      // Switch to details tab
+      setActiveTab("details");
 
     } catch (error: any) {
       toast({
@@ -203,6 +213,7 @@ const CRM = () => {
 
   const handleEdit = (property: Property) => {
     setEditingProperty(property);
+    setNewPropertyId(null);
     setFormData({
       title: property.title,
       description: property.description || "",
@@ -215,6 +226,7 @@ const CRM = () => {
       latitude: property.latitude?.toString() || "",
       longitude: property.longitude?.toString() || "",
     });
+    setActiveTab("add");
   };
 
   const handleUpdate = async (e: React.FormEvent) => {
@@ -290,6 +302,7 @@ const CRM = () => {
 
   const cancelEdit = () => {
     setEditingProperty(null);
+    setNewPropertyId(null);
     setFormData({
       title: "",
       description: "",
@@ -302,6 +315,7 @@ const CRM = () => {
       latitude: "",
       longitude: "",
     });
+    setActiveTab("list");
   };
 
   const getStatusLabel = (status: string) => {
@@ -342,11 +356,13 @@ const CRM = () => {
             </Button>
           </div>
 
-          <Tabs defaultValue="list" className="w-full">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="list">Liste des biens</TabsTrigger>
               <TabsTrigger value="add">{editingProperty ? "Modifier ici" : "Ajouter un bien"}</TabsTrigger>
-              <TabsTrigger value="details">Détails avancés</TabsTrigger>
+              <TabsTrigger value="details" disabled={!editingProperty && !newPropertyId}>
+                Détails avancés
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="list" className="space-y-4">
@@ -596,23 +612,36 @@ const CRM = () => {
                       />
                     </div>
 
-                    <Button type="submit" disabled={isLoading} className="w-full">
-                      {isLoading ? (
-                        editingProperty ? "Modification en cours..." : "Ajout en cours..."
-                      ) : (
-                        editingProperty ? (
-                          <>
-                            <Save className="h-4 w-4 mr-2" />
-                            Modifier le bien
-                          </>
+                    <div className="flex gap-3">
+                      <Button type="submit" disabled={isLoading} className="flex-1">
+                        {isLoading ? (
+                          editingProperty ? "Modification en cours..." : "Ajout en cours..."
                         ) : (
-                          <>
-                            <Plus className="h-4 w-4 mr-2" />
-                            Ajouter le bien
-                          </>
-                        )
+                          editingProperty ? (
+                            <>
+                              <Save className="h-4 w-4 mr-2" />
+                              Modifier le bien
+                            </>
+                          ) : (
+                            <>
+                              <Plus className="h-4 w-4 mr-2" />
+                              Ajouter le bien
+                            </>
+                          )
+                        )}
+                      </Button>
+                      {!editingProperty && (
+                        <Button 
+                          type="button" 
+                          variant="outline" 
+                          onClick={() => setActiveTab("details")}
+                          disabled={!newPropertyId}
+                          className="whitespace-nowrap"
+                        >
+                          Voir détails
+                        </Button>
                       )}
-                    </Button>
+                    </div>
                   </form>
                 </CardContent>
               </Card>
@@ -625,21 +654,26 @@ const CRM = () => {
                   <CardDescription>
                     {editingProperty 
                       ? `Gérez les détails avancés de: ${editingProperty.title}`
-                      : "Sélectionnez une propriété à modifier pour accéder aux détails avancés"
+                      : newPropertyId 
+                        ? "Ajoutez les détails avancés de votre nouveau bien"
+                        : "Sélectionnez une propriété pour gérer ses détails avancés"
                     }
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {editingProperty ? (
-                    <PropertyDetailsEditor propertyId={editingProperty.id} />
+                  {editingProperty || newPropertyId ? (
+                    <PropertyDetailsEditor propertyId={editingProperty?.id || newPropertyId!} />
                   ) : (
                     <div className="text-center py-8 text-muted-foreground">
                       <Building className="h-12 w-12 mx-auto mb-4 opacity-50" />
                       <p className="text-lg font-medium mb-2">Aucune propriété sélectionnée</p>
-                      <p className="text-sm">
-                        Allez dans l'onglet "Liste des biens" et cliquez sur "Modifier" 
-                        pour une propriété afin d'accéder à ses détails avancés.
+                      <p className="text-sm mb-4">
+                        Pour accéder aux détails avancés :
                       </p>
+                      <div className="space-y-2 text-sm">
+                        <p>• Modifiez une propriété existante depuis la liste</p>
+                        <p>• Ou ajoutez un nouveau bien dans l'onglet précédent</p>
+                      </div>
                     </div>
                   )}
                 </CardContent>
