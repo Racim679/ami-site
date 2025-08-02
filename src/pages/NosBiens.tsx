@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Header from "@/components/Header";
 import PropertyMap from "@/components/PropertyMap";
@@ -225,91 +225,100 @@ const NosBiens = () => {
                 transition={{ duration: 0.5 }}
               >
                 <AnimatedCard className="group overflow-hidden hover:shadow-xl transition-all duration-300 bg-card border border-border">
-                  <div className="relative overflow-hidden">
-                    <img
-                      src={property.image_url || "/placeholder.svg"}
-                      alt={property.title}
-                      className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <div className="absolute top-4 left-4">
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(property.status)}`}>
-                        {getStatusLabel(property.status)}
-                      </span>
-                    </div>
-                    <div className="absolute top-4 right-4 flex gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => isFavorite(property.id)
-                          ? removeFromFavorites(property.id)
-                          : addToFavorites({
+                  <Link to={`/property/${property.id}`} className="block">
+                    <div className="relative overflow-hidden">
+                      <img
+                        src={property.image_url || "/placeholder.svg"}
+                        alt={property.title}
+                        className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute top-4 left-4">
+                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(property.status)}`}>
+                          {getStatusLabel(property.status)}
+                        </span>
+                      </div>
+                      <div className="absolute top-4 right-4 flex gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            isFavorite(property.id)
+                              ? removeFromFavorites(property.id)
+                              : addToFavorites({
+                                  id: property.id,
+                                  title: property.title,
+                                  price: property.prix_dinar || 0,
+                                  surface: property.surface_m2 || 0,
+                                  location: property.locality?.name || "",
+                                  image: property.image_url || "/placeholder.svg",
+                                  type: property.typology?.label || ""
+                                });
+                          }}
+                          className="w-8 h-8 p-0 rounded-full bg-white/80 hover:bg-white"
+                        >
+                          <Heart className={`w-4 h-4 ${isFavorite(property.id) ? "fill-red-500 text-red-500" : "text-gray-600"}`} />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            addToComparison({
                               id: property.id,
                               title: property.title,
                               price: property.prix_dinar || 0,
                               surface: property.surface_m2 || 0,
                               location: property.locality?.name || "",
                               image: property.image_url || "/placeholder.svg",
-                              type: property.typology?.label || ""
-                            })
-                        }
-                        className="w-8 h-8 p-0 rounded-full bg-white/80 hover:bg-white"
-                      >
-                        <Heart className={`w-4 h-4 ${isFavorite(property.id) ? "fill-red-500 text-red-500" : "text-gray-600"}`} />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => addToComparison({
-                          id: property.id,
-                          title: property.title,
-                          price: property.prix_dinar || 0,
-                          surface: property.surface_m2 || 0,
-                          location: property.locality?.name || "",
-                          image: property.image_url || "/placeholder.svg",
-                          type: property.typology?.label || "",
-                          status: getStatusLabel(property.status),
-                          etat: "N/A"
-                        })}
-                        disabled={isInComparison(property.id)}
-                        className="w-8 h-8 p-0 rounded-full bg-white/80 hover:bg-white"
-                      >
-                        <BarChart3 className={`w-4 h-4 ${isInComparison(property.id) ? "text-primary" : "text-gray-600"}`} />
-                      </Button>
-                    </div>
-                    {property.prix_dinar && property.prix_dinar > 0 && (
-                      <div className="absolute bottom-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
-                        {formatCurrency(property.prix_dinar)}
+                              type: property.typology?.label || "",
+                              status: getStatusLabel(property.status),
+                              etat: "N/A"
+                            });
+                          }}
+                          disabled={isInComparison(property.id)}
+                          className="w-8 h-8 p-0 rounded-full bg-white/80 hover:bg-white"
+                        >
+                          <BarChart3 className={`w-4 h-4 ${isInComparison(property.id) ? "text-primary" : "text-gray-600"}`} />
+                        </Button>
                       </div>
-                    )}
-                  </div>
+                      {property.prix_dinar && property.prix_dinar > 0 && (
+                        <div className="absolute bottom-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
+                          {formatCurrency(property.prix_dinar)}
+                        </div>
+                      )}
+                    </div>
 
-                  <CardContent className="p-6">
-                    <h3 className="text-xl font-bold mb-2 text-foreground">
-                      {property.title}
-                    </h3>
-                    <div className="flex items-center text-muted-foreground mb-3">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      <span className="text-sm">{property.locality?.name || "N/A"}</span>
-                    </div>
-                    <p className="text-muted-foreground mb-4 line-clamp-2">
-                      {property.description || "Aucune description disponible"}
-                    </p>
-                    <div className="flex justify-between items-center">
-                      <div className="flex gap-2">
-                        <span className="text-sm px-3 py-1 bg-muted rounded-full text-muted-foreground">
-                          {property.typology?.label || "N/A"}
-                        </span>
-                        {property.surface_m2 && (
-                          <span className="text-sm px-3 py-1 bg-muted rounded-full text-muted-foreground">
-                            {property.surface_m2} m²
-                          </span>
-                        )}
+                    <CardContent className="p-6">
+                      <h3 className="text-xl font-bold mb-2 text-foreground">
+                        {property.title}
+                      </h3>
+                      <div className="flex items-center text-muted-foreground mb-3">
+                        <MapPin className="h-4 w-4 mr-1" />
+                        <span className="text-sm">{property.locality?.name || "N/A"}</span>
                       </div>
-                      <Button variant="outline" size="sm">
-                        Voir détails
-                      </Button>
-                    </div>
-                  </CardContent>
+                      <p className="text-muted-foreground mb-4 line-clamp-2">
+                        {property.description || "Aucune description disponible"}
+                      </p>
+                      <div className="flex justify-between items-center">
+                        <div className="flex gap-2">
+                          <span className="text-sm px-3 py-1 bg-muted rounded-full text-muted-foreground">
+                            {property.typology?.label || "N/A"}
+                          </span>
+                          {property.surface_m2 && (
+                            <span className="text-sm px-3 py-1 bg-muted rounded-full text-muted-foreground">
+                              {property.surface_m2} m²
+                            </span>
+                          )}
+                        </div>
+                        <Button variant="outline" size="sm">
+                          Voir détails
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Link>
                 </AnimatedCard>
               </motion.div>
             ))}
