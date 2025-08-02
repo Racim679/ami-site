@@ -6,11 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Building, Plus, LogOut } from "lucide-react";
+import { Building, Plus, LogOut, Edit, Save, X } from "lucide-react";
 
 interface PropertyFormData {
   title: string;
@@ -25,10 +27,27 @@ interface PropertyFormData {
   longitude: string;
 }
 
+interface Property {
+  id: string;
+  title: string;
+  description: string | null;
+  status: "lancement" | "en_cours" | "livré";
+  surface_m2: number | null;
+  prix_dinar: number | null;
+  typology_id: string | null;
+  locality_id: string | null;
+  image_url: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  created_at: string;
+}
+
 const CRM = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [editingProperty, setEditingProperty] = useState<Property | null>(null);
   const [formData, setFormData] = useState<PropertyFormData>({
     title: "",
     description: "",
@@ -70,13 +89,33 @@ const CRM = () => {
     { id: "f3933de3-7a81-4122-8198-314a4819e40f", name: "Hydra" },
   ];
 
-  // Vérification de l'authentification
+  // Vérification de l'authentification et chargement des biens
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("crmAuth");
     if (!isAuthenticated) {
       navigate("/login");
+    } else {
+      loadProperties();
     }
   }, [navigate]);
+
+  const loadProperties = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("properties")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      setProperties(data || []);
+    } catch (error: any) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de charger les biens",
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("crmAuth");
@@ -135,7 +174,7 @@ const CRM = () => {
         description: "Le bien a été ajouté avec succès",
       });
 
-      // Reset form
+      // Reset form and reload properties
       setFormData({
         title: "",
         description: "",
@@ -148,6 +187,7 @@ const CRM = () => {
         latitude: "",
         longitude: "",
       });
+      loadProperties();
 
     } catch (error: any) {
       toast({
@@ -158,6 +198,130 @@ const CRM = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleEdit = (property: Property) => {
+    setEditingProperty(property);
+    setFormData({
+      title: property.title,
+      description: property.description || "",
+      status: property.status,
+      surface_m2: property.surface_m2?.toString() || "",
+      prix_dinar: property.prix_dinar?.toString() || "",
+      typology_id: property.typology_id || "",
+      locality_id: property.locality_id || "",
+      image_url: property.image_url || "",
+      latitude: property.latitude?.toString() || "",
+      longitude: property.longitude?.toString() || "",
+    });
+  };
+
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!editingProperty) return;
+    
+    if (!formData.title || !formData.status || !formData.surface_m2 || !formData.locality_id) {
+      toast({
+        title: "Erreur",
+        description: "Le titre, le statut, la surface et la localité sont obligatoires",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const propertyData = {
+        title: formData.title,
+        description: formData.description || null,
+        status: formData.status,
+        surface_m2: formData.surface_m2 ? parseFloat(formData.surface_m2) : null,
+        prix_dinar: formData.prix_dinar ? parseInt(formData.prix_dinar) : null,
+        typology_id: formData.typology_id || null,
+        locality_id: formData.locality_id || null,
+        image_url: formData.image_url || null,
+        latitude: formData.latitude ? parseFloat(formData.latitude) : null,
+        longitude: formData.longitude ? parseFloat(formData.longitude) : null,
+      };
+
+      const { error } = await supabase
+        .from("properties")
+        .update(propertyData)
+        .eq("id", editingProperty.id);
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Succès",
+        description: "Le bien a été modifié avec succès",
+      });
+
+      // Reset form and reload properties
+      setEditingProperty(null);
+      setFormData({
+        title: "",
+        description: "",
+        status: "lancement",
+        surface_m2: "",
+        prix_dinar: "",
+        typology_id: "",
+        locality_id: "",
+        image_url: "",
+        latitude: "",
+        longitude: "",
+      });
+      loadProperties();
+
+    } catch (error: any) {
+      toast({
+        title: "Erreur",
+        description: error.message || "Une erreur est survenue",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const cancelEdit = () => {
+    setEditingProperty(null);
+    setFormData({
+      title: "",
+      description: "",
+      status: "lancement",
+      surface_m2: "",
+      prix_dinar: "",
+      typology_id: "",
+      locality_id: "",
+      image_url: "",
+      latitude: "",
+      longitude: "",
+    });
+  };
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case "lancement": return "En lancement";
+      case "en_cours": return "En cours";
+      case "livré": return "Livré";
+      default: return status;
+    }
+  };
+
+  const getTypologyLabel = (typologyId: string | null) => {
+    if (!typologyId) return "Non spécifié";
+    const typology = typologies.find(t => t.id === typologyId);
+    return typology?.label || "Inconnu";
+  };
+
+  const getLocalityLabel = (localityId: string | null) => {
+    if (!localityId) return "Non spécifié";
+    const locality = localities.find(l => l.id === localityId);
+    return locality?.name || "Inconnu";
   };
 
   return (
@@ -177,169 +341,281 @@ const CRM = () => {
             </Button>
           </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Plus className="h-5 w-5" />
-                Ajouter un nouveau bien
-              </CardTitle>
-              <CardDescription>
-                Remplissez les informations pour ajouter un bien à votre portefeuille
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Titre */}
-                  <div className="space-y-2">
-                    <Label htmlFor="title">Titre *</Label>
-                    <Input
-                      id="title"
-                      value={formData.title}
-                      onChange={(e) => handleInputChange("title", e.target.value)}
-                      placeholder="Ex: Appartement F3 centre-ville"
-                      required
-                    />
-                  </div>
+          <Tabs defaultValue="list" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="list">Liste des biens</TabsTrigger>
+              <TabsTrigger value="add">Ajouter un bien</TabsTrigger>
+            </TabsList>
 
-                  {/* Statut */}
-                  <div className="space-y-2">
-                    <Label htmlFor="status">Statut *</Label>
-                    <Select
-                      value={formData.status}
-                      onValueChange={(value) => handleInputChange("status", value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Sélectionner le statut" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="lancement">En lancement</SelectItem>
-                        <SelectItem value="en_cours">En cours</SelectItem>
-                        <SelectItem value="livré">Livré</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+            <TabsContent value="list" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Biens immobiliers ({properties.length})</CardTitle>
+                  <CardDescription>
+                    Gérez vos biens immobiliers existants
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {properties.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-8">
+                      Aucun bien trouvé. Ajoutez votre premier bien !
+                    </p>
+                  ) : (
+                    <div className="rounded-md border">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Titre</TableHead>
+                            <TableHead>Type</TableHead>
+                            <TableHead>Localité</TableHead>
+                            <TableHead>Surface</TableHead>
+                            <TableHead>Prix</TableHead>
+                            <TableHead>Statut</TableHead>
+                            <TableHead>Actions</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {properties.map((property) => (
+                            <TableRow key={property.id}>
+                              <TableCell className="font-medium">{property.title}</TableCell>
+                              <TableCell>{getTypologyLabel(property.typology_id)}</TableCell>
+                              <TableCell>{getLocalityLabel(property.locality_id)}</TableCell>
+                              <TableCell>{property.surface_m2 ? `${property.surface_m2} m²` : "Non spécifié"}</TableCell>
+                              <TableCell>
+                                {property.prix_dinar 
+                                  ? `${property.prix_dinar.toLocaleString()} DZD`
+                                  : "Non spécifié"
+                                }
+                              </TableCell>
+                              <TableCell>
+                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                  ${property.status === 'livré' ? 'bg-green-100 text-green-800' : 
+                                    property.status === 'en_cours' ? 'bg-blue-100 text-blue-800' : 
+                                    'bg-yellow-100 text-yellow-800'}`}>
+                                  {getStatusLabel(property.status)}
+                                </span>
+                              </TableCell>
+                              <TableCell>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleEdit(property)}
+                                  className="flex items-center gap-1"
+                                >
+                                  <Edit className="h-3 w-3" />
+                                  Modifier
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
 
-                  {/* Type de bien */}
-                  <div className="space-y-2">
-                    <Label htmlFor="typology">Type de bien</Label>
-                    <Select
-                      value={formData.typology_id}
-                      onValueChange={(value) => handleInputChange("typology_id", value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Sélectionner un type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {typologies.map((type) => (
-                          <SelectItem key={type.id} value={type.id}>
-                            {type.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+            <TabsContent value="add" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    {editingProperty ? (
+                      <>
+                        <Edit className="h-5 w-5" />
+                        Modifier le bien
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="h-5 w-5" />
+                        Ajouter un nouveau bien
+                      </>
+                    )}
+                  </CardTitle>
+                  <CardDescription>
+                    {editingProperty 
+                      ? "Modifiez les informations du bien sélectionné"
+                      : "Remplissez les informations pour ajouter un bien à votre portefeuille"
+                    }
+                  </CardDescription>
+                  {editingProperty && (
+                    <div className="flex gap-2 pt-2">
+                      <Button variant="outline" size="sm" onClick={cancelEdit}>
+                        <X className="h-4 w-4 mr-1" />
+                        Annuler
+                      </Button>
+                    </div>
+                  )}
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={editingProperty ? handleUpdate : handleSubmit} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Titre */}
+                      <div className="space-y-2">
+                        <Label htmlFor="title">Titre *</Label>
+                        <Input
+                          id="title"
+                          value={formData.title}
+                          onChange={(e) => handleInputChange("title", e.target.value)}
+                          placeholder="Ex: Appartement F3 centre-ville"
+                          required
+                        />
+                      </div>
 
-                  {/* Localité */}
-                  <div className="space-y-2">
-                    <Label htmlFor="locality">Localité *</Label>
-                    <Select
-                      value={formData.locality_id}
-                      onValueChange={(value) => handleInputChange("locality_id", value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Sélectionner une localité" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {localities.map((locality) => (
-                          <SelectItem key={locality.id} value={locality.id}>
-                            {locality.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                      {/* Statut */}
+                      <div className="space-y-2">
+                        <Label htmlFor="status">Statut *</Label>
+                        <Select
+                          value={formData.status}
+                          onValueChange={(value) => handleInputChange("status", value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Sélectionner le statut" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="lancement">En lancement</SelectItem>
+                            <SelectItem value="en_cours">En cours</SelectItem>
+                            <SelectItem value="livré">Livré</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
 
-                  {/* Surface */}
-                  <div className="space-y-2">
-                    <Label htmlFor="surface">Surface (m²) *</Label>
-                    <Input
-                      id="surface"
-                      type="number"
-                      value={formData.surface_m2}
-                      onChange={(e) => handleInputChange("surface_m2", e.target.value)}
-                      placeholder="Ex: 85"
-                      required
-                    />
-                  </div>
+                      {/* Type de bien */}
+                      <div className="space-y-2">
+                        <Label htmlFor="typology">Type de bien</Label>
+                        <Select
+                          value={formData.typology_id}
+                          onValueChange={(value) => handleInputChange("typology_id", value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Sélectionner un type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {typologies.map((type) => (
+                              <SelectItem key={type.id} value={type.id}>
+                                {type.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
 
-                  {/* Prix */}
-                  <div className="space-y-2">
-                    <Label htmlFor="price">Prix (DZD)</Label>
-                    <Input
-                      id="price"
-                      type="number"
-                      value={formData.prix_dinar}
-                      onChange={(e) => handleInputChange("prix_dinar", e.target.value)}
-                      placeholder="Ex: 5000000"
-                    />
-                  </div>
+                      {/* Localité */}
+                      <div className="space-y-2">
+                        <Label htmlFor="locality">Localité *</Label>
+                        <Select
+                          value={formData.locality_id}
+                          onValueChange={(value) => handleInputChange("locality_id", value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Sélectionner une localité" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {localities.map((locality) => (
+                              <SelectItem key={locality.id} value={locality.id}>
+                                {locality.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
 
-                  {/* URL de l'image */}
-                  <div className="space-y-2 md:col-span-2">
-                    <Label htmlFor="image_url">URL de l'image</Label>
-                    <Input
-                      id="image_url"
-                      value={formData.image_url}
-                      onChange={(e) => handleInputChange("image_url", e.target.value)}
-                      placeholder="https://exemple.com/image.jpg"
-                    />
-                  </div>
+                      {/* Surface */}
+                      <div className="space-y-2">
+                        <Label htmlFor="surface">Surface (m²) *</Label>
+                        <Input
+                          id="surface"
+                          type="number"
+                          value={formData.surface_m2}
+                          onChange={(e) => handleInputChange("surface_m2", e.target.value)}
+                          placeholder="Ex: 85"
+                          required
+                        />
+                      </div>
 
-                  {/* Coordonnées GPS */}
-                  <div className="space-y-2">
-                    <Label htmlFor="latitude">Latitude</Label>
-                    <Input
-                      id="latitude"
-                      type="number"
-                      step="any"
-                      value={formData.latitude}
-                      onChange={(e) => handleInputChange("latitude", e.target.value)}
-                      placeholder="Ex: 36.7538"
-                    />
-                  </div>
+                      {/* Prix */}
+                      <div className="space-y-2">
+                        <Label htmlFor="price">Prix (DZD)</Label>
+                        <Input
+                          id="price"
+                          type="number"
+                          value={formData.prix_dinar}
+                          onChange={(e) => handleInputChange("prix_dinar", e.target.value)}
+                          placeholder="Ex: 5000000"
+                        />
+                      </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="longitude">Longitude</Label>
-                    <Input
-                      id="longitude"
-                      type="number"
-                      step="any"
-                      value={formData.longitude}
-                      onChange={(e) => handleInputChange("longitude", e.target.value)}
-                      placeholder="Ex: 3.0588"
-                    />
-                  </div>
-                </div>
+                      {/* URL de l'image */}
+                      <div className="space-y-2 md:col-span-2">
+                        <Label htmlFor="image_url">URL de l'image</Label>
+                        <Input
+                          id="image_url"
+                          value={formData.image_url}
+                          onChange={(e) => handleInputChange("image_url", e.target.value)}
+                          placeholder="https://exemple.com/image.jpg"
+                        />
+                      </div>
 
-                {/* Description */}
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => handleInputChange("description", e.target.value)}
-                    placeholder="Description détaillée du bien..."
-                    rows={4}
-                  />
-                </div>
+                      {/* Coordonnées GPS */}
+                      <div className="space-y-2">
+                        <Label htmlFor="latitude">Latitude</Label>
+                        <Input
+                          id="latitude"
+                          type="number"
+                          step="any"
+                          value={formData.latitude}
+                          onChange={(e) => handleInputChange("latitude", e.target.value)}
+                          placeholder="Ex: 36.7538"
+                        />
+                      </div>
 
-                <Button type="submit" disabled={isLoading} className="w-full">
-                  {isLoading ? "Ajout en cours..." : "Ajouter le bien"}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+                      <div className="space-y-2">
+                        <Label htmlFor="longitude">Longitude</Label>
+                        <Input
+                          id="longitude"
+                          type="number"
+                          step="any"
+                          value={formData.longitude}
+                          onChange={(e) => handleInputChange("longitude", e.target.value)}
+                          placeholder="Ex: 3.0588"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Description */}
+                    <div className="space-y-2">
+                      <Label htmlFor="description">Description</Label>
+                      <Textarea
+                        id="description"
+                        value={formData.description}
+                        onChange={(e) => handleInputChange("description", e.target.value)}
+                        placeholder="Description détaillée du bien..."
+                        rows={4}
+                      />
+                    </div>
+
+                    <Button type="submit" disabled={isLoading} className="w-full">
+                      {isLoading ? (
+                        editingProperty ? "Modification en cours..." : "Ajout en cours..."
+                      ) : (
+                        editingProperty ? (
+                          <>
+                            <Save className="h-4 w-4 mr-2" />
+                            Modifier le bien
+                          </>
+                        ) : (
+                          <>
+                            <Plus className="h-4 w-4 mr-2" />
+                            Ajouter le bien
+                          </>
+                        )
+                      )}
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
       </main>
 
