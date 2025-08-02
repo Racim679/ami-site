@@ -55,7 +55,7 @@ const Chatbot = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://n8n.srv933307.hstgr.cloud/webhook-test/f74e4ebd-0a22-411d-be5c-219749f2cf45', {
+      const response = await fetch('https://n8n.srv933307.hstgr.cloud/webhook/a04bb5d7-4bc1-4a87-8ae2-4e3e34c681b5/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
