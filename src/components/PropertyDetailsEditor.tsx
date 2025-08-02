@@ -46,60 +46,72 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
   const [newDocument, setNewDocument] = useState('');
   const [newPhoto, setNewPhoto] = useState('');
   const [newVideo, setNewVideo] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadPropertyData();
   }, [propertyId]);
 
   const loadPropertyData = async () => {
+    if (!propertyId) return;
+    
+    setLoading(true);
     try {
-      // Pour l'instant, charger des données factices
-      // TODO: Remplacer par de vraies requêtes quand les types Supabase seront mis à jour
-      setDetails({
-        bedrooms: 3,
-        bathrooms: 2,
-        rooms: 5,
-        floors: 2,
-        living_area: 120,
-        has_city_view: true,
-        condition: 'Excellent'
-      });
+      // Load property details using RPC query
+      const { data: detailsData, error: detailsError } = await supabase.rpc('get_property_details', { p_property_id: propertyId });
       
-      setAmenities([
-        { id: '1', text: 'Climatisation' },
-        { id: '2', text: 'Cuisine équipée' }
-      ]);
-      
-      setSecurityFeatures([
-        { id: '1', text: 'Interphone' },
-        { id: '2', text: 'Alarme' }
-      ]);
-      
-      setBuildingFeatures([
-        { id: '1', text: 'Ascenseur' },
-        { id: '2', text: 'Parking' }
-      ]);
-      
-      setNearby([
-        { id: '1', text: 'École primaire' },
-        { id: '2', text: 'Supermarché' }
-      ]);
-      
-      setDocuments([
-        { id: '1', text: 'Acte de propriété' },
-        { id: '2', text: 'Certificat d\'urbanisme' }
-      ]);
-      
-      setPhotos([
-        { id: '1', text: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800' }
-      ]);
-      
-      setVideos([
-        { id: '1', text: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' }
-      ]);
-      
+      if (!detailsError && detailsData && detailsData.length > 0) {
+        const detail = detailsData[0];
+        setDetails({
+          bedrooms: detail.bedrooms,
+          bathrooms: detail.bathrooms,
+          rooms: detail.rooms,
+          floors: detail.floors,
+          living_area: detail.living_area,
+          has_city_view: detail.has_city_view,
+          condition: detail.condition
+        });
+      } else {
+        setDetails({});
+      }
+
+      // Load amenities
+      const { data: amenitiesData } = await supabase.rpc('get_property_amenities', { p_property_id: propertyId });
+      setAmenities(amenitiesData?.map((item: any) => ({ id: item.id, text: item.amenity })) || []);
+
+      // Load security features
+      const { data: securityData } = await supabase.rpc('get_property_security_features', { p_property_id: propertyId });
+      setSecurityFeatures(securityData?.map((item: any) => ({ id: item.id, text: item.security_feature })) || []);
+
+      // Load building features
+      const { data: buildingData } = await supabase.rpc('get_property_building_features', { p_property_id: propertyId });
+      setBuildingFeatures(buildingData?.map((item: any) => ({ id: item.id, text: item.building_feature })) || []);
+
+      // Load nearby
+      const { data: nearbyData } = await supabase.rpc('get_property_nearby', { p_property_id: propertyId });
+      setNearby(nearbyData?.map((item: any) => ({ id: item.id, text: item.nearby_feature })) || []);
+
+      // Load documents
+      const { data: documentsData } = await supabase.rpc('get_property_documents', { p_property_id: propertyId });
+      setDocuments(documentsData?.map((item: any) => ({ id: item.id, text: item.document_name })) || []);
+
+      // Load photos
+      const { data: photosData } = await supabase.rpc('get_property_photos', { p_property_id: propertyId });
+      setPhotos(photosData?.map((item: any) => ({ id: item.id, text: item.photo_url })) || []);
+
+      // Load videos
+      const { data: videosData } = await supabase.rpc('get_property_videos', { p_property_id: propertyId });
+      setVideos(videosData?.map((item: any) => ({ id: item.id, text: item.video_url })) || []);
+
     } catch (error) {
       console.error('Erreur lors du chargement:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de charger les données de la propriété",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -111,40 +123,106 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
   };
 
   const saveDetails = async () => {
+    if (!propertyId) return;
+    
     try {
-      // TODO: Implémenter la sauvegarde réelle
+      setLoading(true);
+      
+      const { error } = await supabase.rpc('upsert_property_details', {
+        p_property_id: propertyId,
+        p_bedrooms: details.bedrooms,
+        p_bathrooms: details.bathrooms,
+        p_rooms: details.rooms,
+        p_floors: details.floors,
+        p_living_area: details.living_area,
+        p_has_city_view: details.has_city_view,
+        p_condition: details.condition
+      });
+
+      if (error) throw error;
+
       toast({
         title: "Succès",
         description: "Détails de la propriété mis à jour",
       });
     } catch (error) {
+      console.error('Erreur lors de la sauvegarde:', error);
       toast({
         title: "Erreur",
         description: "Impossible de sauvegarder les détails",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const addItem = (
+  const addItem = async (
+    table: string,
+    column: string,
     list: ListItem[], 
     setList: React.Dispatch<React.SetStateAction<ListItem[]>>, 
     newItem: string, 
     setNewItem: React.Dispatch<React.SetStateAction<string>>
   ) => {
-    if (newItem.trim()) {
-      const newListItem = { id: Date.now().toString(), text: newItem.trim() };
+    if (!newItem.trim() || !propertyId) return;
+    
+    try {
+      const functionName = `add_${table.replace('property_', '')}`;
+      const { data, error } = await supabase.rpc(functionName, {
+        p_property_id: propertyId,
+        p_value: newItem.trim(),
+        p_display_order: table === 'property_photos' ? list.length : null
+      });
+
+      if (error) throw error;
+
+      const newListItem = { id: data, text: newItem.trim() };
       setList([...list, newListItem]);
       setNewItem('');
+
+      toast({
+        title: "Succès",
+        description: "Élément ajouté",
+      });
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible d'ajouter l'élément",
+        variant: "destructive",
+      });
     }
   };
 
-  const removeItem = (
+  const removeItem = async (
+    table: string,
     list: ListItem[], 
     setList: React.Dispatch<React.SetStateAction<ListItem[]>>, 
     id: string
   ) => {
-    setList(list.filter(item => item.id !== id));
+    try {
+      const functionName = `delete_${table.replace('property_', '')}`;
+      const { error } = await supabase.rpc(functionName, {
+        p_id: id
+      });
+
+      if (error) throw error;
+
+      setList(list.filter(item => item.id !== id));
+
+      toast({
+        title: "Succès",
+        description: "Élément supprimé",
+      });
+    } catch (error) {
+      console.error('Erreur lors de la suppression:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de supprimer l'élément",
+        variant: "destructive",
+      });
+    }
   };
 
   const ListEditor = ({ 
@@ -153,7 +231,9 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
     setItems, 
     newItem, 
     setNewItem, 
-    placeholder 
+    placeholder,
+    table,
+    column
   }: {
     title: string;
     items: ListItem[];
@@ -161,6 +241,8 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
     newItem: string;
     setNewItem: React.Dispatch<React.SetStateAction<string>>;
     placeholder: string;
+    table: string;
+    column: string;
   }) => (
     <Card>
       <CardHeader>
@@ -173,11 +255,13 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
               value={newItem}
               onChange={(e) => setNewItem(e.target.value)}
               placeholder={placeholder}
-              onKeyPress={(e) => e.key === 'Enter' && addItem(items, setItems, newItem, setNewItem)}
+              onKeyPress={(e) => e.key === 'Enter' && addItem(table, column, items, setItems, newItem, setNewItem)}
+              disabled={loading}
             />
             <Button
               size="sm"
-              onClick={() => addItem(items, setItems, newItem, setNewItem)}
+              onClick={() => addItem(table, column, items, setItems, newItem, setNewItem)}
+              disabled={loading}
             >
               <Plus className="h-4 w-4" />
             </Button>
@@ -188,7 +272,7 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
                 {item.text}
                 <X 
                   className="h-3 w-3 cursor-pointer" 
-                  onClick={() => removeItem(items, setItems, item.id!)}
+                  onClick={() => removeItem(table, items, setItems, item.id!)}
                 />
               </Badge>
             ))}
@@ -205,9 +289,9 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             Détails de la propriété
-            <Button size="sm" onClick={saveDetails}>
+            <Button size="sm" onClick={saveDetails} disabled={loading}>
               <Save className="h-4 w-4 mr-1" />
-              Sauvegarder
+              {loading ? 'Sauvegarde...' : 'Sauvegarder'}
             </Button>
           </CardTitle>
         </CardHeader>
@@ -291,6 +375,8 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
           newItem={newAmenity}
           setNewItem={setNewAmenity}
           placeholder="Ex: Climatisation, Cuisine équipée..."
+          table="property_amenities"
+          column="amenity"
         />
 
         <ListEditor
@@ -300,6 +386,8 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
           newItem={newSecurity}
           setNewItem={setNewSecurity}
           placeholder="Ex: Interphone, Alarme..."
+          table="property_security_features"
+          column="security_feature"
         />
 
         <ListEditor
@@ -309,6 +397,8 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
           newItem={newBuilding}
           setNewItem={setNewBuilding}
           placeholder="Ex: Ascenseur, Parking..."
+          table="property_building_features"
+          column="building_feature"
         />
 
         <ListEditor
@@ -318,6 +408,8 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
           newItem={newNearby}
           setNewItem={setNewNearby}
           placeholder="Ex: École, Transport..."
+          table="property_nearby"
+          column="nearby_feature"
         />
 
         <ListEditor
@@ -327,6 +419,8 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
           newItem={newDocument}
           setNewItem={setNewDocument}
           placeholder="Ex: Acte de propriété..."
+          table="property_documents"
+          column="document_name"
         />
 
         <ListEditor
@@ -336,6 +430,8 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
           newItem={newPhoto}
           setNewItem={setNewPhoto}
           placeholder="URL de l'image..."
+          table="property_photos"
+          column="photo_url"
         />
       </div>
 
@@ -347,6 +443,8 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
         newItem={newVideo}
         setNewItem={setNewVideo}
         placeholder="URL YouTube ou TikTok..."
+        table="property_videos"
+        column="video_url"
       />
     </div>
   );
