@@ -209,7 +209,7 @@ const PropertyMap: React.FC = () => {
 
     // Add global function for navigation
     (window as typeof window & { showPropertyDetail: (propertyId: string) => void }).showPropertyDetail = (propertyId: string) => {
-      navigate(`/bien/${propertyId}`);
+      navigate(`/property/${propertyId}`);
     };
   }, [filteredProperties, mapLoaded, navigate]);
 

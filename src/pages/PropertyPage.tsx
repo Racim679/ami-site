@@ -60,9 +60,17 @@ const PropertyPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
+  console.log('PropertyPage - propertyId from URL:', propertyId);
+
   useEffect(() => {
     const fetchProperty = async () => {
-      if (!propertyId) return;
+      if (!propertyId) {
+        console.error('No propertyId provided');
+        setLoading(false);
+        return;
+      }
+
+      console.log('Fetching property with ID:', propertyId);
 
       try {
         // Main property data
@@ -79,50 +87,25 @@ const PropertyPage: React.FC = () => {
           .eq('id', propertyId)
           .single();
 
-        if (propertyError) throw propertyError;
+        if (propertyError) {
+          console.error('Property fetch error:', propertyError);
+          throw propertyError;
+        }
 
-        // Fetch related data in parallel
-        const fetchPromises = await Promise.allSettled([
-          (supabase as any).from('property_photos').select('*').eq('property_id', propertyId).order('display_order'),
-          (supabase as any).from('property_videos').select('*').eq('property_id', propertyId),
-          (supabase as any).from('property_details').select('*').eq('property_id', propertyId).maybeSingle(),
-          (supabase as any).from('property_amenities').select('*').eq('property_id', propertyId),
-          (supabase as any).from('property_security_features').select('*').eq('property_id', propertyId),
-          (supabase as any).from('property_building_features').select('*').eq('property_id', propertyId),
-          (supabase as any).from('property_nearby').select('*').eq('property_id', propertyId),
-          (supabase as any).from('property_documents').select('*').eq('property_id', propertyId)
-        ]);
+        console.log('Property data fetched:', propertyData);
 
-        const [
-          photosResult,
-          videosResult,
-          detailsResult,
-          amenitiesResult,
-          securityFeaturesResult,
-          buildingFeaturesResult,
-          nearbyResult,
-          documentsResult
-        ] = fetchPromises;
-
-        const photos = photosResult.status === 'fulfilled' ? photosResult.value.data || [] : [];
-        const videos = videosResult.status === 'fulfilled' ? videosResult.value.data || [] : [];
-        const details = detailsResult.status === 'fulfilled' ? detailsResult.value.data || null : null;
-        const amenities = amenitiesResult.status === 'fulfilled' ? amenitiesResult.value.data || [] : [];
-        const securityFeatures = securityFeaturesResult.status === 'fulfilled' ? securityFeaturesResult.value.data || [] : [];
-        const buildingFeatures = buildingFeaturesResult.status === 'fulfilled' ? buildingFeaturesResult.value.data || [] : [];
-        const nearby = nearbyResult.status === 'fulfilled' ? nearbyResult.value.data || [] : [];
-        const documents = documentsResult.status === 'fulfilled' ? documentsResult.value.data || [] : [];
-
+        // Pour l'instant, utilisons des tableaux vides pour les nouvelles données
+        // jusqu'à ce que les types Supabase soient mis à jour
         const completePropertyData: PropertyPageData = {
           ...propertyData,
-          photos: photos || [],
-          videos: videos || [],
-          details: details || null,
-          amenities: amenities || [],
-          securityFeatures: securityFeatures || [],
-          buildingFeatures: buildingFeatures || [],
-          nearby: nearby || [],
-          documents: documents || []
+          photos: [], // Sera implémenté quand les types seront disponibles
+          videos: [], // Sera implémenté quand les types seront disponibles
+          details: null, // Sera implémenté quand les types seront disponibles
+          amenities: [], // Sera implémenté quand les types seront disponibles
+          securityFeatures: [], // Sera implémenté quand les types seront disponibles
+          buildingFeatures: [], // Sera implémenté quand les types seront disponibles
+          nearby: [], // Sera implémenté quand les types seront disponibles
+          documents: [] // Sera implémenté quand les types seront disponibles
         };
 
         setProperty(completePropertyData);
