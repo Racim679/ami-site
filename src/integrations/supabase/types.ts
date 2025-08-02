@@ -14,27 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      appointments: {
-        Row: {
-          created_at: string
-          id: number
-          name: string | null
-          surname: string | null
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          name?: string | null
-          surname?: string | null
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          name?: string | null
-          surname?: string | null
-        }
-        Relationships: []
-      }
       cities: {
         Row: {
           id: string
