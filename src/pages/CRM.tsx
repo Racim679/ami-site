@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PropertyDetailsEditor from "@/components/PropertyDetailsEditor";
 import { Building, Plus, LogOut, Edit, Save, X } from "lucide-react";
 
 interface PropertyFormData {
@@ -342,9 +343,10 @@ const CRM = () => {
           </div>
 
           <Tabs defaultValue="list" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="list">Liste des biens</TabsTrigger>
               <TabsTrigger value="add">{editingProperty ? "Modifier ici" : "Ajouter un bien"}</TabsTrigger>
+              <TabsTrigger value="details">Détails avancés</TabsTrigger>
             </TabsList>
 
             <TabsContent value="list" className="space-y-4">
@@ -612,6 +614,34 @@ const CRM = () => {
                       )}
                     </Button>
                   </form>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="details" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Détails avancés de la propriété</CardTitle>
+                  <CardDescription>
+                    {editingProperty 
+                      ? `Gérez les détails avancés de: ${editingProperty.title}`
+                      : "Sélectionnez une propriété à modifier pour accéder aux détails avancés"
+                    }
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {editingProperty ? (
+                    <PropertyDetailsEditor propertyId={editingProperty.id} />
+                  ) : (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <Building className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                      <p className="text-lg font-medium mb-2">Aucune propriété sélectionnée</p>
+                      <p className="text-sm">
+                        Allez dans l'onglet "Liste des biens" et cliquez sur "Modifier" 
+                        pour une propriété afin d'accéder à ses détails avancés.
+                      </p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
