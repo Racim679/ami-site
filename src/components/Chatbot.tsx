@@ -55,7 +55,7 @@ const Chatbot = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://n8n.srv933307.hstgr.cloud/webhook-test/rag-agent', {
+      const response = await fetch('https://n8n.srv933307.hstgr.cloud/webhook-test/f74e4ebd-0a22-411d-be5c-219749f2cf45', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
