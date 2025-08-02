@@ -625,23 +625,31 @@ const CRM = () => {
                           ) : (
                             <>
                               <Plus className="h-4 w-4 mr-2" />
-                              Ajouter le bien
+                              Ajouter le bien de base
                             </>
                           )
                         )}
                       </Button>
-                      {!editingProperty && (
-                        <Button 
-                          type="button" 
-                          variant="outline" 
-                          onClick={() => setActiveTab("details")}
-                          disabled={!newPropertyId}
-                          className="whitespace-nowrap"
-                        >
-                          Voir détails
-                        </Button>
-                      )}
                     </div>
+                    
+                    {/* Informations après ajout */}
+                    {newPropertyId && (
+                      <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <p className="text-green-800 text-sm font-medium mb-2">
+                          ✅ Bien ajouté avec succès !
+                        </p>
+                        <p className="text-green-700 text-sm mb-3">
+                          Vous pouvez maintenant compléter les détails avancés (commodités, sécurité, photos, etc.)
+                        </p>
+                        <Button 
+                          onClick={() => setActiveTab("details")}
+                          className="w-full"
+                          variant="default"
+                        >
+                          Ajouter les détails avancés
+                        </Button>
+                      </div>
+                    )}
                   </form>
                 </CardContent>
               </Card>
