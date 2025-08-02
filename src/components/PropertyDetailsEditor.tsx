@@ -57,11 +57,14 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
     
     setLoading(true);
     try {
-      // Load property details using RPC query
-      const { data: detailsData, error: detailsError } = await supabase.rpc('get_property_details', { p_property_id: propertyId });
+      // Load property details using direct table query
+      const { data: detailsData, error: detailsError } = await supabase
+        .from('property_details' as any)
+        .select('*')
+        .eq('property_id', propertyId);
       
       if (!detailsError && detailsData && detailsData.length > 0) {
-        const detail = detailsData[0];
+        const detail = detailsData[0] as any;
         setDetails({
           bedrooms: detail.bedrooms,
           bathrooms: detail.bathrooms,
@@ -76,32 +79,60 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
       }
 
       // Load amenities
-      const { data: amenitiesData } = await supabase.rpc('get_property_amenities', { p_property_id: propertyId });
-      setAmenities(amenitiesData?.map((item: any) => ({ id: item.id, text: item.amenity })) || []);
+      const { data: amenitiesData } = await supabase
+        .from('property_amenities' as any)
+        .select('*')
+        .eq('property_id', propertyId)
+        .order('created_at');
+      setAmenities(amenitiesData?.map((item: any) => ({ id: String(item.id), text: item.amenity })) || []);
 
       // Load security features
-      const { data: securityData } = await supabase.rpc('get_property_security_features', { p_property_id: propertyId });
-      setSecurityFeatures(securityData?.map((item: any) => ({ id: item.id, text: item.security_feature })) || []);
+      const { data: securityData } = await supabase
+        .from('property_security_features' as any)
+        .select('*')
+        .eq('property_id', propertyId)
+        .order('created_at');
+      setSecurityFeatures(securityData?.map((item: any) => ({ id: String(item.id), text: item.security_feature })) || []);
 
       // Load building features
-      const { data: buildingData } = await supabase.rpc('get_property_building_features', { p_property_id: propertyId });
-      setBuildingFeatures(buildingData?.map((item: any) => ({ id: item.id, text: item.building_feature })) || []);
+      const { data: buildingData } = await supabase
+        .from('property_building_features' as any)
+        .select('*')
+        .eq('property_id', propertyId)
+        .order('created_at');
+      setBuildingFeatures(buildingData?.map((item: any) => ({ id: String(item.id), text: item.building_feature })) || []);
 
       // Load nearby
-      const { data: nearbyData } = await supabase.rpc('get_property_nearby', { p_property_id: propertyId });
-      setNearby(nearbyData?.map((item: any) => ({ id: item.id, text: item.nearby_feature })) || []);
+      const { data: nearbyData } = await supabase
+        .from('property_nearby' as any)
+        .select('*')
+        .eq('property_id', propertyId)
+        .order('created_at');
+      setNearby(nearbyData?.map((item: any) => ({ id: String(item.id), text: item.nearby_feature })) || []);
 
       // Load documents
-      const { data: documentsData } = await supabase.rpc('get_property_documents', { p_property_id: propertyId });
-      setDocuments(documentsData?.map((item: any) => ({ id: item.id, text: item.document_name })) || []);
+      const { data: documentsData } = await supabase
+        .from('property_documents' as any)
+        .select('*')
+        .eq('property_id', propertyId)
+        .order('created_at');
+      setDocuments(documentsData?.map((item: any) => ({ id: String(item.id), text: item.document_name })) || []);
 
       // Load photos
-      const { data: photosData } = await supabase.rpc('get_property_photos', { p_property_id: propertyId });
-      setPhotos(photosData?.map((item: any) => ({ id: item.id, text: item.photo_url })) || []);
+      const { data: photosData } = await supabase
+        .from('property_photos' as any)
+        .select('*')
+        .eq('property_id', propertyId)
+        .order('display_order', { ascending: true });
+      setPhotos(photosData?.map((item: any) => ({ id: String(item.id), text: item.photo_url })) || []);
 
       // Load videos
-      const { data: videosData } = await supabase.rpc('get_property_videos', { p_property_id: propertyId });
-      setVideos(videosData?.map((item: any) => ({ id: item.id, text: item.video_url })) || []);
+      const { data: videosData } = await supabase
+        .from('property_videos' as any)
+        .select('*')
+        .eq('property_id', propertyId)
+        .order('created_at');
+      setVideos(videosData?.map((item: any) => ({ id: String(item.id), text: item.video_url })) || []);
 
     } catch (error) {
       console.error('Erreur lors du chargement:', error);
@@ -128,16 +159,19 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
     try {
       setLoading(true);
       
-      const { error } = await supabase.rpc('upsert_property_details', {
-        p_property_id: propertyId,
-        p_bedrooms: details.bedrooms,
-        p_bathrooms: details.bathrooms,
-        p_rooms: details.rooms,
-        p_floors: details.floors,
-        p_living_area: details.living_area,
-        p_has_city_view: details.has_city_view,
-        p_condition: details.condition
-      });
+      const { error } = await supabase
+        .from('property_details' as any)
+        .upsert({
+          property_id: propertyId,
+          bedrooms: details.bedrooms,
+          bathrooms: details.bathrooms,
+          rooms: details.rooms,
+          floors: details.floors,
+          living_area: details.living_area,
+          has_city_view: details.has_city_view,
+          condition: details.condition,
+          updated_at: new Date().toISOString()
+        });
 
       if (error) throw error;
 
@@ -168,16 +202,24 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
     if (!newItem.trim() || !propertyId) return;
     
     try {
-      const functionName = `add_${table.replace('property_', '')}`;
-      const { data, error } = await supabase.rpc(functionName, {
-        p_property_id: propertyId,
-        p_value: newItem.trim(),
-        p_display_order: table === 'property_photos' ? list.length : null
-      });
+      const insertData: any = {
+        property_id: propertyId,
+        [column]: newItem.trim()
+      };
+
+      if (table === 'property_photos') {
+        insertData.display_order = list.length;
+      }
+
+      const { data, error } = await supabase
+        .from(table as any)
+        .insert(insertData)
+        .select()
+        .single();
 
       if (error) throw error;
 
-      const newListItem = { id: data, text: newItem.trim() };
+      const newListItem = { id: String((data as any)?.id), text: newItem.trim() };
       setList([...list, newListItem]);
       setNewItem('');
 
@@ -202,10 +244,10 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
     id: string
   ) => {
     try {
-      const functionName = `delete_${table.replace('property_', '')}`;
-      const { error } = await supabase.rpc(functionName, {
-        p_id: id
-      });
+      const { error } = await supabase
+        .from(table as any)
+        .delete()
+        .eq('id', id);
 
       if (error) throw error;
 
