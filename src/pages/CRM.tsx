@@ -344,7 +344,7 @@ const CRM = () => {
           <Tabs defaultValue="list" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="list">Liste des biens</TabsTrigger>
-              <TabsTrigger value="add">Ajouter un bien</TabsTrigger>
+              <TabsTrigger value="add">{editingProperty ? "Modifier ici" : "Ajouter un bien"}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="list" className="space-y-4">
