@@ -92,20 +92,68 @@ const PropertyPage: React.FC = () => {
           throw propertyError;
         }
 
-        console.log('Property data fetched:', propertyData);
+        // Mock data for now - will be replaced when Supabase types are updated
+        const photos = [
+          { photo_url: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800', caption: 'Vue principale' },
+          { photo_url: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400', caption: 'Salon' },
+          { photo_url: 'https://images.unsplash.com/photo-1586105251261-72a756497a11?w=400', caption: 'Cuisine' },
+          { photo_url: 'https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=400', caption: 'Chambre' },
+          { photo_url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400', caption: 'Salle de bain' }
+        ];
+        
+        const videos = [
+          { video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', video_type: 'youtube' }
+        ];
+        
+        const details = {
+          bedrooms: 3,
+          bathrooms: 2,
+          rooms: 5,
+          floors: 2,
+          living_area: 150,
+          has_city_view: true,
+          condition: 'Excellent'
+        };
+        
+        const amenities = [
+          { amenity: 'Climatisation' },
+          { amenity: 'Cuisine équipée' },
+          { amenity: 'Terrasse' }
+        ];
+        
+        const securityFeatures = [
+          { security_feature: 'Interphone' },
+          { security_feature: 'Alarme' }
+        ];
+        
+        const buildingFeatures = [
+          { building_feature: 'Ascenseur' },
+          { building_feature: 'Jardin' }
+        ];
+        
+        const nearby = [
+          { nearby_feature: 'École' },
+          { nearby_feature: 'Commerces' },
+          { nearby_feature: 'Transport' }
+        ];
+        
+        const documents = [
+          { document_name: 'Acte de propriété' },
+          { document_name: 'Certificat d\'urbanisme' }
+        ];
 
-        // Pour l'instant, utilisons des tableaux vides pour les nouvelles données
-        // jusqu'à ce que les types Supabase soient mis à jour
+        console.log('All property data fetched:', { propertyData, photos, videos, details, amenities });
+
         const completePropertyData: PropertyPageData = {
           ...propertyData,
-          photos: [], // Sera implémenté quand les types seront disponibles
-          videos: [], // Sera implémenté quand les types seront disponibles
-          details: null, // Sera implémenté quand les types seront disponibles
-          amenities: [], // Sera implémenté quand les types seront disponibles
-          securityFeatures: [], // Sera implémenté quand les types seront disponibles
-          buildingFeatures: [], // Sera implémenté quand les types seront disponibles
-          nearby: [], // Sera implémenté quand les types seront disponibles
-          documents: [] // Sera implémenté quand les types seront disponibles
+          photos,
+          videos,
+          details,
+          amenities,
+          securityFeatures,
+          buildingFeatures,
+          nearby,
+          documents
         };
 
         setProperty(completePropertyData);
@@ -178,31 +226,52 @@ const PropertyPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-6">
-          <Link to="/nos-biens">
-            <Button variant="outline">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Retour à la liste
-            </Button>
-          </Link>
+      
+      {/* Breadcrumb Navigation */}
+      <div className="bg-muted py-4">
+        <div className="container mx-auto px-4">
+          <div className="text-sm text-muted-foreground">
+            Propriétés / <span className="text-foreground font-medium">{property.title}</span>
+          </div>
         </div>
+      </div>
 
-        <div className="space-y-8">
-          {/* Video Section */}
-          {property.videos && property.videos.length > 0 && (
-            <PropertyVideoPlayer
-              videoUrl={property.videos[0].video_url}
-              videoType={property.videos[0].video_type}
-              className="w-full"
-            />
-          )}
-
-          {/* Photo Carousel */}
+      <main className="container mx-auto px-4 py-8">
+        {/* Hero Image Section */}
+        <div className="mb-8">
           {property.photos && property.photos.length > 0 ? (
-            <PropertyCarousel photos={property.photos} className="w-full" />
+            <div className="relative">
+              {/* Main large image */}
+              <div className="aspect-[16/9] rounded-lg overflow-hidden bg-muted mb-4">
+                <img
+                  src={property.photos[0].photo_url}
+                  alt={property.photos[0].caption || property.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              
+              {/* Thumbnail gallery */}
+              {property.photos.length > 1 && (
+                <div className="grid grid-cols-4 gap-2">
+                  {property.photos.slice(1, 5).map((photo, index) => (
+                    <div key={index} className="relative aspect-video rounded-lg overflow-hidden bg-muted">
+                      <img
+                        src={photo.photo_url}
+                        alt={photo.caption || `Photo ${index + 2}`}
+                        className="w-full h-full object-cover"
+                      />
+                      {index === 3 && property.photos.length > 5 && (
+                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                          <span className="text-white font-semibold">+{property.photos.length - 4}</span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           ) : property.image_url ? (
-            <div className="aspect-video rounded-lg overflow-hidden bg-muted">
+            <div className="aspect-[16/9] rounded-lg overflow-hidden bg-muted">
               <img
                 src={property.image_url}
                 alt={property.title}
@@ -210,113 +279,168 @@ const PropertyPage: React.FC = () => {
               />
             </div>
           ) : null}
+        </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Main Information */}
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-3xl font-bold mb-2">{property.title}</h1>
-                <div className="flex items-center text-muted-foreground mb-4">
-                  <MapPin className="w-4 h-4 mr-1" />
-                  {getLocationText()}
-                </div>
-                <div className="inline-block px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
-                  {property.status}
-                </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content - Left Side */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Property Header */}
+            <div>
+              <div className="text-sm text-primary font-medium mb-2">{property.typology?.label || 'Propriété'} à vendre</div>
+              <h1 className="text-4xl font-bold mb-4">{property.title}</h1>
+              <div className="text-3xl font-bold text-primary mb-4">{formatPrice(property.prix_dinar)}</div>
+              <div className="flex items-center text-muted-foreground">
+                <MapPin className="w-4 h-4 mr-1" />
+                {getLocationText()}
               </div>
+            </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {property.typology?.label && (
-                  <Card>
-                    <CardContent className="p-4 text-center">
-                      <div className="font-semibold">Type</div>
-                      <div className="text-muted-foreground">{property.typology.label}</div>
-                    </CardContent>
-                  </Card>
+            {/* Property Quick Info with Icons */}
+            {property.details && (
+              <div className="grid grid-cols-4 gap-4 py-6 border-y">
+                {property.details.bedrooms && (
+                  <div className="text-center">
+                    <div className="w-12 h-12 mx-auto mb-2 bg-muted rounded-lg flex items-center justify-center">
+                      🛏️
+                    </div>
+                    <div className="font-semibold">{property.details.bedrooms}</div>
+                    <div className="text-sm text-muted-foreground">Chambres</div>
+                  </div>
                 )}
-                
+                {property.details.bathrooms && (
+                  <div className="text-center">
+                    <div className="w-12 h-12 mx-auto mb-2 bg-muted rounded-lg flex items-center justify-center">
+                      🚿
+                    </div>
+                    <div className="font-semibold">{property.details.bathrooms}</div>
+                    <div className="text-sm text-muted-foreground">Salles de bain</div>
+                  </div>
+                )}
                 {property.surface_m2 && (
-                  <Card>
-                    <CardContent className="p-4 text-center">
-                      <Ruler className="w-5 h-5 mx-auto mb-1 text-primary" />
-                      <div className="font-semibold">{property.surface_m2} m²</div>
-                      <div className="text-sm text-muted-foreground">Surface</div>
-                    </CardContent>
-                  </Card>
+                  <div className="text-center">
+                    <div className="w-12 h-12 mx-auto mb-2 bg-muted rounded-lg flex items-center justify-center">
+                      📐
+                    </div>
+                    <div className="font-semibold">{property.surface_m2} m²</div>
+                    <div className="text-sm text-muted-foreground">Surface</div>
+                  </div>
                 )}
-                
-                <Card>
-                  <CardContent className="p-4 text-center">
-                    <DollarSign className="w-5 h-5 mx-auto mb-1 text-primary" />
-                    <div className="font-semibold">{formatPrice(property.prix_dinar)}</div>
-                    <div className="text-sm text-muted-foreground">Prix</div>
-                  </CardContent>
-                </Card>
+                {property.details.floors && (
+                  <div className="text-center">
+                    <div className="w-12 h-12 mx-auto mb-2 bg-muted rounded-lg flex items-center justify-center">
+                      🏢
+                    </div>
+                    <div className="font-semibold">{property.details.floors}</div>
+                    <div className="text-sm text-muted-foreground">Étages</div>
+                  </div>
+                )}
               </div>
+            )}
 
-              {property.description && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Description</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {property.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
+            {/* Description */}
+            {property.description && (
+              <div>
+                <h3 className="text-xl font-semibold mb-4">Description</h3>
+                <p className="text-muted-foreground leading-relaxed">{property.description}</p>
+              </div>
+            )}
 
-            {/* Property Details and Lists */}
-            <div className="space-y-6">
-              {/* Property Information */}
-              {property.details && (
-                <PropertyInfoSection 
-                  propertyInfo={{
-                    bedrooms: property.details.bedrooms,
-                    bathrooms: property.details.bathrooms,
-                    rooms: property.details.rooms,
-                    floors: property.details.floors,
-                    livingArea: property.details.living_area,
-                    hasCityView: property.details.has_city_view,
-                    condition: property.details.condition
-                  }}
-                />
-              )}
+            {/* Amenities in 3-column layout */}
+            {property.amenities && property.amenities.length > 0 && (
+              <div>
+                <h3 className="text-xl font-semibold mb-4">Équipements et Commodités</h3>
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <h4 className="font-medium mb-3">Intérieur</h4>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      {property.amenities.slice(0, Math.ceil(property.amenities.length/3)).map((item, index) => (
+                        <li key={index}>• {item.amenity}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-medium mb-3">Sécurité</h4>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      {property.securityFeatures.map((item, index) => (
+                        <li key={index}>• {item.security_feature}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-medium mb-3">Bâtiment</h4>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      {property.buildingFeatures.map((item, index) => (
+                        <li key={index}>• {item.building_feature}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
 
-              {/* Amenities */}
-              <PropertyAmenitiesSection items={property.amenities} />
+            {/* Nearby Features */}
+            {property.nearby && property.nearby.length > 0 && (
+              <div>
+                <h3 className="text-xl font-semibold mb-4">À Proximité</h3>
+                <div className="flex flex-wrap gap-3">
+                  {property.nearby.map((item, index) => (
+                    <span key={index} className="px-3 py-1 bg-muted rounded-full text-sm">
+                      • {item.nearby_feature}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
 
-              {/* Security Features */}
-              <PropertySecuritySection items={property.securityFeatures} />
+            {/* Documents */}
+            {property.documents && property.documents.length > 0 && (
+              <div>
+                <h3 className="text-xl font-semibold mb-4">Documents Associés</h3>
+                <div className="flex flex-wrap gap-3">
+                  {property.documents.map((item, index) => (
+                    <span key={index} className="px-3 py-1 bg-muted rounded-full text-sm">
+                      • {item.document_name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
 
-              {/* Building Features */}
-              <PropertyBuildingSection items={property.buildingFeatures} />
+          {/* Sidebar - Right Side */}
+          <div className="space-y-6">
+            {/* Share Button */}
+            <Button variant="outline" className="w-full">
+              🔗 Partager
+            </Button>
 
-              {/* Nearby */}
-              <PropertyNearbySection items={property.nearby} />
+            {/* Property Owner Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Propriétaire du bien</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <div className="text-sm text-muted-foreground">Numéro de téléphone</div>
+                  <div className="font-medium">+213 5 41 22 55 52</div>
+                </div>
+                <Button className="w-full bg-green-500 hover:bg-green-600 text-white">
+                  💬 WhatsApp
+                </Button>
+              </CardContent>
+            </Card>
 
-              {/* Documents */}
-              <PropertyDocumentsSection items={property.documents} />
-
-              {/* Contact Card */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Intéressé par cette propriété ?</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Contactez-nous pour plus d'informations ou pour organiser une visite.
-                  </p>
-                  <Link to="/contact">
-                    <Button className="w-full">
-                      Nous contacter
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            </div>
+            {/* Location */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Localisation</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
+                  <span className="text-muted-foreground">Carte</span>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </main>
