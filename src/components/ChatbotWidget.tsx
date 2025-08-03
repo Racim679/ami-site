@@ -74,23 +74,23 @@ export const ChatbotWidget = ({
       {/* Bouton de toggle du chatbot */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-6 right-6 w-16 h-16 rounded-full shadow-2xl transition-all duration-300 z-50 transform hover:scale-110 active:scale-95 ${
+        className={`fixed bottom-4 right-4 md:bottom-6 md:right-6 w-12 h-12 md:w-16 md:h-16 rounded-full shadow-2xl transition-all duration-300 z-50 transform hover:scale-110 active:scale-95 ${
           isOpen ? 'rotate-180' : ''
         } bg-gradient-to-r from-chatbot-primary to-chatbot-primary hover:from-chatbot-hover hover:to-chatbot-hover text-chatbot-primary-foreground`}
       >
         {isOpen ? (
-          <svg className="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 md:w-8 md:h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         ) : (
-          <svg className="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 md:w-8 md:h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
           </svg>
         )}
       </button>
 
       {/* Fenêtre du chatbot */}
-      <div className={`fixed bottom-24 right-6 w-96 max-w-[calc(100vw-3rem)] transition-all duration-300 z-40 transform origin-bottom-right ${
+      <div className={`fixed bottom-20 right-2 md:bottom-24 md:right-6 w-[calc(100vw-1rem)] md:w-96 max-w-[calc(100vw-1rem)] md:max-w-[calc(100vw-3rem)] transition-all duration-300 z-40 transform origin-bottom-right ${
         isOpen ? 'scale-100 opacity-100 translate-y-0' : 'scale-0 opacity-0 translate-y-4 pointer-events-none'
       }`}>
         <div className="bg-black rounded-3xl shadow-2xl overflow-hidden backdrop-blur-sm border border-chatbot-primary/20 transform transition-all duration-300 hover:shadow-3xl hover:scale-[1.02] hover:shadow-chatbot-primary/20">
@@ -109,7 +109,7 @@ export const ChatbotWidget = ({
           </div>
 
           {/* Zone de chat */}
-          <div className="h-96 px-4 py-6 overflow-y-auto bg-gradient-to-b from-gray-900 to-black space-y-4 scrollbar-thin scrollbar-thumb-chatbot-primary scrollbar-track-transparent">
+          <div className="h-64 md:h-96 px-3 md:px-4 py-4 md:py-6 overflow-y-auto bg-gradient-to-b from-gray-900 to-black space-y-3 md:space-y-4 scrollbar-thin scrollbar-thumb-chatbot-primary scrollbar-track-transparent">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
@@ -122,7 +122,7 @@ export const ChatbotWidget = ({
                 }}
               >
                 <div
-                  className={`relative max-w-xs px-5 py-3 rounded-2xl text-sm font-medium leading-relaxed shadow-lg transform transition-all duration-300 hover:scale-105 ${
+                  className={`relative max-w-[240px] md:max-w-xs px-3 md:px-5 py-2 md:py-3 rounded-2xl text-xs md:text-sm font-medium leading-relaxed shadow-lg transform transition-all duration-300 hover:scale-105 ${
                     msg.from === 'bot'
                       ? 'bg-gradient-to-br from-white to-gray-50 text-black border border-gray-200 hover:shadow-xl hover:shadow-gray-300/50'
                       : 'bg-gradient-to-br from-chatbot-primary to-chatbot-primary text-chatbot-primary-foreground hover:from-chatbot-hover hover:to-chatbot-hover hover:shadow-chatbot-primary/50'
