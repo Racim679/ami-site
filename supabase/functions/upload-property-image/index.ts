@@ -12,16 +12,23 @@ serve(async (req) => {
   }
 
   try {
+    console.log('Upload function called')
+    
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
+    console.log('Supabase client created')
+
     const formData = await req.formData()
     const file = formData.get('file') as File
     const propertyId = formData.get('propertyId') as string
 
+    console.log('Form data parsed:', { fileName: file?.name, propertyId })
+
     if (!file || !propertyId) {
+      console.error('Missing file or propertyId')
       return new Response(
         JSON.stringify({ error: 'File and propertyId are required' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -32,28 +39,36 @@ serve(async (req) => {
     const fileExt = file.name.split('.').pop()
     const fileName = `${propertyId}/${crypto.randomUUID()}.${fileExt}`
 
+    console.log('Uploading file:', fileName)
+
+    // Convert File to ArrayBuffer first
+    const fileBuffer = await file.arrayBuffer()
+    
     // Upload to storage
     const { data: uploadData, error: uploadError } = await supabaseClient.storage
       .from('property-images')
-      .upload(fileName, file, {
+      .upload(fileName, fileBuffer, {
         cacheControl: '3600',
-        upsert: false
+        upsert: false,
+        contentType: file.type
       })
 
     if (uploadError) {
       console.error('Upload error:', uploadError)
       return new Response(
-        JSON.stringify({ error: 'Failed to upload image' }),
+        JSON.stringify({ error: 'Failed to upload image', details: uploadError.message }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
+
+    console.log('Upload successful:', uploadData)
 
     // Get public URL
     const { data: urlData } = supabaseClient.storage
       .from('property-images')
       .getPublicUrl(fileName)
 
-    console.log('Image uploaded successfully:', fileName)
+    console.log('Public URL generated:', urlData.publicUrl)
 
     return new Response(
       JSON.stringify({ 
@@ -69,7 +84,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in upload-property-image function:', error)
     return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
+      JSON.stringify({ error: 'Internal server error', details: error.message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }
