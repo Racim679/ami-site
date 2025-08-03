@@ -14,6 +14,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PropertyDetailsEditor from "@/components/PropertyDetailsEditor";
 import { Building, Plus, LogOut, Edit, Save, X } from "lucide-react";
+import { ImageUploadDropzone } from "@/components/ImageUploadDropzone";
 
 interface PropertyFormData {
   title: string;
@@ -563,15 +564,23 @@ const CRM = () => {
                         />
                       </div>
 
-                      {/* URL de l'image */}
+                      {/* Image Upload */}
                       <div className="space-y-2 md:col-span-2">
-                        <Label htmlFor="image_url">URL de l'image</Label>
-                        <Input
-                          id="image_url"
-                          value={formData.image_url}
-                          onChange={(e) => handleInputChange("image_url", e.target.value)}
-                          placeholder="https://exemple.com/image.jpg"
+                        <Label>Image du bien</Label>
+                        <ImageUploadDropzone
+                          onImageUploaded={(url) => handleInputChange("image_url", url)}
+                          propertyId={editingProperty?.id || "temp"}
+                          className="h-32"
                         />
+                        {formData.image_url && (
+                          <div className="mt-2">
+                            <img 
+                              src={formData.image_url} 
+                              alt="Aperçu" 
+                              className="h-20 w-20 object-cover rounded-lg border"
+                            />
+                          </div>
+                        )}
                       </div>
 
                       {/* Coordonnées GPS */}
