@@ -13,7 +13,7 @@ Deno.serve(async (req) => {
 
   try {
     // Get Google Maps API key from environment (Supabase secrets)
-    const googleMapsApiKey = Deno.env.get('GOOGLE_MAPS_API_KEY');
+    const googleMapsApiKey = Deno.env.get('GOOGLE CALENDAR API');
 
     if (!googleMapsApiKey) {
       console.error('Google Maps API key not found in environment variables');
