@@ -17,7 +17,7 @@ import PropertyPage from "./pages/PropertyPage";
 import NotFound from "./pages/NotFound";
 import CRM from "./pages/CRM";
 import Login from "./pages/Login";
-import ChatbotN8n from "./components/ChatbotN8n";
+import { ChatbotWidget } from "./components/ChatbotWidget";
 import ComparisonSystem from "./components/ComparisonSystem";
 import PWARegistration from "./components/PWARegistration";
 
@@ -46,7 +46,12 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <ChatbotN8n />
+        <ChatbotWidget
+          title="Racim Promotion"
+          initialMessage1="Bonjour, je suis votre assistante immobilière ! 👋"
+          initialMessage2="Vous recherchez un bien ? Souhaitez vendre un bien ? Ou simplement des questions sur nos services ? N'hésitez pas à nous dire ce dont vous avez besoin pour que nous puissions vous assister."
+          webhookUrl="https://n8n.srv933307.hstgr.cloud/webhook/a04bb5d7-4bc1-4a87-8ae2-4e3e34c681b5/chat"
+        />
         <ComparisonSystem />
         <PWARegistration />
       </BrowserRouter>
