@@ -1,8 +1,11 @@
+import { useEffect } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import '@n8n/chat/style.css';
+import { createChat } from '@n8n/chat';
 import Home from "./pages/Home";
 import NosBiens from "./pages/NosBiens";
 import Services from "./pages/Services";
@@ -17,13 +20,19 @@ import PropertyPage from "./pages/PropertyPage";
 import NotFound from "./pages/NotFound";
 import CRM from "./pages/CRM";
 import Login from "./pages/Login";
-import Chatbot from "./components/Chatbot";
 import ComparisonSystem from "./components/ComparisonSystem";
 import PWARegistration from "./components/PWARegistration";
 
 const queryClient = new QueryClient();
 
-const App = () => (
+const App = () => {
+  useEffect(() => {
+    createChat({
+      webhookUrl: 'https://n8n.srv933307.hstgr.cloud/webhook/a04bb5d7-4bc1-4a87-8ae2-4e3e34c681b5/chat'
+    });
+  }, []);
+
+  return (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
@@ -46,12 +55,12 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <Chatbot />
         <ComparisonSystem />
         <PWARegistration />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
-);
+  );
+};
 
 export default App;
