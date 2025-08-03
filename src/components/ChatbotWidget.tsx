@@ -90,7 +90,7 @@ export const ChatbotWidget = ({
       </button>
 
       {/* Fenêtre du chatbot */}
-      <div className={`fixed bottom-20 right-2 md:bottom-24 md:right-6 w-[calc(100vw-1rem)] md:w-96 max-w-[calc(100vw-1rem)] md:max-w-[calc(100vw-3rem)] transition-all duration-300 z-40 transform origin-bottom-right ${
+      <div className={`fixed bottom-20 right-2 md:bottom-24 md:right-6 w-[calc(100vw-2rem)] md:w-96 max-w-[calc(100vw-2rem)] md:max-w-[calc(100vw-3rem)] transition-all duration-300 z-40 transform origin-bottom-right ${
         isOpen ? 'scale-100 opacity-100 translate-y-0' : 'scale-0 opacity-0 translate-y-4 pointer-events-none'
       }`}>
         <div className="bg-black rounded-3xl shadow-2xl overflow-hidden backdrop-blur-sm border border-chatbot-primary/20 transform transition-all duration-300 hover:shadow-3xl hover:scale-[1.02] hover:shadow-chatbot-primary/20">
