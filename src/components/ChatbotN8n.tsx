@@ -61,6 +61,11 @@ const ChatbotN8n = () => {
     setIsLoading(true);
 
     try {
+      console.log('Envoi du message vers n8n:', {
+        message: userMessage.text,
+        timestamp: userMessage.timestamp.toISOString(),
+      });
+
       const response = await fetch('https://n8n.srv933307.hstgr.cloud/webhook/a04bb5d7-4bc1-4a87-8ae2-4e3e34c681b5/chat', {
         method: 'POST',
         headers: {
@@ -72,11 +77,17 @@ const ChatbotN8n = () => {
         }),
       });
 
+      console.log('Réponse n8n status:', response.status);
+      console.log('Réponse n8n headers:', response.headers);
+
       if (!response.ok) {
-        throw new Error('Erreur de réseau');
+        const errorText = await response.text();
+        console.log('Erreur réponse n8n:', errorText);
+        throw new Error(`Erreur de réseau: ${response.status} - ${errorText}`);
       }
 
       const data = await response.json();
+      console.log('Données reçues de n8n:', data);
 
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
