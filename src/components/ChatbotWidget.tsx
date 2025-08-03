@@ -76,7 +76,7 @@ export const ChatbotWidget = ({
         onClick={() => setIsOpen(!isOpen)}
         className={`fixed bottom-6 right-6 w-16 h-16 rounded-full shadow-2xl transition-all duration-300 z-50 transform hover:scale-110 active:scale-95 ${
           isOpen ? 'rotate-180' : ''
-        } bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 text-black`}
+        } bg-gradient-to-r from-chatbot-primary to-chatbot-primary hover:from-chatbot-hover hover:to-chatbot-hover text-chatbot-primary-foreground`}
       >
         {isOpen ? (
           <svg className="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -93,23 +93,23 @@ export const ChatbotWidget = ({
       <div className={`fixed bottom-24 right-6 w-96 max-w-[calc(100vw-3rem)] transition-all duration-300 z-40 transform origin-bottom-right ${
         isOpen ? 'scale-100 opacity-100 translate-y-0' : 'scale-0 opacity-0 translate-y-4 pointer-events-none'
       }`}>
-        <div className="bg-black rounded-3xl shadow-2xl overflow-hidden backdrop-blur-sm border border-yellow-500/20 transform transition-all duration-300 hover:shadow-3xl hover:scale-[1.02] hover:shadow-yellow-500/20">
+        <div className="bg-black rounded-3xl shadow-2xl overflow-hidden backdrop-blur-sm border border-chatbot-primary/20 transform transition-all duration-300 hover:shadow-3xl hover:scale-[1.02] hover:shadow-chatbot-primary/20">
           {/* Header avec gradient et glassmorphisme */}
-          <div className="bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-400 text-black px-6 py-4 relative overflow-hidden">
+          <div className="bg-gradient-to-r from-chatbot-primary via-chatbot-primary to-chatbot-primary text-chatbot-primary-foreground px-6 py-4 relative overflow-hidden">
             <div className="absolute inset-0 bg-black/10 backdrop-blur-sm"></div>
             <div className="relative z-10">
               <h3 className="text-xl font-bold tracking-wide">{title}</h3>
-              <div className="flex items-center mt-1 text-black/80">
+              <div className="flex items-center mt-1 text-chatbot-primary-foreground/80">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse mr-2"></div>
                 <span className="text-sm font-medium">En ligne</span>
               </div>
             </div>
             {/* Effet de brillance */}
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-yellow-300/20 to-transparent transform -skew-x-12 animate-pulse"></div>
+            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-chatbot-primary/20 to-transparent transform -skew-x-12 animate-pulse"></div>
           </div>
 
           {/* Zone de chat */}
-          <div className="h-96 px-4 py-6 overflow-y-auto bg-gradient-to-b from-gray-900 to-black space-y-4 scrollbar-thin scrollbar-thumb-yellow-600 scrollbar-track-transparent">
+          <div className="h-96 px-4 py-6 overflow-y-auto bg-gradient-to-b from-gray-900 to-black space-y-4 scrollbar-thin scrollbar-thumb-chatbot-primary scrollbar-track-transparent">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
@@ -125,7 +125,7 @@ export const ChatbotWidget = ({
                   className={`relative max-w-xs px-5 py-3 rounded-2xl text-sm font-medium leading-relaxed shadow-lg transform transition-all duration-300 hover:scale-105 ${
                     msg.from === 'bot'
                       ? 'bg-gradient-to-br from-white to-gray-50 text-black border border-gray-200 hover:shadow-xl hover:shadow-gray-300/50'
-                      : 'bg-gradient-to-br from-yellow-500 to-yellow-600 text-black hover:from-yellow-400 hover:to-yellow-500 hover:shadow-yellow-400/50'
+                      : 'bg-gradient-to-br from-chatbot-primary to-chatbot-primary text-chatbot-primary-foreground hover:from-chatbot-hover hover:to-chatbot-hover hover:shadow-chatbot-primary/50'
                   }`}
                 >
                   {msg.text}
@@ -134,7 +134,7 @@ export const ChatbotWidget = ({
                     className={`absolute top-3 w-3 h-3 transform rotate-45 ${
                       msg.from === 'bot'
                         ? 'bg-white -left-1.5 border-l border-b border-gray-200'
-                        : 'bg-yellow-500 -right-1.5'
+                        : 'bg-chatbot-primary -right-1.5'
                     }`}
                   ></div>
                 </div>
@@ -158,25 +158,25 @@ export const ChatbotWidget = ({
           </div>
 
           {/* Zone de saisie */}
-          <div className="border-t border-yellow-500/30 bg-gradient-to-r from-gray-900 to-black px-4 py-4">
+          <div className="border-t border-chatbot-primary/30 bg-gradient-to-r from-gray-900 to-black px-4 py-4">
             <div className="flex space-x-3 items-end">
               <div className="flex-1 relative group">
                 <input
                   type="text"
                   placeholder="Tapez votre message..."
-                  className="w-full bg-gray-800 border-2 border-yellow-500/30 rounded-2xl px-5 py-3 text-sm font-medium text-yellow-100 placeholder-white focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-300 shadow-sm hover:shadow-md hover:border-yellow-500/50"
+                  className="w-full bg-gray-800 border-2 border-chatbot-primary/30 rounded-2xl px-5 py-3 text-sm font-medium text-yellow-100 placeholder-white focus:outline-none focus:border-chatbot-primary focus:ring-2 focus:ring-chatbot-primary/20 transition-all duration-300 shadow-sm hover:shadow-md hover:border-chatbot-primary/50"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                 />
                 {/* Effet de focus lumineux */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-yellow-500/0 via-yellow-500/10 to-yellow-400/0 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-chatbot-primary/0 via-chatbot-primary/10 to-chatbot-primary/0 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
               </div>
               
               <button
                 onClick={sendMessage}
                 disabled={!input.trim()}
-                className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 disabled:from-gray-600 disabled:to-gray-700 text-black hover:text-black disabled:text-gray-400 px-6 py-3 rounded-2xl text-sm font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-yellow-500/30 hover:scale-105 disabled:hover:scale-100 disabled:cursor-not-allowed transform active:scale-95"
+                className="bg-gradient-to-r from-chatbot-primary to-chatbot-primary hover:from-chatbot-hover hover:to-chatbot-hover disabled:from-gray-600 disabled:to-gray-700 text-chatbot-primary-foreground hover:text-chatbot-primary-foreground disabled:text-gray-400 px-6 py-3 rounded-2xl text-sm font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-chatbot-primary/30 hover:scale-105 disabled:hover:scale-100 disabled:cursor-not-allowed transform active:scale-95"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
@@ -204,15 +204,15 @@ export const ChatbotWidget = ({
         .scrollbar-thin::-webkit-scrollbar {
           width: 4px;
         }
-        .scrollbar-thumb-yellow-600::-webkit-scrollbar-thumb {
-          background-color: rgb(202 138 4);
+        .scrollbar-thumb-chatbot-primary::-webkit-scrollbar-thumb {
+          background-color: hsl(var(--chatbot-primary));
           border-radius: 2px;
         }
         .scrollbar-track-transparent::-webkit-scrollbar-track {
           background: transparent;
         }
         .hover\\:shadow-3xl:hover {
-          box-shadow: 0 35px 60px -12px rgba(202, 138, 4, 0.25);
+          box-shadow: 0 35px 60px -12px hsl(var(--chatbot-primary) / 0.25);
         }
       `}</style>
     </>

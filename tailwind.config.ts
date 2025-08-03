@@ -61,6 +61,11 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				chatbot: {
+					primary: 'hsl(var(--chatbot-primary))',
+					'primary-foreground': 'hsl(var(--chatbot-primary-foreground))',
+					hover: 'hsl(var(--chatbot-hover))'
 				}
 			},
 			borderRadius: {
