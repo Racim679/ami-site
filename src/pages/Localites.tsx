@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { MapPin } from "lucide-react";
 import Header from "@/components/Header";
 import { Card, CardContent } from "@/components/ui/card";
@@ -120,32 +121,31 @@ const Localites = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {city.localities.map((locality) => (
-                <Card
-                  key={locality.id}
-                  className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer"
-                >
-                  <div className="relative h-64 overflow-hidden">
-                    <img
-                      src={localityImages[locality.name] || babElOuedImage}
-                      alt={locality.name}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <MapPin className="h-5 w-5 text-white" />
-                        <h3 className="text-xl font-semibold text-white">
-                          {locality.name}
-                        </h3>
+                <Link key={locality.id} to={`/localite/${locality.id}`}>
+                  <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer">
+                    <div className="relative h-64 overflow-hidden">
+                      <img
+                        src={localityImages[locality.name] || babElOuedImage}
+                        alt={locality.name}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <MapPin className="h-5 w-5 text-white" />
+                          <h3 className="text-xl font-semibold text-white">
+                            {locality.name}
+                          </h3>
+                        </div>
+                        {locality.description && (
+                          <p className="text-white/90 text-sm">
+                            {locality.description}
+                          </p>
+                        )}
                       </div>
-                      {locality.description && (
-                        <p className="text-white/90 text-sm">
-                          {locality.description}
-                        </p>
-                      )}
                     </div>
-                  </div>
-                </Card>
+                  </Card>
+                </Link>
               ))}
             </div>
           </section>

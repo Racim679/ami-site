@@ -14,6 +14,7 @@ import Favoris from "./pages/Favoris";
 import Comparaison from "./pages/Comparaison";
 import PropertyDetail from "./pages/PropertyDetail";
 import PropertyPage from "./pages/PropertyPage";
+import LocalityDetail from "./pages/LocalityDetail";
 import NotFound from "./pages/NotFound";
 import CRM from "./pages/CRM";
 import Login from "./pages/Login";
@@ -43,6 +44,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
           <Route path="/bien/:id" element={<PropertyDetail />} />
           <Route path="/property/:propertyId" element={<PropertyPage />} />
+          <Route path="/localite/:localityId" element={<LocalityDetail />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
