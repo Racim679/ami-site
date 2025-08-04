@@ -41,7 +41,14 @@ const NosBiens = () => {
     maxSurface: "",
     chambres: "",
     sallesBain: "",
-    etages: ""
+    etages: "",
+    commodites: [],
+    securite: [],
+    documents: [],
+    proximite: [],
+    vue: "",
+    minPrixM2: "",
+    maxPrixM2: ""
   });
   const [visibleResidences, setVisibleResidences] = useState(9);
   const [properties, setProperties] = useState<Property[]>([]);
@@ -98,7 +105,14 @@ const NosBiens = () => {
       maxSurface: searchParams.get("maxSurface") || "",
       chambres: searchParams.get("chambres") || "",
       sallesBain: searchParams.get("sallesBain") || "",
-      etages: searchParams.get("etages") || ""
+      etages: searchParams.get("etages") || "",
+      commodites: searchParams.get("commodites")?.split(",") || [],
+      securite: searchParams.get("securite")?.split(",") || [],
+      documents: searchParams.get("documents")?.split(",") || [],
+      proximite: searchParams.get("proximite")?.split(",") || [],
+      vue: searchParams.get("vue") || "",
+      minPrixM2: searchParams.get("minPrixM2") || "",
+      maxPrixM2: searchParams.get("maxPrixM2") || ""
     };
     setFilters(urlFilters);
   }, [searchParams]);
