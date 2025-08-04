@@ -11,7 +11,12 @@ const BiensSection = () => {
     etat: "",
     localite: "",
     minPrice: "",
-    maxPrice: ""
+    maxPrice: "",
+    minSurface: "",
+    maxSurface: "",
+    chambres: "",
+    sallesBain: "",
+    etages: ""
   });
   const [visibleResidences, setVisibleResidences] = useState(9);
   const residences = [{

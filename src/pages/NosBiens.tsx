@@ -36,7 +36,12 @@ const NosBiens = () => {
     etat: "",
     localite: "",
     minPrice: "",
-    maxPrice: ""
+    maxPrice: "",
+    minSurface: "",
+    maxSurface: "",
+    chambres: "",
+    sallesBain: "",
+    etages: ""
   });
   const [visibleResidences, setVisibleResidences] = useState(9);
   const [properties, setProperties] = useState<Property[]>([]);
@@ -88,7 +93,12 @@ const NosBiens = () => {
       etat: searchParams.get("etat") || "",
       localite: searchParams.get("localite") || "",
       minPrice: searchParams.get("minPrice") || "",
-      maxPrice: searchParams.get("maxPrice") || ""
+      maxPrice: searchParams.get("maxPrice") || "",
+      minSurface: searchParams.get("minSurface") || "",
+      maxSurface: searchParams.get("maxSurface") || "",
+      chambres: searchParams.get("chambres") || "",
+      sallesBain: searchParams.get("sallesBain") || "",
+      etages: searchParams.get("etages") || ""
     };
     setFilters(urlFilters);
   }, [searchParams]);
@@ -134,6 +144,9 @@ const NosBiens = () => {
     if (filters.localite && property.locality?.name !== filters.localite) return false;
     if (filters.minPrice && property.prix_dinar && property.prix_dinar < parseInt(filters.minPrice)) return false;
     if (filters.maxPrice && property.prix_dinar && property.prix_dinar > parseInt(filters.maxPrice)) return false;
+    if (filters.minSurface && property.surface_m2 && property.surface_m2 < parseInt(filters.minSurface)) return false;
+    if (filters.maxSurface && property.surface_m2 && property.surface_m2 > parseInt(filters.maxSurface)) return false;
+    // Note: Les filtres chambres, sallesBain et etages nécessitent des données property_details depuis Supabase
     return true;
   });
 

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronDown } from "lucide-react";
 
 interface PropertyFiltersProps {
   onSearch?: (filters: FilterState) => void;
@@ -16,6 +18,11 @@ export interface FilterState {
   localite: string;
   minPrice: string;
   maxPrice: string;
+  minSurface: string;
+  maxSurface: string;
+  chambres: string;
+  sallesBain: string;
+  etages: string;
 }
 
 const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => {
@@ -26,8 +33,14 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
     etat: "",
     localite: "",
     minPrice: "",
-    maxPrice: ""
+    maxPrice: "",
+    minSurface: "",
+    maxSurface: "",
+    chambres: "",
+    sallesBain: "",
+    etages: ""
   });
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const handleFilterChange = (key: keyof FilterState, value: string) => {
     const newFilters = { ...filters, [key]: value };
@@ -49,13 +62,18 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
   };
 
   const resetFilters = () => {
-    const resetState = {
+    const resetState: FilterState = {
       typeOffre: "",
       type: "",
       etat: "",
       localite: "",
       minPrice: "",
-      maxPrice: ""
+      maxPrice: "",
+      minSurface: "",
+      maxSurface: "",
+      chambres: "",
+      sallesBain: "",
+      etages: ""
     };
     setFilters(resetState);
     onSearch?.(resetState);
@@ -63,6 +81,7 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
 
   return (
     <div className={`bg-emerald-700 p-6 rounded-lg ${className}`}>
+      {/* Filtres de base */}
       <div className="grid grid-cols-1 md:grid-cols-7 gap-4 items-end">
         {/* Typologie */}
         <div className="space-y-2">
@@ -148,7 +167,7 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
 
         {/* Prix minimum */}
         <div className="space-y-2">
-          <label className="text-white text-sm font-medium block">Prix min (€)</label>
+          <label className="text-white text-sm font-medium block">Prix min (DZD)</label>
           <Input
             type="number"
             placeholder="Prix minimum"
@@ -160,7 +179,7 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
 
         {/* Prix maximum */}
         <div className="space-y-2">
-          <label className="text-white text-sm font-medium block">Prix max (€)</label>
+          <label className="text-white text-sm font-medium block">Prix max (DZD)</label>
           <Input
             type="number"
             placeholder="Prix maximum"
@@ -179,6 +198,107 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
             Rechercher
           </Button>
         </div>
+      </div>
+
+      {/* Filtres avancés */}
+      <div className="mt-6">
+        <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
+          <CollapsibleTrigger asChild>
+            <Button
+              variant="outline"
+              className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20 flex items-center justify-between"
+            >
+              <span>Filtres avancés</span>
+              <ChevronDown className={`h-4 w-4 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+              {/* Surface min */}
+              <div className="space-y-2">
+                <label className="text-white text-sm font-medium block">Surface min (m²)</label>
+                <Input
+                  type="number"
+                  placeholder="Min"
+                  value={filters.minSurface}
+                  onChange={(e) => handleFilterChange("minSurface", e.target.value)}
+                  className="bg-white border-0 h-12 text-slate-800"
+                />
+              </div>
+
+              {/* Surface max */}
+              <div className="space-y-2">
+                <label className="text-white text-sm font-medium block">Surface max (m²)</label>
+                <Input
+                  type="number"
+                  placeholder="Max"
+                  value={filters.maxSurface}
+                  onChange={(e) => handleFilterChange("maxSurface", e.target.value)}
+                  className="bg-white border-0 h-12 text-slate-800"
+                />
+              </div>
+
+              {/* Nombre de chambres */}
+              <div className="space-y-2">
+                <label className="text-white text-sm font-medium block">Chambres</label>
+                <Select value={filters.chambres} onValueChange={(value) => handleFilterChange("chambres", value)}>
+                  <SelectTrigger className="bg-white border-0 h-12 text-slate-800">
+                    <SelectValue placeholder="Tout" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white z-50">
+                    <SelectItem value="1">1</SelectItem>
+                    <SelectItem value="2">2</SelectItem>
+                    <SelectItem value="3">3</SelectItem>
+                    <SelectItem value="4">4</SelectItem>
+                    <SelectItem value="5">5+</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Nombre de salles de bain */}
+              <div className="space-y-2">
+                <label className="text-white text-sm font-medium block">Salles de bain</label>
+                <Select value={filters.sallesBain} onValueChange={(value) => handleFilterChange("sallesBain", value)}>
+                  <SelectTrigger className="bg-white border-0 h-12 text-slate-800">
+                    <SelectValue placeholder="Tout" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white z-50">
+                    <SelectItem value="1">1</SelectItem>
+                    <SelectItem value="2">2</SelectItem>
+                    <SelectItem value="3">3</SelectItem>
+                    <SelectItem value="4">4+</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Étages */}
+              <div className="space-y-2">
+                <label className="text-white text-sm font-medium block">Étages</label>
+                <Select value={filters.etages} onValueChange={(value) => handleFilterChange("etages", value)}>
+                  <SelectTrigger className="bg-white border-0 h-12 text-slate-800">
+                    <SelectValue placeholder="Tout" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white z-50">
+                    <SelectItem value="1">1</SelectItem>
+                    <SelectItem value="2">2</SelectItem>
+                    <SelectItem value="3">3</SelectItem>
+                    <SelectItem value="4">4+</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="mt-4 flex gap-4">
+              <Button
+                onClick={resetFilters}
+                variant="outline"
+                className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+              >
+                Réinitialiser les filtres
+              </Button>
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
       </div>
     </div>
   );
