@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, X, Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { ImageUploadDropzone } from '@/components/ImageUploadDropzone';
 
 interface PropertyDetailsEditorProps {
   propertyId: string;
@@ -465,16 +466,36 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
           column="document_name"
         />
 
-        <ListEditor
-          title="Photos (URLs)"
-          items={photos}
-          setItems={setPhotos}
-          newItem={newPhoto}
-          setNewItem={setNewPhoto}
-          placeholder="URL de l'image..."
-          table="property_photos"
-          column="photo_url"
-        />
+        <Card>
+          <CardHeader>
+            <CardTitle>Photos</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <ImageUploadDropzone
+              propertyId={propertyId}
+              onImageUploaded={(url) => addItem('property_photos', 'photo_url', photos, setPhotos, url, () => {})}
+              className="min-h-[200px]"
+            />
+            {photos.length > 0 && (
+              <div className="space-y-2">
+                <h4 className="font-medium">Photos ajoutées :</h4>
+                {photos.map((photo) => (
+                  <div key={photo.id} className="flex items-center justify-between p-2 border rounded">
+                    <img src={photo.text} alt="Photo" className="w-16 h-16 object-cover rounded" />
+                    <span className="flex-1 mx-3 text-sm truncate">{photo.text}</span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => removeItem('property_photos', photos, setPhotos, photo.id!)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
       {/* Videos section spans full width */}
