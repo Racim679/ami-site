@@ -7,6 +7,7 @@ import { ArrowLeft, MapPin, Ruler, DollarSign } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import PropertyQuoteForm from '@/components/PropertyQuoteForm';
 
 interface PropertyDetailData {
   id: string;
@@ -17,6 +18,8 @@ interface PropertyDetailData {
   status: string;
   image_url?: string;
   created_at: string;
+  latitude?: number;
+  longitude?: number;
   locality?: {
     name: string;
     city?: {
@@ -224,6 +227,14 @@ const PropertyDetail: React.FC = () => {
           </div>
         </div>
       </main>
+      
+      {/* Section de demande de devis */}
+      <PropertyQuoteForm 
+        propertyTitle={property.title}
+        latitude={property.latitude}
+        longitude={property.longitude}
+      />
+      
       <Footer />
     </div>
   );

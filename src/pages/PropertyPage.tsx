@@ -16,6 +16,7 @@ import PropertyInfoSection, {
   PropertyNearbySection,
   PropertyDocumentsSection
 } from '@/components/PropertyInfoSection';
+import PropertyQuoteForm from '@/components/PropertyQuoteForm';
 
 interface PropertyPageData {
   id: string;
@@ -26,6 +27,8 @@ interface PropertyPageData {
   status: string;
   image_url?: string;
   created_at: string;
+  latitude?: number;
+  longitude?: number;
   locality?: {
     name: string;
     city?: {
@@ -444,6 +447,14 @@ const PropertyPage: React.FC = () => {
           </div>
         </div>
       </main>
+      
+      {/* Section de demande de devis */}
+      <PropertyQuoteForm 
+        propertyTitle={property.title}
+        latitude={property.latitude}
+        longitude={property.longitude}
+      />
+      
       <Footer />
     </div>
   );
