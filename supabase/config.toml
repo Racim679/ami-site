@@ -1,7 +1,1 @@
-project_id = "xiduvcxmtzpwgwmtsmzc"
-
-[functions.google-maps-config]
-verify_jwt = false
-
-[functions.upload-property-image]
-verify_jwt = false
+project_id = "iuuolubfhswwgrpumqtc"
