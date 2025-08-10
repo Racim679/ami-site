@@ -98,7 +98,7 @@ const PropertyMap: React.FC = () => {
         console.log('Starting Google Maps initialization...');
         // Utilisation directe de la clé API fournie
         const loader = new Loader({
-          apiKey: 'AIzaSyBL0FEnN7f4IdXGhT926lMdtDtb5l8jbhc',
+          apiKey: 'AIzaSyAcfSxQm9zP3ja7vkuEDQvKfW4mNLVZpkA',
           version: 'weekly',
         });
 
