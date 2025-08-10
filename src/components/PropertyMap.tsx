@@ -1,11 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Loader } from '@googlemaps/js-api-loader';
+import React, { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
 
 interface Property {
   id: string;
@@ -18,31 +14,32 @@ interface Property {
   image_url?: string;
   localities?: {
     name: string;
-  } | null;
+  };
 }
 
 const PropertyMap: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [filteredProperties, setFilteredProperties] = useState<Property[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
-  const [loading, setLoading] = useState(true);
-  const [mapLoaded, setMapLoaded] = useState(false);
-
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<google.maps.Map | null>(null);
-  const markers = useRef<google.maps.Marker[]>([]);
-  const infoWindows = useRef<google.maps.InfoWindow[]>([]);
-  const { toast } = useToast();
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
 
   // Fetch properties from Supabase
   useEffect(() => {
     const fetchProperties = async () => {
       try {
+        console.log('Fetching properties from database...');
         const { data, error } = await supabase
           .from('properties')
           .select(`
-            id, title, status, latitude, longitude, surface, price, image_url,
+            id,
+            title,
+            status,
+            latitude,
+            longitude,
+            surface,
+            price,
+            image_url,
             localities!inner(name)
           `)
           .not('latitude', 'is', null)
@@ -50,178 +47,167 @@ const PropertyMap: React.FC = () => {
           .order('created_at', { ascending: false })
           .limit(50);
 
-        if (error) throw error;
-        console.log('Properties fetched from database:', data);
-        console.log('Number of properties:', data?.length);
-        // Transform data to match our interface
-        const transformedData = data?.map(property => ({
-          ...property,
-          localities: Array.isArray(property.localities) && property.localities.length > 0 
-            ? property.localities[0] 
-            : null
-        })) || [];
-        
-        setProperties(transformedData);
-        setFilteredProperties(transformedData);
-      } catch (error) {
-        if (import.meta.env.DEV) {
-          console.error('Erreur lors du chargement des données:', error);
+        if (error) {
+          console.error('Error fetching properties:', error);
+          return;
         }
-        toast({
-          title: "Erreur",
-          description: "Impossible de charger les données des propriétés",
-          variant: "destructive",
-        });
+
+        console.log('Properties fetched from database:', data);
+        console.log('Number of properties:', data?.length || 0);
+        
+        const transformedData = data?.map(item => ({
+          id: item.id,
+          title: item.title,
+          status: item.status,
+          latitude: Number(item.latitude),
+          longitude: Number(item.longitude),
+          surface: item.surface ? Number(item.surface) : undefined,
+          price: item.price ? Number(item.price) : undefined,
+          image_url: item.image_url || undefined,
+          localities: Array.isArray(item.localities) && item.localities.length > 0 
+            ? item.localities[0] 
+            : undefined
+        })) || [];
+
+        setProperties(transformedData);
+      } catch (error) {
+        console.error('Error in fetchProperties:', error);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
     fetchProperties();
-  }, [toast]);
+  }, []);
 
-  // Filter properties by status
+  // Filter properties based on selected status
   useEffect(() => {
     if (selectedStatus === 'all') {
       setFilteredProperties(properties);
     } else {
       setFilteredProperties(properties.filter(property => property.status === selectedStatus));
     }
-  }, [selectedStatus, properties]);
+  }, [properties, selectedStatus]);
 
-  // Initialize Google Maps
+  // Initialize map when component mounts
   useEffect(() => {
-    const initializeMap = async () => {
-      if (!mapContainer.current || map.current) return;
+    if (window.google && window.google.maps) {
+      console.log("Google Maps API already loaded.");
+      if (!isMapLoaded) initMap();
+      return;
+    }
 
-      try {
-        console.log('Starting Google Maps initialization...');
-        // Utilisation directe de la clé API fournie
-        const loader = new Loader({
-          apiKey: 'AIzaSyAcfSxQm9zP3ja7vkuEDQvKfW4mNLVZpkA',
-          version: 'weekly',
-        });
+    // Load Google Maps API
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAcfSxQm9zP3ja7vkuEDQvKfW4mNLVZpkA`;
+    script.async = true;
+    script.onload = initMap;
+    document.head.appendChild(script);
 
-        await loader.load();
-
-        map.current = new google.maps.Map(mapContainer.current, {
-          center: { lat: 36.7538, lng: 3.0588 }, // Alger centre coordinates
-          zoom: 10,
-          mapTypeId: google.maps.MapTypeId.ROADMAP,
-          styles: [
-            {
-              featureType: 'poi',
-              stylers: [{ visibility: 'off' }]
-            }
-          ]
-        });
-
-        setMapLoaded(true);
-        toast({
-          title: "Succès",
-          description: "Carte Google Maps chargée avec succès",
-        });
-      } catch (error) {
-        console.error('Erreur lors de l\'initialisation de Google Maps:', error);
-        toast({
-          title: "Erreur",
-          description: "Impossible de charger Google Maps",
-          variant: "destructive",
-        });
+    return () => {
+      // Cleanup script on unmount
+      if (document.head.contains(script)) {
+        document.head.removeChild(script);
       }
     };
+  }, []);
 
-    initializeMap();
-  }, [toast]);
-
-  // Update markers when filtered properties change
+  // Reinitialize markers when filtered properties change
   useEffect(() => {
-    if (!map.current || !mapLoaded) return;
+    if (isMapLoaded && filteredProperties.length > 0) {
+      addMarkersToMap();
+    }
+  }, [filteredProperties, isMapLoaded]);
 
-    // Remove existing markers and info windows
-    markers.current.forEach(marker => marker.setMap(null));
-    infoWindows.current.forEach(infoWindow => infoWindow.close());
-    markers.current = [];
-    infoWindows.current = [];
+  const initMap = () => {
+    const mapElement = document.getElementById("property-map");
+    if (!mapElement) return;
 
-    // Add new markers
-    console.log('Adding markers for properties:', filteredProperties);
-    filteredProperties.forEach((property) => {
-      const formatPrice = (price?: number) => {
-        if (!price) return 'Prix sur demande';
-        return new Intl.NumberFormat('fr-TN', {
-          style: 'decimal',
-          minimumFractionDigits: 0,
-        }).format(price) + ' DT';
-      };
+    const map = new google.maps.Map(mapElement, {
+      center: { lat: 36.7538, lng: 3.0588 }, // Alger center
+      zoom: 10,
+    });
 
-      console.log('Creating marker for property:', property.title, 'at coordinates:', property.latitude, property.longitude);
+    // Store map instance globally for marker updates
+    (window as any).propertyMap = map;
+    setIsMapLoaded(true);
+    console.log('Map initialized successfully');
+  };
+
+  const addMarkersToMap = () => {
+    const map = (window as any).propertyMap;
+    if (!map) return;
+
+    // Clear existing markers
+    if ((window as any).propertyMarkers) {
+      (window as any).propertyMarkers.forEach((marker: google.maps.Marker) => {
+        marker.setMap(null);
+      });
+    }
+
+    const markers: google.maps.Marker[] = [];
+
+    // Format price helper
+    const formatPrice = (price: number) => {
+      return new Intl.NumberFormat('fr-DZ', {
+        style: 'currency',
+        currency: 'DZD',
+        minimumFractionDigits: 0,
+      }).format(price);
+    };
+
+    // Loop through filtered properties and add them to the map
+    filteredProperties.forEach(({ id, title, status, latitude, longitude, surface, price, image_url, localities }) => {
       const marker = new google.maps.Marker({
-        position: { lat: property.latitude, lng: property.longitude },
-        map: map.current!,
-        title: property.title,
-        icon: {
-          url: `data:image/svg+xml,${encodeURIComponent(`
-            <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="20" cy="20" r="18" fill="#3b82f6" stroke="#ffffff" stroke-width="2"/>
-              <circle cx="20" cy="20" r="6" fill="#ffffff"/>
-            </svg>
-          `)}`,
-          scaledSize: new google.maps.Size(40, 40),
-          anchor: new google.maps.Point(20, 20)
-        }
+        position: { lat: latitude, lng: longitude },
+        map,
+        title: title || undefined,
       });
 
+      // Create info window content
       const infoWindowContent = `
-        <div style="max-width: 250px; padding: 12px; font-family: system-ui;">
-          ${property.image_url ? `
-            <img src="${property.image_url}" alt="${property.title}" 
-                 style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;">
-          ` : ''}
-          <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #1f2937;">${property.title}</h3>
-          <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
-            <span style="background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 12px; font-size: 12px;">${property.status}</span>
-          </div>
-          <div style="margin-bottom: 8px;">
-            ${property.surface ? `<p style="margin: 2px 0; font-size: 14px; color: #4b5563;">📐 ${property.surface} m²</p>` : ''}
-            <p style="margin: 2px 0; font-size: 14px; color: #4b5563;">💰 ${formatPrice(property.price)}</p>
-            ${property.localities?.name ? `<p style="margin: 2px 0; font-size: 14px; color: #4b5563;">📍 ${property.localities.name}</p>` : ''}
-          </div>
-          <button onclick="window.showPropertyDetail('${property.id}')" 
-                  style="width: 100%; background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 14px; cursor: pointer; margin-top: 8px;">
+        <div style="max-width: 300px; padding: 10px;">
+          ${image_url ? `<img src="${image_url}" alt="${title}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;" />` : ""}
+          ${title ? `<h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold;">${title}</h3>` : ""}
+          ${localities?.name ? `<p style="margin: 0 0 4px 0; color: #666; font-size: 14px;"><strong>Localité:</strong> ${localities.name}</p>` : ""}
+          ${surface ? `<p style="margin: 0 0 4px 0; color: #666; font-size: 14px;"><strong>Surface:</strong> ${surface} m²</p>` : ""}
+          ${price ? `<p style="margin: 0 0 4px 0; color: #666; font-size: 14px;"><strong>Prix:</strong> ${formatPrice(price)}</p>` : ""}
+          <p style="margin: 0 0 8px 0; color: #666; font-size: 14px;"><strong>Status:</strong> ${status === 'available' ? 'Disponible' : 'Réservé'}</p>
+          <a href="/property/${id}" style="display: inline-block; background-color: #3b82f6; color: white; text-decoration: none; padding: 8px 16px; border-radius: 4px; font-size: 14px;">
             Voir les détails
-          </button>
-        </div>
-      `;
+          </a>
+        </div>`;
 
       const infoWindow = new google.maps.InfoWindow({
         content: infoWindowContent,
+        disableAutoPan: true, // Prevents the small zoom/movement when clicking a marker
       });
 
-      marker.addListener('click', () => {
-        // Close all other info windows
-        infoWindows.current.forEach(iw => iw.close());
-        infoWindow.open(map.current!, marker);
+      // Open InfoWindow on marker click
+      marker.addListener("click", () => {
+        infoWindow.open(map, marker);
       });
 
-      markers.current.push(marker);
-      infoWindows.current.push(infoWindow);
+      markers.push(marker);
     });
 
-    // Add global function for navigation
-    (window as typeof window & { showPropertyDetail: (propertyId: string) => void }).showPropertyDetail = (propertyId: string) => {
-      navigate(`/property/${propertyId}`);
-    };
-  }, [filteredProperties, mapLoaded, navigate]);
+    // Store markers globally for cleanup
+    (window as any).propertyMarkers = markers;
+  };
 
-  // Get unique statuses
-  const uniqueStatuses = [...new Set(properties.map(p => p.status))];
+  // Get unique statuses for filter
+  const uniqueStatuses = [...new Set(properties.map(property => property.status))];
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <Card>
-        <CardContent className="p-6">
-          <div className="text-center">Chargement de la carte...</div>
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle>Carte des Propriétés</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-center h-96">
+            <p>Chargement de la carte...</p>
+          </div>
         </CardContent>
       </Card>
     );
@@ -230,18 +216,17 @@ const PropertyMap: React.FC = () => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Carte Interactive des Biens Immobiliers</CardTitle>
-        <div className="flex items-center gap-4">
-          <label className="text-sm font-medium">Filtrer par status:</label>
+        <CardTitle>Carte des Propriétés ({filteredProperties.length} propriétés)</CardTitle>
+        <div className="flex gap-4 items-center">
           <Select value={selectedStatus} onValueChange={setSelectedStatus}>
             <SelectTrigger className="w-48">
-              <SelectValue placeholder="Sélectionner un status" />
+              <SelectValue placeholder="Filtrer par statut" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Tous les status</SelectItem>
+              <SelectItem value="all">Tous les statuts</SelectItem>
               {uniqueStatuses.map(status => (
                 <SelectItem key={status} value={status}>
-                  {status}
+                  {status === 'available' ? 'Disponible' : 'Réservé'}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -249,22 +234,7 @@ const PropertyMap: React.FC = () => {
         </div>
       </CardHeader>
       <CardContent>
-        {!mapLoaded && (
-          <div className="h-96 w-full rounded-lg bg-muted flex items-center justify-center">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-              <p className="text-sm text-muted-foreground">Chargement de Google Maps...</p>
-            </div>
-          </div>
-        )}
-        <div
-          ref={mapContainer}
-          className={`w-full h-96 rounded-lg overflow-hidden ${!mapLoaded ? 'hidden' : ''}`}
-        />
-        <div className="mt-4 text-sm text-muted-foreground">
-          {filteredProperties.length} bien(s) affiché(s) sur la carte
-          {filteredProperties.length > 0 && " • Cliquez sur un marqueur pour plus d'informations"}
-        </div>
+        <div id="property-map" style={{ height: "550px", width: "100%" }} />
       </CardContent>
     </Card>
   );
