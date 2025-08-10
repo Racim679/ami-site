@@ -20,12 +20,11 @@ interface Property {
   status: string;
   latitude?: number;
   longitude?: number;
-  surface_m2?: number;
-  prix_dinar?: number;
+  surface?: number;
+  price?: number;
   image_url?: string;
-  locality?: { name: string };
-  typology?: { label: string };
-  description?: string;
+  localities?: { name: string } | null;
+  typology?: string;
 }
 
 const NosBiens = () => {
@@ -68,19 +67,26 @@ const NosBiens = () => {
             status,
             latitude,
             longitude,
-            surface_m2,
-            prix_dinar,
+            surface,
+            price,
             image_url,
-            description,
-            locality:localities(name),
-            typology:typologies(label)
+            typology,
+            localities!inner(name)
           `)
           .order('created_at', { ascending: false });
 
         if (error) {
           console.error('Erreur lors de la récupération des propriétés:', error);
         } else {
-          setProperties(data || []);
+          // Transform data to match our interface
+          const transformedData = data?.map(property => ({
+            ...property,
+            localities: Array.isArray(property.localities) && property.localities.length > 0 
+              ? property.localities[0] 
+              : null
+          })) || [];
+          
+          setProperties(transformedData);
         }
       } catch (error) {
         console.error('Erreur:', error);
@@ -154,12 +160,12 @@ const NosBiens = () => {
 
   const filteredProperties = properties.filter(property => {
     if (filters.typeOffre && property.status !== filters.typeOffre) return false;
-    if (filters.type && property.typology?.label !== filters.type) return false;
-    if (filters.localite && property.locality?.name !== filters.localite) return false;
-    if (filters.minPrice && property.prix_dinar && property.prix_dinar < parseInt(filters.minPrice)) return false;
-    if (filters.maxPrice && property.prix_dinar && property.prix_dinar > parseInt(filters.maxPrice)) return false;
-    if (filters.minSurface && property.surface_m2 && property.surface_m2 < parseInt(filters.minSurface)) return false;
-    if (filters.maxSurface && property.surface_m2 && property.surface_m2 > parseInt(filters.maxSurface)) return false;
+    if (filters.type && property.typology !== filters.type) return false;
+    if (filters.localite && property.localities?.name !== filters.localite) return false;
+    if (filters.minPrice && property.price && property.price < parseInt(filters.minPrice)) return false;
+    if (filters.maxPrice && property.price && property.price > parseInt(filters.maxPrice)) return false;
+    if (filters.minSurface && property.surface && property.surface < parseInt(filters.minSurface)) return false;
+    if (filters.maxSurface && property.surface && property.surface > parseInt(filters.maxSurface)) return false;
     // Note: Les filtres chambres, sallesBain et etages nécessitent des données property_details depuis Supabase
     return true;
   });
@@ -273,15 +279,15 @@ const NosBiens = () => {
                             e.stopPropagation();
                             isFavorite(property.id)
                               ? removeFromFavorites(property.id)
-                              : addToFavorites({
-                                  id: property.id,
-                                  title: property.title,
-                                  price: property.prix_dinar || 0,
-                                  surface: property.surface_m2 || 0,
-                                  location: property.locality?.name || "",
-                                  image: property.image_url || "/placeholder.svg",
-                                  type: property.typology?.label || ""
-                                });
+                               : addToFavorites({
+                                   id: property.id,
+                                   title: property.title,
+                                   price: property.price || 0,
+                                   surface: property.surface || 0,
+                                   location: property.localities?.name || "",
+                                   image: property.image_url || "/placeholder.svg",
+                                   type: property.typology || ""
+                                 });
                           }}
                           className="w-8 h-8 p-0 rounded-full bg-white/80 hover:bg-white"
                         >
@@ -293,17 +299,17 @@ const NosBiens = () => {
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            addToComparison({
-                              id: property.id,
-                              title: property.title,
-                              price: property.prix_dinar || 0,
-                              surface: property.surface_m2 || 0,
-                              location: property.locality?.name || "",
-                              image: property.image_url || "/placeholder.svg",
-                              type: property.typology?.label || "",
-                              status: getStatusLabel(property.status),
-                              etat: "N/A"
-                            });
+                             addToComparison({
+                               id: property.id,
+                               title: property.title,
+                               price: property.price || 0,
+                               surface: property.surface || 0,
+                               location: property.localities?.name || "",
+                               image: property.image_url || "/placeholder.svg",
+                               type: property.typology || "",
+                               status: getStatusLabel(property.status),
+                               etat: "N/A"
+                             });
                           }}
                           disabled={isInComparison(property.id)}
                           className="w-8 h-8 p-0 rounded-full bg-white/80 hover:bg-white"
@@ -311,34 +317,31 @@ const NosBiens = () => {
                           <BarChart3 className={`w-4 h-4 ${isInComparison(property.id) ? "text-primary" : "text-gray-600"}`} />
                         </Button>
                       </div>
-                      {property.prix_dinar && property.prix_dinar > 0 && (
-                        <div className="absolute bottom-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
-                          {formatCurrency(property.prix_dinar)}
-                        </div>
-                      )}
+                       {property.price && property.price > 0 && (
+                         <div className="absolute bottom-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
+                           {formatCurrency(property.price)}
+                         </div>
+                       )}
                     </div>
 
                     <CardContent className="p-6">
                       <h3 className="text-xl font-bold mb-2 text-foreground">
                         {property.title}
                       </h3>
-                      <div className="flex items-center text-muted-foreground mb-3">
-                        <MapPin className="h-4 w-4 mr-1" />
-                        <span className="text-sm">{property.locality?.name || "N/A"}</span>
-                      </div>
-                      <p className="text-muted-foreground mb-4 line-clamp-2">
-                        {property.description || "Aucune description disponible"}
-                      </p>
-                      <div className="flex justify-between items-center">
-                        <div className="flex gap-2">
-                          <span className="text-sm px-3 py-1 bg-muted rounded-full text-muted-foreground">
-                            {property.typology?.label || "N/A"}
-                          </span>
-                          {property.surface_m2 && (
-                            <span className="text-sm px-3 py-1 bg-muted rounded-full text-muted-foreground">
-                              {property.surface_m2} m²
-                            </span>
-                          )}
+                       <div className="flex items-center text-muted-foreground mb-3">
+                         <MapPin className="h-4 w-4 mr-1" />
+                         <span className="text-sm">{property.localities?.name || "N/A"}</span>
+                       </div>
+                       <div className="flex justify-between items-center">
+                         <div className="flex gap-2">
+                           <span className="text-sm px-3 py-1 bg-muted rounded-full text-muted-foreground">
+                             {property.typology || "N/A"}
+                           </span>
+                           {property.surface && (
+                             <span className="text-sm px-3 py-1 bg-muted rounded-full text-muted-foreground">
+                               {property.surface} m²
+                             </span>
+                           )}
                         </div>
                         <Button variant="outline" size="sm">
                           Voir détails

@@ -13,17 +13,12 @@ interface Property {
   status: string;
   latitude: number;
   longitude: number;
-  surface_m2?: number;
-  prix_dinar?: number;
+  surface?: number;
+  price?: number;
   image_url?: string;
-  locality_id?: string;
-  typology_id?: string;
-  locality?: {
+  localities?: {
     name: string;
-  };
-  typology?: {
-    label: string;
-  };
+  } | null;
 }
 
 const PropertyMap: React.FC = () => {
@@ -47,9 +42,8 @@ const PropertyMap: React.FC = () => {
         const { data, error } = await supabase
           .from('properties')
           .select(`
-            id, title, status, latitude, longitude, surface_m2, prix_dinar, image_url,
-            locality:localities(name),
-            typology:typologies(label)
+            id, title, status, latitude, longitude, surface, price, image_url,
+            localities!inner(name)
           `)
           .not('latitude', 'is', null)
           .not('longitude', 'is', null)
@@ -59,8 +53,16 @@ const PropertyMap: React.FC = () => {
         if (error) throw error;
         console.log('Properties fetched from database:', data);
         console.log('Number of properties:', data?.length);
-        setProperties(data || []);
-        setFilteredProperties(data || []);
+        // Transform data to match our interface
+        const transformedData = data?.map(property => ({
+          ...property,
+          localities: Array.isArray(property.localities) && property.localities.length > 0 
+            ? property.localities[0] 
+            : null
+        })) || [];
+        
+        setProperties(transformedData);
+        setFilteredProperties(transformedData);
       } catch (error) {
         if (import.meta.env.DEV) {
           console.error('Erreur lors du chargement des données:', error);
@@ -178,13 +180,12 @@ const PropertyMap: React.FC = () => {
           ` : ''}
           <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #1f2937;">${property.title}</h3>
           <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
-            ${property.typology?.label ? `<span style="background: #dbeafe; color: #1e40af; padding: 2px 8px; border-radius: 12px; font-size: 12px;">${property.typology.label}</span>` : ''}
             <span style="background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 12px; font-size: 12px;">${property.status}</span>
           </div>
           <div style="margin-bottom: 8px;">
-            ${property.surface_m2 ? `<p style="margin: 2px 0; font-size: 14px; color: #4b5563;">📐 ${property.surface_m2} m²</p>` : ''}
-            <p style="margin: 2px 0; font-size: 14px; color: #4b5563;">💰 ${formatPrice(property.prix_dinar)}</p>
-            ${property.locality?.name ? `<p style="margin: 2px 0; font-size: 14px; color: #4b5563;">📍 ${property.locality.name}</p>` : ''}
+            ${property.surface ? `<p style="margin: 2px 0; font-size: 14px; color: #4b5563;">📐 ${property.surface} m²</p>` : ''}
+            <p style="margin: 2px 0; font-size: 14px; color: #4b5563;">💰 ${formatPrice(property.price)}</p>
+            ${property.localities?.name ? `<p style="margin: 2px 0; font-size: 14px; color: #4b5563;">📍 ${property.localities.name}</p>` : ''}
           </div>
           <button onclick="window.showPropertyDetail('${property.id}')" 
                   style="width: 100%; background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 14px; cursor: pointer; margin-top: 8px;">
