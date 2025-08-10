@@ -91,17 +91,29 @@ const PropertyMap: React.FC = () => {
 
   // Initialize map when component mounts
   useEffect(() => {
+    console.log('PropertyMap component mounted');
+    
     if (window.google && window.google.maps) {
       console.log("Google Maps API already loaded.");
-      if (!isMapLoaded) initMap();
+      if (!isMapLoaded) {
+        console.log('Initializing map...');
+        initMap();
+      }
       return;
     }
 
+    console.log('Loading Google Maps API...');
     // Load Google Maps API
     const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAcfSxQm9zP3ja7vkuEDQvKfW4mNLVZpkA`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAcfSxQm9zP3ja7vkuEDQvKfW4mNLVZpkA&loading=async`;
     script.async = true;
-    script.onload = initMap;
+    script.onload = () => {
+      console.log('Google Maps script loaded successfully');
+      initMap();
+    };
+    script.onerror = (error) => {
+      console.error('Failed to load Google Maps script:', error);
+    };
     document.head.appendChild(script);
 
     return () => {
@@ -120,18 +132,34 @@ const PropertyMap: React.FC = () => {
   }, [filteredProperties, isMapLoaded]);
 
   const initMap = () => {
+    console.log('initMap called');
     const mapElement = document.getElementById("property-map");
-    if (!mapElement) return;
+    if (!mapElement) {
+      console.error('Map element not found');
+      return;
+    }
 
-    const map = new google.maps.Map(mapElement, {
-      center: { lat: 36.7538, lng: 3.0588 }, // Alger center
-      zoom: 10,
-    });
+    try {
+      console.log('Creating Google Maps instance...');
+      const map = new google.maps.Map(mapElement, {
+        center: { lat: 36.7538, lng: 3.0588 }, // Alger center
+        zoom: 10,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+      });
 
-    // Store map instance globally for marker updates
-    (window as any).propertyMap = map;
-    setIsMapLoaded(true);
-    console.log('Map initialized successfully');
+      // Store map instance globally for marker updates
+      (window as any).propertyMap = map;
+      setIsMapLoaded(true);
+      console.log('Map initialized successfully');
+      
+      // Add markers immediately if properties are available
+      if (filteredProperties.length > 0) {
+        console.log('Adding markers to map...');
+        addMarkersToMap();
+      }
+    } catch (error) {
+      console.error('Error initializing map:', error);
+    }
   };
 
   const addMarkersToMap = () => {
