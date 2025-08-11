@@ -8,14 +8,20 @@ const PropertyMap: React.FC = () => {
   useEffect(() => {
     const fetchApiKey = async () => {
       try {
+        console.log("Tentative de récupération de la clé API...");
         const res = await fetch(
           "https://iuuolubfhswwgrpumqtc.supabase.co/functions/v1/google-maps-config"
         );
+        console.log("Response status:", res.status);
+        
         const data = await res.json();
+        console.log("Response data:", data);
+        
         if (data.apiKey) {
+          console.log("Clé API récupérée avec succès");
           setApiKey(data.apiKey);
         } else {
-          console.error("Clé API introuvable");
+          console.error("Clé API introuvable dans la réponse:", data);
         }
       } catch (err) {
         console.error("Erreur de récupération de la clé :", err);

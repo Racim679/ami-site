@@ -12,8 +12,10 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // Get Google Maps API key from environment (using 'GOOGLE CALENDAR API' secret which contains the Maps API key)
+    console.log('Tentative de récupération du secret GOOGLE_MAPS_API_KEY...');
+    // Get Google Maps API key from environment
     const googleMapsApiKey = Deno.env.get('GOOGLE_MAPS_API_KEY');
+    console.log('Secret trouvé:', googleMapsApiKey ? 'OUI' : 'NON');
 
     if (!googleMapsApiKey) {
       console.error('Google Maps API key not found in environment variables');
