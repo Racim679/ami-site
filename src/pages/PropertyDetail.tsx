@@ -53,7 +53,7 @@ const PropertyDetail: React.FC = () => {
             typology:typologies(label)
           `)
           .eq('id', id)
-          .single();
+          .maybeSingle();
 
         if (error) throw error;
         setProperty(data);

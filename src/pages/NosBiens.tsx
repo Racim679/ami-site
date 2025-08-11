@@ -258,7 +258,7 @@ const NosBiens = () => {
                 transition={{ duration: 0.5 }}
               >
                 <AnimatedCard className="group overflow-hidden hover:shadow-xl transition-all duration-300 bg-card border border-border">
-                  <Link to={`/property/${property.id}`} className="block">
+                  <Link to={`/bien/${property.id}`} className="block">
                     <div className="relative overflow-hidden">
                       <img
                         src={property.image_url || "/placeholder.svg"}
