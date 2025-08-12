@@ -13,21 +13,19 @@ interface PropertyDetailData {
   id: string;
   title: string;
   description?: string;
-  surface_m2?: number;
-  prix_dinar?: number;
+  surface?: number;
+  price?: number;
   status: string;
   image_url?: string;
   created_at: string;
   latitude?: number;
   longitude?: number;
+  typology?: string;
   locality?: {
     name: string;
     city?: {
       name: string;
     };
-  };
-  typology?: {
-    label: string;
   };
 }
 
@@ -49,8 +47,7 @@ const PropertyDetail: React.FC = () => {
             locality:localities(
               name,
               city:cities(name)
-            ),
-            typology:typologies(label)
+            )
           `)
           .eq('id', id)
           .maybeSingle();
@@ -168,20 +165,20 @@ const PropertyDetail: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {property.typology?.label && (
+              {property.typology && (
                 <Card>
                   <CardContent className="p-4 text-center">
                     <div className="font-semibold">Type</div>
-                    <div className="text-muted-foreground">{property.typology.label}</div>
+                    <div className="text-muted-foreground">{property.typology}</div>
                   </CardContent>
                 </Card>
               )}
               
-              {property.surface_m2 && (
+              {property.surface && (
                 <Card>
                   <CardContent className="p-4 text-center">
                     <Ruler className="w-5 h-5 mx-auto mb-1 text-primary" />
-                    <div className="font-semibold">{property.surface_m2} m²</div>
+                    <div className="font-semibold">{property.surface} m²</div>
                     <div className="text-sm text-muted-foreground">Surface</div>
                   </CardContent>
                 </Card>
@@ -190,7 +187,7 @@ const PropertyDetail: React.FC = () => {
               <Card>
                 <CardContent className="p-4 text-center">
                   <DollarSign className="w-5 h-5 mx-auto mb-1 text-primary" />
-                  <div className="font-semibold">{formatPrice(property.prix_dinar)}</div>
+                  <div className="font-semibold">{formatPrice(property.price)}</div>
                   <div className="text-sm text-muted-foreground">Prix</div>
                 </CardContent>
               </Card>
