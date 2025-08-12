@@ -19,10 +19,10 @@ import { ImageUploadDropzone } from "@/components/ImageUploadDropzone";
 interface PropertyFormData {
   title: string;
   description: string;
-  status: "lancement" | "en_cours" | "livré";
-  surface_m2: string;
-  prix_dinar: string;
-  typology_id: string;
+  status: "available" | "sold" | "rented";
+  surface: string;
+  price: string;
+  typology: string;
   locality_id: string;
   image_url: string;
   latitude: string;
@@ -32,16 +32,17 @@ interface PropertyFormData {
 interface Property {
   id: string;
   title: string;
-  description: string | null;
-  status: "lancement" | "en_cours" | "livré";
-  surface_m2: number | null;
-  prix_dinar: number | null;
-  typology_id: string | null;
-  locality_id: string | null;
+  description?: string | null;
+  status: "available" | "sold" | "rented";
+  surface: number | null;
+  price: number | null;
+  typology: string | null;
+  locality_id: number | null;
   image_url: string | null;
   latitude: number | null;
   longitude: number | null;
   created_at: string;
+  updated_at: string;
 }
 
 const CRM = () => {
@@ -55,10 +56,10 @@ const CRM = () => {
   const [formData, setFormData] = useState<PropertyFormData>({
     title: "",
     description: "",
-    status: "lancement",
-    surface_m2: "",
-    prix_dinar: "",
-    typology_id: "",
+    status: "available",
+    surface: "",
+    price: "",
+    typology: "",
     locality_id: "",
     image_url: "",
     latitude: "",
@@ -66,32 +67,23 @@ const CRM = () => {
   });
 
   const typologies = [
-    { id: "36a6c906-72bb-4325-8c0c-110d86251ecc", label: "Appartement" },
-    { id: "52e02ba1-48e7-40b6-a3f5-4ca7cda07665", label: "Appartement commercial" },
-    { id: "05644ccf-1f27-4780-ad83-50e0c72f57d3", label: "Complexe touristique" },
-    { id: "1aff2af9-56b3-4c75-a66e-8ddbbf0f3ad1", label: "Duplex" },
-    { id: "f4f54705-e199-45ab-aece-5ea03cfcc9e5", label: "Hôtel" },
-    { id: "d70a49c1-890b-4f18-a5f1-4e0b51b48a17", label: "Immeuble commercial" },
-    { id: "fb47bbb8-68cc-49ed-a43d-9ff88f16dd45", label: "Immeuble duplex" },
-    { id: "0886df7a-4e90-4707-bdf3-439b2955be70", label: "Locaux commerciaux" },
-    { id: "fb764e4a-49b2-4455-ab28-62276661dc9e", label: "Loft" },
-    { id: "a442b3de-97e0-4a76-943c-f6fccd2a8718", label: "Maison" },
-    { id: "d59fe838-818c-448e-a8b8-e7567874ed58", label: "Propriété de campagne" },
-    { id: "80f4a6ef-eb74-471e-a8f9-a1435457516c", label: "Ranch" },
-    { id: "6693a796-8a99-4d65-86d9-93696c4ad2fc", label: "Studio" },
-    { id: "1e0f2dc5-0233-4a25-9f02-c4d27cb056bf", label: "Terrain" },
-    { id: "2ad957dd-2ade-4f81-ab69-ca5521b28cfe", label: "Triplex" },
-    { id: "99be046f-891c-4787-86f1-58ae56712fd6", label: "Villa" },
+    "Appartement",
+    "Villa", 
+    "Maison",
+    "Studio",
+    "Duplex",
+    "Triplex",
+    "Loft",
+    "Terrain",
+    "Locaux commerciaux",
+    "Immeuble commercial",
+    "Complexe touristique",
+    "Hôtel",
+    "Ranch",
+    "Propriété de campagne"
   ];
 
-  const localities = [
-    { id: "74bb88e4-557a-4e0b-a7d7-fa4d45c8c798", name: "Bab El Oued" },
-    { id: "15872448-9032-4dac-a8cc-5ef7ba03af2d", name: "Belgaïd" },
-    { id: "1289a44e-040c-4f64-878b-fa32bd6d11b9", name: "Bir El Djir" },
-    { id: "bcc07508-2cb8-4cbf-a197-451a8da33acb", name: "El Khroub" },
-    { id: "1afdb5f8-8c53-4f9b-a3e8-da6ac04ffd3c", name: "El Madania" },
-    { id: "f3933de3-7a81-4122-8198-314a4819e40f", name: "Hydra" },
-  ];
+  const [localities, setLocalities] = useState<Array<{id: number, name: string}>>([]);
 
   // Vérification de l'authentification et chargement des biens
   useEffect(() => {
@@ -100,8 +92,23 @@ const CRM = () => {
       navigate("/login");
     } else {
       loadProperties();
+      loadLocalities();
     }
   }, [navigate]);
+
+  const loadLocalities = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("localities")
+        .select("id, name")
+        .order("name");
+
+      if (error) throw error;
+      setLocalities(data || []);
+    } catch (error: any) {
+      console.error("Erreur lors du chargement des localités:", error);
+    }
+  };
 
   const loadProperties = async () => {
     try {
@@ -140,7 +147,7 @@ const CRM = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.title || !formData.status || !formData.surface_m2 || !formData.locality_id) {
+    if (!formData.title || !formData.status || !formData.surface || !formData.locality_id) {
       toast({
         title: "Erreur",
         description: "Le titre, le statut, la surface et la localité sont obligatoires",
@@ -154,12 +161,11 @@ const CRM = () => {
     try {
       const propertyData = {
         title: formData.title,
-        description: formData.description || null,
         status: formData.status,
-        surface_m2: formData.surface_m2 ? parseFloat(formData.surface_m2) : null,
-        prix_dinar: formData.prix_dinar ? parseInt(formData.prix_dinar) : null,
-        typology_id: formData.typology_id || null,
-        locality_id: formData.locality_id || null,
+        surface: formData.surface ? parseFloat(formData.surface) : null,
+        price: formData.price ? parseInt(formData.price) : null,
+        typology: formData.typology || null,
+        locality_id: formData.locality_id ? parseInt(formData.locality_id) : null,
         image_url: formData.image_url || null,
         latitude: formData.latitude ? parseFloat(formData.latitude) : null,
         longitude: formData.longitude ? parseFloat(formData.longitude) : null,
@@ -184,10 +190,10 @@ const CRM = () => {
       setFormData({
         title: "",
         description: "",
-        status: "lancement",
-        surface_m2: "",
-        prix_dinar: "",
-        typology_id: "",
+        status: "available",
+        surface: "",
+        price: "",
+        typology: "",
         locality_id: "",
         image_url: "",
         latitude: "",
@@ -219,10 +225,10 @@ const CRM = () => {
       title: property.title,
       description: property.description || "",
       status: property.status,
-      surface_m2: property.surface_m2?.toString() || "",
-      prix_dinar: property.prix_dinar?.toString() || "",
-      typology_id: property.typology_id || "",
-      locality_id: property.locality_id || "",
+      surface: property.surface?.toString() || "",
+      price: property.price?.toString() || "",
+      typology: property.typology || "",
+      locality_id: property.locality_id?.toString() || "",
       image_url: property.image_url || "",
       latitude: property.latitude?.toString() || "",
       longitude: property.longitude?.toString() || "",
@@ -235,7 +241,7 @@ const CRM = () => {
     
     if (!editingProperty) return;
     
-    if (!formData.title || !formData.status || !formData.surface_m2 || !formData.locality_id) {
+    if (!formData.title || !formData.status || !formData.surface || !formData.locality_id) {
       toast({
         title: "Erreur",
         description: "Le titre, le statut, la surface et la localité sont obligatoires",
@@ -249,12 +255,11 @@ const CRM = () => {
     try {
       const propertyData = {
         title: formData.title,
-        description: formData.description || null,
         status: formData.status,
-        surface_m2: formData.surface_m2 ? parseFloat(formData.surface_m2) : null,
-        prix_dinar: formData.prix_dinar ? parseInt(formData.prix_dinar) : null,
-        typology_id: formData.typology_id || null,
-        locality_id: formData.locality_id || null,
+        surface: formData.surface ? parseFloat(formData.surface) : null,
+        price: formData.price ? parseInt(formData.price) : null,
+        typology: formData.typology || null,
+        locality_id: formData.locality_id ? parseInt(formData.locality_id) : null,
         image_url: formData.image_url || null,
         latitude: formData.latitude ? parseFloat(formData.latitude) : null,
         longitude: formData.longitude ? parseFloat(formData.longitude) : null,
@@ -279,10 +284,10 @@ const CRM = () => {
       setFormData({
         title: "",
         description: "",
-        status: "lancement",
-        surface_m2: "",
-        prix_dinar: "",
-        typology_id: "",
+        status: "available",
+        surface: "",
+        price: "",
+        typology: "",
         locality_id: "",
         image_url: "",
         latitude: "",
@@ -307,10 +312,10 @@ const CRM = () => {
     setFormData({
       title: "",
       description: "",
-      status: "lancement",
-      surface_m2: "",
-      prix_dinar: "",
-      typology_id: "",
+      status: "available",
+      surface: "",
+      price: "",
+      typology: "",
       locality_id: "",
       image_url: "",
       latitude: "",
@@ -321,20 +326,14 @@ const CRM = () => {
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case "lancement": return "En lancement";
-      case "en_cours": return "En cours";
-      case "livré": return "Livré";
+      case "available": return "Disponible";
+      case "sold": return "Vendu";
+      case "rented": return "Loué";
       default: return status;
     }
   };
 
-  const getTypologyLabel = (typologyId: string | null) => {
-    if (!typologyId) return "Non spécifié";
-    const typology = typologies.find(t => t.id === typologyId);
-    return typology?.label || "Inconnu";
-  };
-
-  const getLocalityLabel = (localityId: string | null) => {
+  const getLocalityLabel = (localityId: number | null) => {
     if (!localityId) return "Non spécifié";
     const locality = localities.find(l => l.id === localityId);
     return locality?.name || "Inconnu";
@@ -397,19 +396,19 @@ const CRM = () => {
                           {properties.map((property) => (
                             <TableRow key={property.id}>
                               <TableCell className="font-medium">{property.title}</TableCell>
-                              <TableCell>{getTypologyLabel(property.typology_id)}</TableCell>
+                              <TableCell>{property.typology || "Non spécifié"}</TableCell>
                               <TableCell>{getLocalityLabel(property.locality_id)}</TableCell>
-                              <TableCell>{property.surface_m2 ? `${property.surface_m2} m²` : "Non spécifié"}</TableCell>
+                              <TableCell>{property.surface ? `${property.surface} m²` : "Non spécifié"}</TableCell>
                               <TableCell>
-                                {property.prix_dinar 
-                                  ? `${property.prix_dinar.toLocaleString()} DZD`
+                                {property.price 
+                                  ? `${property.price.toLocaleString()} DZD`
                                   : "Non spécifié"
                                 }
                               </TableCell>
                               <TableCell>
                                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                  ${property.status === 'livré' ? 'bg-green-100 text-green-800' : 
-                                    property.status === 'en_cours' ? 'bg-blue-100 text-blue-800' : 
+                                  ${property.status === 'sold' ? 'bg-green-100 text-green-800' : 
+                                    property.status === 'rented' ? 'bg-blue-100 text-blue-800' : 
                                     'bg-yellow-100 text-yellow-800'}`}>
                                   {getStatusLabel(property.status)}
                                 </span>
@@ -492,9 +491,9 @@ const CRM = () => {
                             <SelectValue placeholder="Sélectionner le statut" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="lancement">En lancement</SelectItem>
-                            <SelectItem value="en_cours">En cours</SelectItem>
-                            <SelectItem value="livré">Livré</SelectItem>
+                            <SelectItem value="available">Disponible</SelectItem>
+                            <SelectItem value="sold">Vendu</SelectItem>
+                            <SelectItem value="rented">Loué</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -503,16 +502,16 @@ const CRM = () => {
                       <div className="space-y-2">
                         <Label htmlFor="typology">Type de bien</Label>
                         <Select
-                          value={formData.typology_id}
-                          onValueChange={(value) => handleInputChange("typology_id", value)}
+                          value={formData.typology}
+                          onValueChange={(value) => handleInputChange("typology", value)}
                         >
                           <SelectTrigger>
                             <SelectValue placeholder="Sélectionner un type" />
                           </SelectTrigger>
                           <SelectContent>
                             {typologies.map((type) => (
-                              <SelectItem key={type.id} value={type.id}>
-                                {type.label}
+                              <SelectItem key={type} value={type}>
+                                {type}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -531,7 +530,7 @@ const CRM = () => {
                           </SelectTrigger>
                           <SelectContent>
                             {localities.map((locality) => (
-                              <SelectItem key={locality.id} value={locality.id}>
+                              <SelectItem key={locality.id} value={locality.id.toString()}>
                                 {locality.name}
                               </SelectItem>
                             ))}
@@ -545,8 +544,8 @@ const CRM = () => {
                         <Input
                           id="surface"
                           type="number"
-                          value={formData.surface_m2}
-                          onChange={(e) => handleInputChange("surface_m2", e.target.value)}
+                          value={formData.surface}
+                          onChange={(e) => handleInputChange("surface", e.target.value)}
                           placeholder="Ex: 85"
                           required
                         />
@@ -558,8 +557,8 @@ const CRM = () => {
                         <Input
                           id="price"
                           type="number"
-                          value={formData.prix_dinar}
-                          onChange={(e) => handleInputChange("prix_dinar", e.target.value)}
+                          value={formData.price}
+                          onChange={(e) => handleInputChange("price", e.target.value)}
                           placeholder="Ex: 5000000"
                         />
                       </div>
