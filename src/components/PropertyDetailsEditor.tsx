@@ -60,7 +60,7 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
     try {
       // Load property details using direct table query
       const { data: detailsData, error: detailsError } = await supabase
-        .from('property_details' as any)
+        .from('property_details')
         .select('*')
         .eq('property_id', propertyId);
       
@@ -81,59 +81,59 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
 
       // Load amenities
       const { data: amenitiesData } = await supabase
-        .from('property_amenities' as any)
+        .from('property_amenities')
         .select('*')
         .eq('property_id', propertyId)
         .order('created_at');
-      setAmenities(amenitiesData?.map((item: any) => ({ id: String(item.id), text: item.amenity })) || []);
+      setAmenities(amenitiesData?.map((item: any) => ({ id: String(item.id), text: item.text })) || []);
 
       // Load security features
       const { data: securityData } = await supabase
-        .from('property_security_features' as any)
+        .from('property_security')
         .select('*')
         .eq('property_id', propertyId)
         .order('created_at');
-      setSecurityFeatures(securityData?.map((item: any) => ({ id: String(item.id), text: item.security_feature })) || []);
+      setSecurityFeatures(securityData?.map((item: any) => ({ id: String(item.id), text: item.text })) || []);
 
       // Load building features
       const { data: buildingData } = await supabase
-        .from('property_building_features' as any)
+        .from('property_building')
         .select('*')
         .eq('property_id', propertyId)
         .order('created_at');
-      setBuildingFeatures(buildingData?.map((item: any) => ({ id: String(item.id), text: item.building_feature })) || []);
+      setBuildingFeatures(buildingData?.map((item: any) => ({ id: String(item.id), text: item.text })) || []);
 
       // Load nearby
       const { data: nearbyData } = await supabase
-        .from('property_nearby' as any)
+        .from('property_nearby')
         .select('*')
         .eq('property_id', propertyId)
         .order('created_at');
-      setNearby(nearbyData?.map((item: any) => ({ id: String(item.id), text: item.nearby_feature })) || []);
+      setNearby(nearbyData?.map((item: any) => ({ id: String(item.id), text: item.text })) || []);
 
       // Load documents
       const { data: documentsData } = await supabase
-        .from('property_documents' as any)
+        .from('property_documents')
         .select('*')
         .eq('property_id', propertyId)
         .order('created_at');
-      setDocuments(documentsData?.map((item: any) => ({ id: String(item.id), text: item.document_name })) || []);
+      setDocuments(documentsData?.map((item: any) => ({ id: String(item.id), text: item.text })) || []);
 
       // Load photos
       const { data: photosData } = await supabase
-        .from('property_photos' as any)
-        .select('*')
-        .eq('property_id', propertyId)
-        .order('display_order', { ascending: true });
-      setPhotos(photosData?.map((item: any) => ({ id: String(item.id), text: item.photo_url })) || []);
-
-      // Load videos
-      const { data: videosData } = await supabase
-        .from('property_videos' as any)
+        .from('property_photos')
         .select('*')
         .eq('property_id', propertyId)
         .order('created_at');
-      setVideos(videosData?.map((item: any) => ({ id: String(item.id), text: item.video_url })) || []);
+      setPhotos(photosData?.map((item: any) => ({ id: String(item.id), text: item.text })) || []);
+
+      // Load videos
+      const { data: videosData } = await supabase
+        .from('property_videos')
+        .select('*')
+        .eq('property_id', propertyId)
+        .order('created_at');
+      setVideos(videosData?.map((item: any) => ({ id: String(item.id), text: item.text })) || []);
 
     } catch (error) {
       console.error('Erreur lors du chargement:', error);
@@ -161,7 +161,7 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
       setLoading(true);
       
       const { error } = await supabase
-        .from('property_details' as any)
+        .from('property_details')
         .upsert({
           property_id: propertyId,
           bedrooms: details.bedrooms,
@@ -205,12 +205,8 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
     try {
       const insertData: any = {
         property_id: propertyId,
-        [column]: newItem.trim()
+        text: newItem.trim()
       };
-
-      if (table === 'property_photos') {
-        insertData.display_order = list.length;
-      }
 
       const { data, error } = await supabase
         .from(table as any)
@@ -419,7 +415,7 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
           setNewItem={setNewAmenity}
           placeholder="Ex: Climatisation, Cuisine équipée..."
           table="property_amenities"
-          column="amenity"
+          column="text"
         />
 
         <ListEditor
@@ -429,8 +425,8 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
           newItem={newSecurity}
           setNewItem={setNewSecurity}
           placeholder="Ex: Interphone, Alarme..."
-          table="property_security_features"
-          column="security_feature"
+          table="property_security"
+          column="text"
         />
 
         <ListEditor
@@ -440,8 +436,8 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
           newItem={newBuilding}
           setNewItem={setNewBuilding}
           placeholder="Ex: Ascenseur, Parking..."
-          table="property_building_features"
-          column="building_feature"
+          table="property_building"
+          column="text"
         />
 
         <ListEditor
@@ -452,7 +448,7 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
           setNewItem={setNewNearby}
           placeholder="Ex: École, Transport..."
           table="property_nearby"
-          column="nearby_feature"
+          column="text"
         />
 
         <ListEditor
@@ -463,7 +459,7 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
           setNewItem={setNewDocument}
           placeholder="Ex: Acte de propriété..."
           table="property_documents"
-          column="document_name"
+          column="text"
         />
 
         <Card>
@@ -473,7 +469,7 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
           <CardContent className="space-y-4">
             <ImageUploadDropzone
               propertyId={propertyId}
-              onImageUploaded={(url) => addItem('property_photos', 'photo_url', photos, setPhotos, url, () => {})}
+              onImageUploaded={(url) => addItem('property_photos', 'text', photos, setPhotos, url, () => {})}
               className="min-h-[200px]"
             />
             {photos.length > 0 && (
@@ -507,7 +503,7 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
         setNewItem={setNewVideo}
         placeholder="URL YouTube ou TikTok..."
         table="property_videos"
-        column="video_url"
+        column="text"
       />
     </div>
   );
