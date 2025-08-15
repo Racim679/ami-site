@@ -156,6 +156,8 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
     
     setLoading(true);
     try {
+      console.log('🔄 Chargement des données pour la propriété:', propertyId);
+      
       // Load basic property info (title and description)
       const { data: propertyData, error: propertyError } = await supabase
         .from('properties')
@@ -163,9 +165,16 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
         .eq('id', propertyId)
         .maybeSingle();
       
+      console.log('📋 Données propriété récupérées:', propertyData);
+      console.log('❌ Erreur propriété:', propertyError);
+      
       if (!propertyError && propertyData) {
         setPropertyTitle(propertyData.title || '');
         setPropertyDescription(propertyData.description || '');
+        console.log('✅ Title et description chargés:', {
+          title: propertyData.title,
+          description: propertyData.description
+        });
       }
 
       // Load property details using direct table query
@@ -308,6 +317,12 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
     try {
       setLoading(true);
       
+      console.log('💾 Sauvegarde des informations de base:', {
+        propertyId,
+        title: propertyTitle,
+        description: propertyDescription
+      });
+      
       const { error } = await supabase
         .from('properties')
         .update({
@@ -317,14 +332,18 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
         })
         .eq('id', propertyId);
 
+      console.log('💾 Erreur de sauvegarde:', error);
+
       if (error) throw error;
+
+      console.log('✅ Sauvegarde réussie !');
 
       toast({
         title: "Succès",
         description: "Informations de base mises à jour",
       });
     } catch (error) {
-      console.error('Erreur lors de la sauvegarde:', error);
+      console.error('❌ Erreur lors de la sauvegarde:', error);
       toast({
         title: "Erreur",
         description: "Impossible de sauvegarder les informations de base",
