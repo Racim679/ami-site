@@ -25,6 +25,15 @@ interface Property {
   image_url?: string;
   localities?: { name: string } | null;
   typology?: string;
+  property_details?: {
+    bedrooms?: number;
+    bathrooms?: number;
+    rooms?: number;
+    floors?: number;
+    living_area?: number;
+    condition?: string;
+    has_city_view?: boolean;
+  }[] | null;
 }
 
 const NosBiens = () => {
@@ -71,7 +80,16 @@ const NosBiens = () => {
             price,
             image_url,
             typology,
-            localities!inner(name)
+            localities!inner(name),
+            property_details (
+              bedrooms,
+              bathrooms,
+              rooms,
+              floors,
+              living_area,
+              condition,
+              has_city_view
+            )
           `)
           .order('created_at', { ascending: false });
 
@@ -125,12 +143,14 @@ const NosBiens = () => {
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case 'lancement':
+      case 'à vendre':
         return 'À vendre';
-      case 'en_cours':
-        return 'En construction';
-      case 'livré':
-        return 'Livré';
+      case 'fondu':
+        return 'Fondu';
+      case 'alloué':
+        return 'Alloué';
+      case 'loué':
+        return 'Loué';
       default:
         return status;
     }
@@ -147,26 +167,48 @@ const NosBiens = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "lancement":
+      case "à vendre":
         return "bg-green-100 text-green-800";
-      case "en_cours":
+      case "fondu":
         return "bg-blue-100 text-blue-800";
-      case "livré":
+      case "alloué":
         return "bg-purple-100 text-purple-800";
+      case "loué":
+        return "bg-orange-100 text-orange-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
   };
 
   const filteredProperties = properties.filter(property => {
-    if (filters.typeOffre && property.status !== filters.typeOffre) return false;
-    if (filters.type && property.typology !== filters.type) return false;
-    if (filters.localite && property.localities?.name !== filters.localite) return false;
+    // Filtres principaux avec comparaisons insensibles à la casse
+    if (filters.typeOffre && property.status?.toLowerCase() !== filters.typeOffre.toLowerCase()) return false;
+    if (filters.type && property.typology?.toLowerCase() !== filters.type.toLowerCase()) return false;
+    if (filters.localite && property.localities?.name?.toLowerCase() !== filters.localite.toLowerCase()) return false;
+    
+    // Filtres de prix
     if (filters.minPrice && property.price && property.price < parseInt(filters.minPrice)) return false;
     if (filters.maxPrice && property.price && property.price > parseInt(filters.maxPrice)) return false;
+    
+    // Filtres de surface
     if (filters.minSurface && property.surface && property.surface < parseInt(filters.minSurface)) return false;
     if (filters.maxSurface && property.surface && property.surface > parseInt(filters.maxSurface)) return false;
-    // Note: Les filtres chambres, sallesBain et etages nécessitent des données property_details depuis Supabase
+    
+    // Filtre état (condition depuis property_details)
+    if (filters.etat && property.property_details && property.property_details.length > 0) {
+      const condition = property.property_details[0]?.condition;
+      if (condition?.toLowerCase() !== filters.etat.toLowerCase()) return false;
+    }
+    
+    // Filtres property_details (chambres, salles de bain, étages)
+    if (property.property_details && property.property_details.length > 0) {
+      const details = property.property_details[0];
+      
+      if (filters.chambres && details.bedrooms !== parseInt(filters.chambres)) return false;
+      if (filters.sallesBain && details.bathrooms !== parseInt(filters.sallesBain)) return false;
+      if (filters.etages && details.floors !== parseInt(filters.etages)) return false;
+    }
+    
     return true;
   });
 
