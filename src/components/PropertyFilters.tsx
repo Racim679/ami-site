@@ -165,10 +165,9 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
               <SelectValue placeholder="Sélectionner le statut" />
             </SelectTrigger>
             <SelectContent className="bg-white z-50">
-              <SelectItem value="à vendre">À vendre</SelectItem>
-              <SelectItem value="fondu">Fondu</SelectItem>
-              <SelectItem value="alloué">Alloué</SelectItem>
-              <SelectItem value="loué">Loué</SelectItem>
+              <SelectItem value="À Vendre">À Vendre</SelectItem>
+              <SelectItem value="Vendu">Vendu</SelectItem>
+              <SelectItem value="À louer">À louer</SelectItem>
             </SelectContent>
           </Select>
         </div>

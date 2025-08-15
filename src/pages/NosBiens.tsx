@@ -143,14 +143,12 @@ const NosBiens = () => {
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case 'à vendre':
-        return 'À vendre';
-      case 'fondu':
-        return 'Fondu';
-      case 'alloué':
-        return 'Alloué';
-      case 'loué':
-        return 'Loué';
+      case 'À Vendre':
+        return 'À Vendre';
+      case 'Vendu':
+        return 'Vendu';
+      case 'À louer':
+        return 'À louer';
       default:
         return status;
     }
@@ -167,14 +165,12 @@ const NosBiens = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "à vendre":
+      case "À Vendre":
         return "bg-green-100 text-green-800";
-      case "fondu":
+      case "Vendu":
+        return "bg-red-100 text-red-800";
+      case "À louer":
         return "bg-blue-100 text-blue-800";
-      case "alloué":
-        return "bg-purple-100 text-purple-800";
-      case "loué":
-        return "bg-orange-100 text-orange-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
