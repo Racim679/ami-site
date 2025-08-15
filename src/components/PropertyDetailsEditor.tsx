@@ -5,6 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus, X, Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -28,6 +30,42 @@ interface ListItem {
   id?: string;
   text: string;
 }
+
+// Options prédéfinies pour les sélections multiples
+const amenityOptions = [
+  'Climatisation', 'Chauffage central', 'Cuisine équipée', 'Dressing', 'Cheminée',
+  'Cave à vin', 'Balcon', 'Terrasse', 'Jardin', 'Piscine', 'Garage',
+  'Parking privé', 'Buanderie', 'Grenier', 'Cave'
+];
+
+const securityOptions = [
+  'Interphone', 'Digicode', 'Alarme', 'Vidéosurveillance', 'Gardien',
+  'Portail électrique', 'Ascenseur', 'Accès handicapé'
+];
+
+const buildingOptions = [
+  'Ascenseur', 'Parking souterrain', 'Local vélos', 'Salle de sport',
+  'Concierge', 'Espaces verts communs', 'Toiture-terrasse', 'Débarras'
+];
+
+const nearbyOptions = [
+  'École primaire', 'Collège', 'Lycée', 'Université', 'Transports publics',
+  'Commerces', 'Restaurants', 'Banques', 'Pharmacies', 'Hôpitaux',
+  'Parcs', 'Plages', 'Mosquées', 'Aéroports'
+];
+
+const documentOptions = [
+  'Titre de propriété', 'Acte de propriété', 'Livret foncier',
+  'Certificat d\'inscription foncière', 'Fiche fiscale', 'Documents cadastraux',
+  'Plans cadastraux', 'Certificat d\'urbanisme', 'Permis de construire',
+  'Certification de conformité', 'Promesse de vente', 'Contrat de location',
+  'Mainlevée', 'Permis d\'exploitation', 'Certificat de non-négativité',
+  'Certification de possession'
+];
+
+const conditionOptions = [
+  'Excellent', 'Très bon', 'Bon', 'Correct', 'À rafraîchir', 'À rénover', 'Neuf'
+];
 
 const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyId }) => {
   const { toast } = useToast();
@@ -264,62 +302,105 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
     }
   };
 
-  const ListEditor = ({ 
+  const MultiSelectEditor = ({ 
     title, 
     items, 
     setItems, 
-    newItem, 
-    setNewItem, 
-    placeholder,
+    options,
     table,
     column
   }: {
     title: string;
     items: ListItem[];
     setItems: React.Dispatch<React.SetStateAction<ListItem[]>>;
-    newItem: string;
-    setNewItem: React.Dispatch<React.SetStateAction<string>>;
-    placeholder: string;
+    options: string[];
     table: string;
     column: string;
-  }) => (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-lg">{title}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
-          <div className="flex gap-2">
-            <Input
-              value={newItem}
-              onChange={(e) => setNewItem(e.target.value)}
-              placeholder={placeholder}
-              onKeyPress={(e) => e.key === 'Enter' && addItem(table, column, items, setItems, newItem, setNewItem)}
-              disabled={loading}
-            />
-            <Button
-              size="sm"
-              onClick={() => addItem(table, column, items, setItems, newItem, setNewItem)}
-              disabled={loading}
-            >
-              <Plus className="h-4 w-4" />
-            </Button>
+  }) => {
+    const [selectedValue, setSelectedValue] = useState<string>('');
+
+    const handleAddOption = async (option: string) => {
+      if (!option || !propertyId) return;
+      
+      // Vérifier si l'option n'est pas déjà ajoutée
+      if (items.some(item => item.text === option)) return;
+      
+      try {
+        const insertData: any = {
+          property_id: propertyId,
+          text: option
+        };
+
+        const { data, error } = await supabase
+          .from(table as any)
+          .insert(insertData)
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        const newListItem = { id: String((data as any)?.id), text: option };
+        setItems([...items, newListItem]);
+
+        toast({
+          title: "Succès",
+          description: "Élément ajouté",
+        });
+      } catch (error) {
+        console.error('Erreur lors de l\'ajout:', error);
+        toast({
+          title: "Erreur",
+          description: "Impossible d'ajouter l'élément",
+          variant: "destructive",
+        });
+      }
+    };
+
+    // Filtrer les options déjà sélectionnées
+    const availableOptions = options.filter(option => 
+      !items.some(item => item.text === option)
+    );
+
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">{title}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            <Select value={selectedValue} onValueChange={(value) => {
+              if (value) {
+                handleAddOption(value);
+                setSelectedValue('');
+              }
+            }}>
+              <SelectTrigger>
+                <SelectValue placeholder={`Sélectionner ${title.toLowerCase()}`} />
+              </SelectTrigger>
+              <SelectContent>
+                {availableOptions.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <div className="flex flex-wrap gap-2">
+              {items.map((item) => (
+                <Badge key={item.id} variant="secondary" className="flex items-center gap-1">
+                  {item.text}
+                  <X 
+                    className="h-3 w-3 cursor-pointer" 
+                    onClick={() => removeItem(table, items, setItems, item.id!)}
+                  />
+                </Badge>
+              ))}
+            </div>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {items.map((item) => (
-              <Badge key={item.id} variant="secondary" className="flex items-center gap-1">
-                {item.text}
-                <X 
-                  className="h-3 w-3 cursor-pointer" 
-                  onClick={() => removeItem(table, items, setItems, item.id!)}
-                />
-              </Badge>
-            ))}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
+        </CardContent>
+      </Card>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -383,12 +464,18 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
             </div>
             <div>
               <Label htmlFor="condition">État</Label>
-              <Input
-                id="condition"
-                value={details.condition || ''}
-                onChange={(e) => handleDetailsChange('condition', e.target.value)}
-                placeholder="Ex: Excellent, Bon, À rénover"
-              />
+              <Select value={details.condition || ''} onValueChange={(value) => handleDetailsChange('condition', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionner l'état" />
+                </SelectTrigger>
+                <SelectContent>
+                  {conditionOptions.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <div className="mt-4">
@@ -405,59 +492,49 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
         </CardContent>
       </Card>
 
-      {/* Lists */}
+      {/* Lists with Multi-Select */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <ListEditor
+        <MultiSelectEditor
           title="Commodités"
           items={amenities}
           setItems={setAmenities}
-          newItem={newAmenity}
-          setNewItem={setNewAmenity}
-          placeholder="Ex: Climatisation, Cuisine équipée..."
+          options={amenityOptions}
           table="property_amenities"
           column="text"
         />
 
-        <ListEditor
+        <MultiSelectEditor
           title="Sécurité"
           items={securityFeatures}
           setItems={setSecurityFeatures}
-          newItem={newSecurity}
-          setNewItem={setNewSecurity}
-          placeholder="Ex: Interphone, Alarme..."
+          options={securityOptions}
           table="property_security"
           column="text"
         />
 
-        <ListEditor
+        <MultiSelectEditor
           title="Caractéristiques du bâtiment"
           items={buildingFeatures}
           setItems={setBuildingFeatures}
-          newItem={newBuilding}
-          setNewItem={setNewBuilding}
-          placeholder="Ex: Ascenseur, Parking..."
+          options={buildingOptions}
           table="property_building"
           column="text"
         />
 
-        <ListEditor
+        <MultiSelectEditor
           title="À proximité"
           items={nearby}
           setItems={setNearby}
-          newItem={newNearby}
-          setNewItem={setNewNearby}
-          placeholder="Ex: École, Transport..."
+          options={nearbyOptions}
           table="property_nearby"
           column="text"
         />
 
-        <ListEditor
+        <MultiSelectEditor
           title="Documents"
           items={documents}
           setItems={setDocuments}
-          newItem={newDocument}
-          setNewItem={setNewDocument}
-          placeholder="Ex: Acte de propriété..."
+          options={documentOptions}
           table="property_documents"
           column="text"
         />
@@ -494,17 +571,48 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
         </Card>
       </div>
 
-      {/* Videos section spans full width */}
-      <ListEditor
-        title="Vidéos (URLs)"
-        items={videos}
-        setItems={setVideos}
-        newItem={newVideo}
-        setNewItem={setNewVideo}
-        placeholder="URL YouTube ou TikTok..."
-        table="property_videos"
-        column="text"
-      />
+      {/* Videos section spans full width - keep as text input */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Vidéos (URLs)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            <div className="flex gap-2">
+              <Input
+                value={newVideo}
+                onChange={(e) => setNewVideo(e.target.value)}
+                placeholder="URL YouTube ou TikTok..."
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addItem('property_videos', 'text', videos, setVideos, newVideo, setNewVideo);
+                  }
+                }}
+                disabled={loading}
+              />
+              <Button
+                size="sm"
+                onClick={() => addItem('property_videos', 'text', videos, setVideos, newVideo, setNewVideo)}
+                disabled={loading}
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {videos.map((item) => (
+                <Badge key={item.id} variant="secondary" className="flex items-center gap-1">
+                  {item.text}
+                  <X 
+                    className="h-3 w-3 cursor-pointer" 
+                    onClick={() => removeItem('property_videos', videos, setVideos, item.id!)}
+                  />
+                </Badge>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
