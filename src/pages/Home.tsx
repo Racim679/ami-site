@@ -3,10 +3,6 @@ import { motion } from "framer-motion";
 import { ArrowRight, Home as HomeIcon, Shield, Users, Award } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import Testimonials from "@/components/Testimonials";
-import OurAgents from "@/components/OurAgents";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { AnimatedSection, AnimatedCard, AnimatedButton } from "@/components/AnimatedComponents";
@@ -37,12 +33,6 @@ const Home: React.FC = () => {
     }
   ];
 
-  const stats = [
-    { value: 500, suffix: "+", label: "Clients Satisfaits" },
-    { value: 150, suffix: "+", label: "Projets Réalisés" },
-    { value: 98, suffix: "%", label: "Taux de Satisfaction" },
-    { value: 5, suffix: " ans", label: "D'Expérience" }
-  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -157,50 +147,6 @@ const Home: React.FC = () => {
         </div>
       </AnimatedSection>
 
-      {/* Stats Section */}
-      <AnimatedSection className="py-20 bg-primary">
-        <div className="container mx-auto px-4">
-          <motion.div
-            className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-primary-foreground"
-            variants={{
-              hidden: { opacity: 0 },
-              show: {
-                opacity: 1,
-                transition: {
-                  staggerChildren: 0.1
-                }
-              }
-            }}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-          >
-            {stats.map((stat, index) => (
-              <motion.div
-                key={index}
-                variants={{
-                  hidden: { opacity: 0, scale: 0.8 },
-                  show: { opacity: 1, scale: 1 }
-                }}
-                transition={{ duration: 0.5 }}
-              >
-                <div className="text-4xl md:text-5xl font-bold mb-2">
-                  {stat.value}{stat.suffix}
-                </div>
-                <div className="text-lg text-primary-foreground/80">
-                  {stat.label}
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </AnimatedSection>
-
-      {/* Témoignages */}
-      <Testimonials />
-
-      {/* Notre équipe */}
-      <OurAgents />
 
       {/* CTA Section */}
       <AnimatedSection className="py-20 bg-muted/30">
