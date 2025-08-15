@@ -19,7 +19,7 @@ const ConditionsUtilisation = () => {
               Conditions d'Utilisation
             </h1>
             <h2 className="text-2xl font-semibold text-primary mb-8 text-center">
-              RACINE IMMOBILIER
+              RACIM IMMOBILIER
             </h2>
 
             <div className="space-y-8">
