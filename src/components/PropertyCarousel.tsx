@@ -17,11 +17,15 @@ const PropertyCarousel: React.FC<PropertyCarouselProps> = ({ photos, className =
 
   return (
     <div className={`relative ${className}`}>
+      <h3 className="text-2xl font-bold mb-4">Photos de la propriété</h3>
       <Carousel className="w-full">
         <CarouselContent>
-          {photos.map((photo, index) => (
-            <CarouselItem key={index}>
-              <div className="aspect-video rounded-lg overflow-hidden bg-muted">
+          {photos.slice(0, 4).map((photo, index) => (
+            <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/4">
+              <div 
+                className="aspect-video rounded-lg overflow-hidden bg-muted cursor-pointer hover:opacity-90 transition-opacity"
+                onClick={() => window.open(photo.photo_url, '_blank')}
+              >
                 <img
                   src={photo.photo_url}
                   alt={photo.caption || `Photo ${index + 1}`}
@@ -43,11 +47,14 @@ const PropertyCarousel: React.FC<PropertyCarouselProps> = ({ photos, className =
           </>
         )}
       </Carousel>
-      {photos.length > 1 && (
-        <div className="text-center text-sm text-muted-foreground mt-2">
-          {photos.length} photo{photos.length > 1 ? 's' : ''}
-        </div>
-      )}
+      <div className="text-center text-sm text-muted-foreground mt-2">
+        Affichage de {Math.min(4, photos.length)} sur {photos.length} photo{photos.length > 1 ? 's' : ''}
+        {photos.length > 4 && (
+          <span className="block mt-1 text-primary cursor-pointer" onClick={() => window.open(photos[0].photo_url, '_blank')}>
+            Cliquez sur une image pour voir toutes les photos
+          </span>
+        )}
+      </div>
     </div>
   );
 };

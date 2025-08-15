@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Header from "@/components/Header";
-import PropertyMap from "@/components/PropertyMap";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Heart, BarChart3 } from "lucide-react";
@@ -413,12 +413,6 @@ const NosBiens = () => {
         </div>
       </AnimatedSection>
 
-      {/* Carte Google Maps */}
-      <AnimatedSection className="py-8">
-        <div className="container mx-auto px-4">
-          <PropertyMap />
-        </div>
-      </AnimatedSection>
 
       {/* Liste des biens */}
       <AnimatedSection className="py-16">

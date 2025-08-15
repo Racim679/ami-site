@@ -1,69 +1,30 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from 'react';
 
-const PropertyMap: React.FC = () => {
-  const mapRef = useRef<HTMLDivElement>(null);
-  const [apiKey, setApiKey] = useState<string | null>(null);
+interface PropertyMapProps {
+  latitude: number;
+  longitude: number;
+  title: string;
+}
 
-  // 1. Récupérer la clé Google Maps depuis Supabase Edge Function
-  useEffect(() => {
-    const fetchApiKey = async () => {
-      try {
-        console.log("Tentative de récupération de la clé API...");
-        const res = await fetch(
-          "https://iuuolubfhswwgrpumqtc.supabase.co/functions/v1/google-maps-config"
-        );
-        console.log("Response status:", res.status);
-        
-        const data = await res.json();
-        console.log("Response data:", data);
-        
-        if (data.apiKey) {
-          console.log("Clé API récupérée avec succès");
-          setApiKey(data.apiKey);
-        } else {
-          console.error("Clé API introuvable dans la réponse:", data);
-        }
-      } catch (err) {
-        console.error("Erreur de récupération de la clé :", err);
-      }
-    };
-
-    fetchApiKey();
-  }, []);
-
-  // 2. Charger Google Maps et afficher la carte
-  useEffect(() => {
-    if (!apiKey || !mapRef.current) return;
-
-    // Charger le script Google Maps
-    const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
-    script.async = true;
-    script.onload = () => {
-      // Créer la carte
-      const map = new google.maps.Map(mapRef.current as HTMLElement, {
-        center: { lat: 36.7538, lng: 3.0588 }, // Coordonnées d'Alger
-        zoom: 12,
-      });
-
-      // Ajouter un marqueur
-      new google.maps.Marker({
-        position: { lat: 36.7538, lng: 3.0588 },
-        map,
-        title: "Exemple de propriété",
-      });
-    };
-
-    document.body.appendChild(script);
-  }, [apiKey]);
-
+const PropertyMap: React.FC<PropertyMapProps> = ({ latitude, longitude, title }) => {
   return (
-    <div>
-      <h2>Carte de la propriété</h2>
-      <div
-        ref={mapRef}
-        style={{ width: "100%", height: "400px", border: "1px solid #ccc" }}
-      ></div>
+    <div className="w-full h-64 bg-muted rounded-lg flex items-center justify-center">
+      <div className="text-center text-muted-foreground">
+        <div className="text-lg font-semibold mb-2">Localisation</div>
+        <div className="text-sm">
+          Coordonnées: {latitude.toFixed(6)}, {longitude.toFixed(6)}
+        </div>
+        <div className="text-sm mt-2 text-primary">
+          <a 
+            href={`https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline"
+          >
+            Ouvrir dans Google Maps
+          </a>
+        </div>
+      </div>
     </div>
   );
 };
