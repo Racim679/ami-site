@@ -109,6 +109,7 @@ export type Database = {
       properties: {
         Row: {
           created_at: string | null
+          description: string | null
           id: string
           image_url: string | null
           latitude: number | null
@@ -124,6 +125,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
+          description?: string | null
           id?: string
           image_url?: string | null
           latitude?: number | null
@@ -139,6 +141,7 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
+          description?: string | null
           id?: string
           image_url?: string | null
           latitude?: number | null

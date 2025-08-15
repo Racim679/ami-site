@@ -70,6 +70,11 @@ const conditionOptions = [
 const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyId }) => {
   const { toast } = useToast();
   const [details, setDetails] = useState<PropertyDetail>({});
+  
+  // Basic property info
+  const [propertyTitle, setPropertyTitle] = useState('');
+  const [propertyDescription, setPropertyDescription] = useState('');
+  
   const [amenities, setAmenities] = useState<ListItem[]>([]);
   const [securityFeatures, setSecurityFeatures] = useState<ListItem[]>([]);
   const [buildingFeatures, setBuildingFeatures] = useState<ListItem[]>([]);
@@ -151,6 +156,18 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
     
     setLoading(true);
     try {
+      // Load basic property info (title and description)
+      const { data: propertyData, error: propertyError } = await supabase
+        .from('properties')
+        .select('title, description')
+        .eq('id', propertyId)
+        .maybeSingle();
+      
+      if (!propertyError && propertyData) {
+        setPropertyTitle(propertyData.title || '');
+        setPropertyDescription(propertyData.description || '');
+      }
+
       // Load property details using direct table query
       const { data: detailsData, error: detailsError } = await supabase
         .from('property_details')
@@ -278,6 +295,39 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
       toast({
         title: "Erreur",
         description: "Impossible de sauvegarder les détails",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const saveBasicInfo = async () => {
+    if (!propertyId) return;
+    
+    try {
+      setLoading(true);
+      
+      const { error } = await supabase
+        .from('properties')
+        .update({
+          title: propertyTitle,
+          description: propertyDescription,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', propertyId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Succès",
+        description: "Informations de base mises à jour",
+      });
+    } catch (error) {
+      console.error('Erreur lors de la sauvegarde:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de sauvegarder les informations de base",
         variant: "destructive",
       });
     } finally {
@@ -467,6 +517,40 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
 
   return (
     <div className="space-y-6">
+      {/* Basic Property Info */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            Informations de base
+            <Button size="sm" onClick={saveBasicInfo} disabled={loading}>
+              <Save className="h-4 w-4 mr-1" />
+              {loading ? 'Sauvegarde...' : 'Sauvegarder'}
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label htmlFor="propertyTitle">Titre de la propriété</Label>
+            <Input
+              id="propertyTitle"
+              value={propertyTitle}
+              onChange={(e) => setPropertyTitle(e.target.value)}
+              placeholder="Titre de la propriété..."
+            />
+          </div>
+          <div>
+            <Label htmlFor="propertyDescription">Description</Label>
+            <Textarea
+              id="propertyDescription"
+              value={propertyDescription}
+              onChange={(e) => setPropertyDescription(e.target.value)}
+              placeholder="Description détaillée de la propriété..."
+              className="min-h-[100px]"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Property Details */}
       <Card>
         <CardHeader>
