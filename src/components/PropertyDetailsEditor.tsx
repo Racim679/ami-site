@@ -611,21 +611,13 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
           setData={setStructuredDocuments}
           options={[
             { key: "acte_propriete", label: "Acte de propriété" },
-            { key: "titre_propriete", label: "Titre de propriété" },
-            { key: "livret_foncier", label: "Livret foncier" },
-            { key: "certificat_inscription_fonciere", label: "Certificat d'inscription foncière" },
-            { key: "fiche_fiscale", label: "Fiche fiscale" },
-            { key: "documents_cadastraux", label: "Documents cadastraux" },
-            { key: "plans_cadastraux", label: "Plans cadastraux" },
-            { key: "certificat_urbanisme", label: "Certificat d'urbanisme" },
             { key: "permis_construire", label: "Permis de construire" },
-            { key: "certification_conformite", label: "Certification de conformité" },
-            { key: "promesse_vente", label: "Promesse de vente" },
-            { key: "mainlevee", label: "Mainlevée" },
-            { key: "permis_exploitation", label: "Permis d'exploitation" },
-            { key: "certificat_non_negativite", label: "Certificat de non-négativité" },
-            { key: "contrat_location", label: "Contrat de location" },
-            { key: "certification_possession", label: "Certification de possession" }
+            { key: "certification_conformite", label: "Certificat de conformité" },
+            { key: "documents_cadastraux", label: "Diagnostic énergétique" },
+            { key: "plans_cadastraux", label: "Expertise technique" },
+            { key: "certificat_urbanisme", label: "Plans" },
+            { key: "livret_foncier", label: "Cadastre" },
+            { key: "fiche_fiscale", label: "Assurance" }
           ]}
           table="property_documents_structured"
         />
