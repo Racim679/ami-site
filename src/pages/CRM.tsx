@@ -161,6 +161,7 @@ const CRM = () => {
     try {
       const propertyData = {
         title: formData.title,
+        description: formData.description || null,
         status: formData.status,
         surface: formData.surface ? parseFloat(formData.surface) : null,
         price: formData.price ? parseInt(formData.price) : null,
@@ -258,6 +259,7 @@ const CRM = () => {
     try {
       const propertyData = {
         title: formData.title,
+        description: formData.description || null,
         status: formData.status,
         surface: formData.surface ? parseFloat(formData.surface) : null,
         price: formData.price ? parseInt(formData.price) : null,
