@@ -103,7 +103,7 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
         .from('property_amenities_structured')
         .select('*')
         .eq('property_id', propertyId)
-        .single();
+        .maybeSingle();
       
       if (amenitiesData) {
         setStructuredAmenities(amenitiesData);
@@ -114,7 +114,7 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
         .from('property_security_structured')
         .select('*')
         .eq('property_id', propertyId)
-        .single();
+        .maybeSingle();
       
       if (securityData) {
         setStructuredSecurity(securityData);
@@ -125,7 +125,7 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
         .from('property_nearby_structured')
         .select('*')
         .eq('property_id', propertyId)
-        .single();
+        .maybeSingle();
       
       if (nearbyData) {
         setStructuredNearby(nearbyData);
@@ -136,7 +136,7 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
         .from('property_documents_structured')
         .select('*')
         .eq('property_id', propertyId)
-        .single();
+        .maybeSingle();
       
       if (documentsData) {
         setStructuredDocuments(documentsData);
@@ -380,15 +380,34 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
       if (!propertyId) return;
       
       try {
+        // D'abord vérifier si un enregistrement existe
+        const { data: existingData } = await supabase
+          .from(table as any)
+          .select('id')
+          .eq('property_id', propertyId)
+          .single();
+
         const updateData = {
           property_id: propertyId,
           [key]: value,
           updated_at: new Date().toISOString()
         };
 
-        const { error } = await supabase
-          .from(table as any)
-          .upsert(updateData, { onConflict: 'property_id' });
+        let error;
+        if (existingData) {
+          // Mettre à jour l'enregistrement existant
+          const result = await supabase
+            .from(table as any)
+            .update(updateData)
+            .eq('property_id', propertyId);
+          error = result.error;
+        } else {
+          // Créer un nouvel enregistrement
+          const result = await supabase
+            .from(table as any)
+            .insert(updateData);
+          error = result.error;
+        }
 
         if (error) throw error;
 
@@ -506,11 +525,11 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
                   <SelectValue placeholder="Sélectionner l'état" />
                 </SelectTrigger>
                 <SelectContent>
-                  {conditionOptions.map((option) => (
-                    <SelectItem key={option} value={option}>
-                      {option}
-                    </SelectItem>
-                  ))}
+                  <SelectItem value="Neuf">Neuf</SelectItem>
+                  <SelectItem value="Rénové">Rénové</SelectItem>
+                  <SelectItem value="Bon état">Bon état</SelectItem>
+                  <SelectItem value="À rénover">À rénover</SelectItem>
+                  <SelectItem value="À démolir">À démolir</SelectItem>
                 </SelectContent>
               </Select>
             </div>
