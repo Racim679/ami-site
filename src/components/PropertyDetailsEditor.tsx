@@ -380,12 +380,19 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
       if (!propertyId) return;
       
       try {
-        // D'abord vérifier si un enregistrement existe
-        const { data: existingData } = await supabase
+        console.log(`Updating ${key} to ${value} for property ${propertyId} in table ${table}`);
+        
+        // D'abord vérifier si un enregistrement existe avec maybeSingle()
+        const { data: existingData, error: selectError } = await supabase
           .from(table as any)
           .select('id')
           .eq('property_id', propertyId)
-          .single();
+          .maybeSingle();
+
+        if (selectError) {
+          console.error('Error checking existing record:', selectError);
+          throw selectError;
+        }
 
         const updateData = {
           property_id: propertyId,
