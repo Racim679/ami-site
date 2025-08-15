@@ -18,6 +18,8 @@ import LocalityDetail from "./pages/LocalityDetail";
 import NotFound from "./pages/NotFound";
 import CRM from "./pages/CRM";
 import Login from "./pages/Login";
+import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
+import ConditionsUtilisation from "./pages/ConditionsUtilisation";
 import { ChatbotWidget } from "./components/ChatbotWidget";
 import ComparisonSystem from "./components/ComparisonSystem";
 import PWARegistration from "./components/PWARegistration";
@@ -45,6 +47,8 @@ const App = () => (
           <Route path="/bien/:id" element={<PropertyDetail />} />
           <Route path="/property/:propertyId" element={<PropertyPage />} />
           <Route path="/localite/:localityId" element={<LocalityDetail />} />
+          <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />
+          <Route path="/conditions-utilisation" element={<ConditionsUtilisation />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
