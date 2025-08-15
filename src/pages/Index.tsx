@@ -3,6 +3,7 @@ import HeroCarousel from "@/components/HeroCarousel";
 import BiensSection from "@/components/BiensSection";
 import ApartmentExplorer from "@/components/ApartmentExplorer";
 import WhyChooseUs from "@/components/WhyChooseUs";
+import ProjectsSection from "@/components/ProjectsSection";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import Chatbot from "@/components/Chatbot";
@@ -23,6 +24,9 @@ const Index = () => {
         
         {/* Pourquoi nous choisir */}
         <WhyChooseUs />
+        
+        {/* Nos Projets */}
+        <ProjectsSection />
       </main>
       
       {/* Footer */}
