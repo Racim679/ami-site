@@ -572,10 +572,10 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
           data={structuredSecurity}
           setData={setStructuredSecurity}
           options={[
-            { key: "gardien", label: "Gardien" },
+            { key: "gardien", label: "Gardiennage" },
             { key: "ascenseur", label: "Ascenseur" },
             { key: "acces_handicape", label: "Accès handicapé" },
-            { key: "video_surveillance", label: "Vidéo surveillance" },
+            { key: "video_surveillance", label: "Videosurveillance" },
             { key: "digicode", label: "Digicode" },
             { key: "interphone", label: "Interphone" },
             { key: "alarme", label: "Alarme" },
@@ -590,17 +590,17 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
           setData={setStructuredNearby}
           options={[
             { key: "ecoles", label: "Écoles" },
+            { key: "pharmacies", label: "Pharmacies" },
+            { key: "mosquees", label: "Mosquées" },
+            { key: "transports_publics", label: "Transports publics" },
+            { key: "banques", label: "Banques" },
             { key: "universites", label: "Universités" },
             { key: "commerces", label: "Commerces" },
             { key: "restaurants", label: "Restaurants" },
             { key: "aeroports", label: "Aéroports" },
             { key: "hopitaux", label: "Hôpitaux" },
-            { key: "transports_publics", label: "Transports publics" },
             { key: "parcs", label: "Parcs" },
-            { key: "plages", label: "Plages" },
-            { key: "mosquees", label: "Mosquées" },
-            { key: "banques", label: "Banques" },
-            { key: "pharmacies", label: "Pharmacies" }
+            { key: "plages", label: "Plages" }
           ]}
           table="property_nearby_structured"
         />
