@@ -33,6 +33,46 @@ interface Property {
     living_area?: number;
     condition?: string;
     has_city_view?: boolean;
+    vue_mer?: boolean;
+    vue_montagne?: boolean;
+    vue_ville?: boolean;
+    vue_jardin?: boolean;
+    vue_cour?: boolean;
+    vue_degagee?: boolean;
+  }[] | null;
+  property_amenities_structured?: {
+    piscine?: boolean;
+    garage?: boolean;
+    jardin?: boolean;
+    terrasse?: boolean;
+    balcon?: boolean;
+    cave?: boolean;
+    grenier?: boolean;
+    buanderie?: boolean;
+  }[] | null;
+  property_security_structured?: {
+    gardien?: boolean;
+    ascenseur?: boolean;
+    acces_handicape?: boolean;
+    video_surveillance?: boolean;
+    digicode?: boolean;
+    interphone?: boolean;
+    alarme?: boolean;
+    portail_electrique?: boolean;
+  }[] | null;
+  property_nearby_structured?: {
+    ecoles?: boolean;
+    pharmacies?: boolean;
+    mosquees?: boolean;
+    transports_publics?: boolean;
+    banques?: boolean;
+    universites?: boolean;
+    commerces?: boolean;
+    restaurants?: boolean;
+    aeroports?: boolean;
+    hopitaux?: boolean;
+    parcs?: boolean;
+    plages?: boolean;
   }[] | null;
 }
 
@@ -54,9 +94,7 @@ const NosBiens = () => {
     securite: [],
     documents: [],
     proximite: [],
-    vue: "",
-    minPrixM2: "",
-    maxPrixM2: ""
+    vue: ""
   });
   const [visibleResidences, setVisibleResidences] = useState(9);
   const [properties, setProperties] = useState<Property[]>([]);
@@ -88,7 +126,47 @@ const NosBiens = () => {
               floors,
               living_area,
               condition,
-              has_city_view
+              has_city_view,
+              vue_mer,
+              vue_montagne,
+              vue_ville,
+              vue_jardin,
+              vue_cour,
+              vue_degagee
+            ),
+            property_amenities_structured (
+              piscine,
+              garage,
+              jardin,
+              terrasse,
+              balcon,
+              cave,
+              grenier,
+              buanderie
+            ),
+            property_security_structured (
+              gardien,
+              ascenseur,
+              acces_handicape,
+              video_surveillance,
+              digicode,
+              interphone,
+              alarme,
+              portail_electrique
+            ),
+            property_nearby_structured (
+              ecoles,
+              pharmacies,
+              mosquees,
+              transports_publics,
+              banques,
+              universites,
+              commerces,
+              restaurants,
+              aeroports,
+              hopitaux,
+              parcs,
+              plages
             )
           `)
           .order('created_at', { ascending: false });
@@ -134,9 +212,7 @@ const NosBiens = () => {
       securite: searchParams.get("securite")?.split(",") || [],
       documents: searchParams.get("documents")?.split(",") || [],
       proximite: searchParams.get("proximite")?.split(",") || [],
-      vue: searchParams.get("vue") || "",
-      minPrixM2: searchParams.get("minPrixM2") || "",
-      maxPrixM2: searchParams.get("maxPrixM2") || ""
+      vue: searchParams.get("vue") || ""
     };
     setFilters(urlFilters);
   }, [searchParams]);
@@ -203,6 +279,81 @@ const NosBiens = () => {
       if (filters.chambres && details.bedrooms !== parseInt(filters.chambres)) return false;
       if (filters.sallesBain && details.bathrooms !== parseInt(filters.sallesBain)) return false;
       if (filters.etages && details.floors !== parseInt(filters.etages)) return false;
+    }
+    
+    // Filtres de vue
+    if (filters.vue && property.property_details && property.property_details.length > 0) {
+      const details = property.property_details[0];
+      const vueMapping = {
+        'mer': details.vue_mer,
+        'montagne': details.vue_montagne,
+        'ville': details.vue_ville,
+        'jardin': details.vue_jardin,
+        'cour': details.vue_cour,
+        'degagee': details.vue_degagee
+      };
+      if (!vueMapping[filters.vue as keyof typeof vueMapping]) return false;
+    }
+    
+    // Filtres commodités
+    if (filters.commodites.length > 0 && property.property_amenities_structured && property.property_amenities_structured.length > 0) {
+      const amenities = property.property_amenities_structured[0];
+      const commoditesMapping = {
+        'Piscine': amenities.piscine,
+        'Garage': amenities.garage,
+        'Jardin': amenities.jardin,
+        'Terrasse': amenities.terrasse,
+        'Balcon': amenities.balcon,
+        'Cave': amenities.cave,
+        'Grenier': amenities.grenier,
+        'Buanderie': amenities.buanderie
+      };
+      
+      for (const commodite of filters.commodites) {
+        if (!commoditesMapping[commodite as keyof typeof commoditesMapping]) return false;
+      }
+    }
+    
+    // Filtres sécurité
+    if (filters.securite.length > 0 && property.property_security_structured && property.property_security_structured.length > 0) {
+      const security = property.property_security_structured[0];
+      const securiteMapping = {
+        'Gardiennage': security.gardien,
+        'Ascenseur': security.ascenseur,
+        'Accès handicapé': security.acces_handicape,
+        'Videosurveillance': security.video_surveillance,
+        'Digicode': security.digicode,
+        'Interphone': security.interphone,
+        'Alarme': security.alarme,
+        'Portail électrique': security.portail_electrique
+      };
+      
+      for (const securiteItem of filters.securite) {
+        if (!securiteMapping[securiteItem as keyof typeof securiteMapping]) return false;
+      }
+    }
+    
+    // Filtres proximité
+    if (filters.proximite.length > 0 && property.property_nearby_structured && property.property_nearby_structured.length > 0) {
+      const nearby = property.property_nearby_structured[0];
+      const proximiteMapping = {
+        'Écoles': nearby.ecoles,
+        'Pharmacies': nearby.pharmacies,
+        'Mosquées': nearby.mosquees,
+        'Transports publics': nearby.transports_publics,
+        'Banques': nearby.banques,
+        'Universités': nearby.universites,
+        'Commerces': nearby.commerces,
+        'Restaurants': nearby.restaurants,
+        'Aéroports': nearby.aeroports,
+        'Hôpitaux': nearby.hopitaux,
+        'Parcs': nearby.parcs,
+        'Plages': nearby.plages
+      };
+      
+      for (const proximiteItem of filters.proximite) {
+        if (!proximiteMapping[proximiteItem as keyof typeof proximiteMapping]) return false;
+      }
     }
     
     return true;

@@ -21,9 +21,7 @@ const BiensSection = () => {
     securite: [],
     documents: [],
     proximite: [],
-    vue: "",
-    minPrixM2: "",
-    maxPrixM2: ""
+    vue: ""
   });
   const [visibleResidences, setVisibleResidences] = useState(9);
   const residences = [{
