@@ -283,6 +283,12 @@ export type Database = {
           property_id: string | null
           rooms: number | null
           updated_at: string | null
+          vue_cour: boolean | null
+          vue_degagee: boolean | null
+          vue_jardin: boolean | null
+          vue_mer: boolean | null
+          vue_montagne: boolean | null
+          vue_ville: boolean | null
         }
         Insert: {
           bathrooms?: number | null
@@ -296,6 +302,12 @@ export type Database = {
           property_id?: string | null
           rooms?: number | null
           updated_at?: string | null
+          vue_cour?: boolean | null
+          vue_degagee?: boolean | null
+          vue_jardin?: boolean | null
+          vue_mer?: boolean | null
+          vue_montagne?: boolean | null
+          vue_ville?: boolean | null
         }
         Update: {
           bathrooms?: number | null
@@ -309,6 +321,12 @@ export type Database = {
           property_id?: string | null
           rooms?: number | null
           updated_at?: string | null
+          vue_cour?: boolean | null
+          vue_degagee?: boolean | null
+          vue_jardin?: boolean | null
+          vue_mer?: boolean | null
+          vue_montagne?: boolean | null
+          vue_ville?: boolean | null
         }
         Relationships: [
           {
@@ -450,6 +468,71 @@ export type Database = {
             foreignKeyName: "property_nearby_property_id_fkey"
             columns: ["property_id"]
             isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      property_nearby_structured: {
+        Row: {
+          aeroports: boolean | null
+          banques: boolean | null
+          commerces: boolean | null
+          created_at: string | null
+          ecoles: boolean | null
+          hopitaux: boolean | null
+          id: string
+          mosquees: boolean | null
+          parcs: boolean | null
+          pharmacies: boolean | null
+          plages: boolean | null
+          property_id: string | null
+          restaurants: boolean | null
+          transports_publics: boolean | null
+          universites: boolean | null
+          updated_at: string | null
+        }
+        Insert: {
+          aeroports?: boolean | null
+          banques?: boolean | null
+          commerces?: boolean | null
+          created_at?: string | null
+          ecoles?: boolean | null
+          hopitaux?: boolean | null
+          id?: string
+          mosquees?: boolean | null
+          parcs?: boolean | null
+          pharmacies?: boolean | null
+          plages?: boolean | null
+          property_id?: string | null
+          restaurants?: boolean | null
+          transports_publics?: boolean | null
+          universites?: boolean | null
+          updated_at?: string | null
+        }
+        Update: {
+          aeroports?: boolean | null
+          banques?: boolean | null
+          commerces?: boolean | null
+          created_at?: string | null
+          ecoles?: boolean | null
+          hopitaux?: boolean | null
+          id?: string
+          mosquees?: boolean | null
+          parcs?: boolean | null
+          pharmacies?: boolean | null
+          plages?: boolean | null
+          property_id?: string | null
+          restaurants?: boolean | null
+          transports_publics?: boolean | null
+          universites?: boolean | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_nearby_structured_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: true
             referencedRelation: "properties"
             referencedColumns: ["id"]
           },
