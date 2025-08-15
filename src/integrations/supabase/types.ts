@@ -188,6 +188,59 @@ export type Database = {
           },
         ]
       }
+      property_amenities_structured: {
+        Row: {
+          balcon: boolean | null
+          buanderie: boolean | null
+          cave: boolean | null
+          created_at: string | null
+          garage: boolean | null
+          grenier: boolean | null
+          id: string
+          jardin: boolean | null
+          piscine: boolean | null
+          property_id: string | null
+          terrasse: boolean | null
+          updated_at: string | null
+        }
+        Insert: {
+          balcon?: boolean | null
+          buanderie?: boolean | null
+          cave?: boolean | null
+          created_at?: string | null
+          garage?: boolean | null
+          grenier?: boolean | null
+          id?: string
+          jardin?: boolean | null
+          piscine?: boolean | null
+          property_id?: string | null
+          terrasse?: boolean | null
+          updated_at?: string | null
+        }
+        Update: {
+          balcon?: boolean | null
+          buanderie?: boolean | null
+          cave?: boolean | null
+          created_at?: string | null
+          garage?: boolean | null
+          grenier?: boolean | null
+          id?: string
+          jardin?: boolean | null
+          piscine?: boolean | null
+          property_id?: string | null
+          terrasse?: boolean | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_amenities_structured_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       property_building: {
         Row: {
           created_at: string | null
@@ -296,6 +349,83 @@ export type Database = {
           },
         ]
       }
+      property_documents_structured: {
+        Row: {
+          acte_propriete: boolean | null
+          certificat_inscription_fonciere: boolean | null
+          certificat_non_negativite: boolean | null
+          certificat_urbanisme: boolean | null
+          certification_conformite: boolean | null
+          certification_possession: boolean | null
+          contrat_location: boolean | null
+          created_at: string | null
+          documents_cadastraux: boolean | null
+          fiche_fiscale: boolean | null
+          id: string
+          livret_foncier: boolean | null
+          mainlevee: boolean | null
+          permis_construire: boolean | null
+          permis_exploitation: boolean | null
+          plans_cadastraux: boolean | null
+          promesse_vente: boolean | null
+          property_id: string | null
+          titre_propriete: boolean | null
+          updated_at: string | null
+        }
+        Insert: {
+          acte_propriete?: boolean | null
+          certificat_inscription_fonciere?: boolean | null
+          certificat_non_negativite?: boolean | null
+          certificat_urbanisme?: boolean | null
+          certification_conformite?: boolean | null
+          certification_possession?: boolean | null
+          contrat_location?: boolean | null
+          created_at?: string | null
+          documents_cadastraux?: boolean | null
+          fiche_fiscale?: boolean | null
+          id?: string
+          livret_foncier?: boolean | null
+          mainlevee?: boolean | null
+          permis_construire?: boolean | null
+          permis_exploitation?: boolean | null
+          plans_cadastraux?: boolean | null
+          promesse_vente?: boolean | null
+          property_id?: string | null
+          titre_propriete?: boolean | null
+          updated_at?: string | null
+        }
+        Update: {
+          acte_propriete?: boolean | null
+          certificat_inscription_fonciere?: boolean | null
+          certificat_non_negativite?: boolean | null
+          certificat_urbanisme?: boolean | null
+          certification_conformite?: boolean | null
+          certification_possession?: boolean | null
+          contrat_location?: boolean | null
+          created_at?: string | null
+          documents_cadastraux?: boolean | null
+          fiche_fiscale?: boolean | null
+          id?: string
+          livret_foncier?: boolean | null
+          mainlevee?: boolean | null
+          permis_construire?: boolean | null
+          permis_exploitation?: boolean | null
+          plans_cadastraux?: boolean | null
+          promesse_vente?: boolean | null
+          property_id?: string | null
+          titre_propriete?: boolean | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_documents_structured_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       property_nearby: {
         Row: {
           created_at: string | null
@@ -376,6 +506,59 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "property_security_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      property_security_structured: {
+        Row: {
+          acces_handicape: boolean | null
+          alarme: boolean | null
+          ascenseur: boolean | null
+          created_at: string | null
+          digicode: boolean | null
+          gardien: boolean | null
+          id: string
+          interphone: boolean | null
+          portail_electrique: boolean | null
+          property_id: string | null
+          updated_at: string | null
+          video_surveillance: boolean | null
+        }
+        Insert: {
+          acces_handicape?: boolean | null
+          alarme?: boolean | null
+          ascenseur?: boolean | null
+          created_at?: string | null
+          digicode?: boolean | null
+          gardien?: boolean | null
+          id?: string
+          interphone?: boolean | null
+          portail_electrique?: boolean | null
+          property_id?: string | null
+          updated_at?: string | null
+          video_surveillance?: boolean | null
+        }
+        Update: {
+          acces_handicape?: boolean | null
+          alarme?: boolean | null
+          ascenseur?: boolean | null
+          created_at?: string | null
+          digicode?: boolean | null
+          gardien?: boolean | null
+          id?: string
+          interphone?: boolean | null
+          portail_electrique?: boolean | null
+          property_id?: string | null
+          updated_at?: string | null
+          video_surveillance?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_security_structured_property_id_fkey"
             columns: ["property_id"]
             isOneToOne: false
             referencedRelation: "properties"
