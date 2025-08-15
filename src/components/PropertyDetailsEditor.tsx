@@ -88,8 +88,63 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    loadPropertyData();
+    if (propertyId) {
+      loadPropertyData();
+      fetchStructuredData();
+    }
   }, [propertyId]);
+
+  const fetchStructuredData = async () => {
+    if (!propertyId) return;
+
+    try {
+      // Fetch structured amenities
+      const { data: amenitiesData } = await supabase
+        .from('property_amenities_structured')
+        .select('*')
+        .eq('property_id', propertyId)
+        .single();
+      
+      if (amenitiesData) {
+        setStructuredAmenities(amenitiesData);
+      }
+
+      // Fetch structured security
+      const { data: securityData } = await supabase
+        .from('property_security_structured')
+        .select('*')
+        .eq('property_id', propertyId)
+        .single();
+      
+      if (securityData) {
+        setStructuredSecurity(securityData);
+      }
+
+      // Fetch structured nearby
+      const { data: nearbyData } = await supabase
+        .from('property_nearby_structured')
+        .select('*')
+        .eq('property_id', propertyId)
+        .single();
+      
+      if (nearbyData) {
+        setStructuredNearby(nearbyData);
+      }
+
+      // Fetch structured documents
+      const { data: documentsData } = await supabase
+        .from('property_documents_structured')
+        .select('*')
+        .eq('property_id', propertyId)
+        .single();
+      
+      if (documentsData) {
+        setStructuredDocuments(documentsData);
+      }
+    } catch (error) {
+      console.error('Erreur lors du chargement des données structurées:', error);
+    }
+  };
 
   const loadPropertyData = async () => {
     if (!propertyId) return;
@@ -302,64 +357,59 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
     }
   };
 
-  const MultiSelectEditor = ({ 
+  // Nouveaux states pour les tables structurées
+  const [structuredAmenities, setStructuredAmenities] = useState<any>({});
+  const [structuredSecurity, setStructuredSecurity] = useState<any>({});
+  const [structuredNearby, setStructuredNearby] = useState<any>({});
+  const [structuredDocuments, setStructuredDocuments] = useState<any>({});
+
+  const StructuredMultiSelect = ({ 
     title, 
-    items, 
-    setItems, 
+    data,
+    setData,
     options,
-    table,
-    column
+    table
   }: {
     title: string;
-    items: ListItem[];
-    setItems: React.Dispatch<React.SetStateAction<ListItem[]>>;
-    options: string[];
+    data: any;
+    setData: React.Dispatch<React.SetStateAction<any>>;
+    options: { key: string; label: string }[];
     table: string;
-    column: string;
   }) => {
-    const [selectedValue, setSelectedValue] = useState<string>('');
-
-    const handleAddOption = async (option: string) => {
-      if (!option || !propertyId) return;
-      
-      // Vérifier si l'option n'est pas déjà ajoutée
-      if (items.some(item => item.text === option)) return;
+    const handleToggle = async (key: string, value: boolean) => {
+      if (!propertyId) return;
       
       try {
-        const insertData: any = {
+        const updateData = {
           property_id: propertyId,
-          text: option
+          [key]: value,
+          updated_at: new Date().toISOString()
         };
 
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from(table as any)
-          .insert(insertData)
-          .select()
-          .single();
+          .upsert(updateData, { onConflict: 'property_id' });
 
         if (error) throw error;
 
-        const newListItem = { id: String((data as any)?.id), text: option };
-        setItems([...items, newListItem]);
+        setData((prev: any) => ({
+          ...prev,
+          [key]: value
+        }));
 
         toast({
           title: "Succès",
-          description: "Élément ajouté",
+          description: "Mise à jour effectuée",
         });
       } catch (error) {
-        console.error('Erreur lors de l\'ajout:', error);
+        console.error('Erreur lors de la mise à jour:', error);
         toast({
           title: "Erreur",
-          description: "Impossible d'ajouter l'élément",
+          description: "Impossible de mettre à jour",
           variant: "destructive",
         });
       }
     };
-
-    // Filtrer les options déjà sélectionnées
-    const availableOptions = options.filter(option => 
-      !items.some(item => item.text === option)
-    );
 
     return (
       <Card>
@@ -367,35 +417,22 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
           <CardTitle className="text-lg">{title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
-            <Select value={selectedValue} onValueChange={(value) => {
-              if (value) {
-                handleAddOption(value);
-                setSelectedValue('');
-              }
-            }}>
-              <SelectTrigger>
-                <SelectValue placeholder={`Sélectionner ${title.toLowerCase()}`} />
-              </SelectTrigger>
-              <SelectContent>
-                {availableOptions.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <div className="flex flex-wrap gap-2">
-              {items.map((item) => (
-                <Badge key={item.id} variant="secondary" className="flex items-center gap-1">
-                  {item.text}
-                  <X 
-                    className="h-3 w-3 cursor-pointer" 
-                    onClick={() => removeItem(table, items, setItems, item.id!)}
-                  />
-                </Badge>
-              ))}
-            </div>
+          <div className="grid grid-cols-2 gap-3">
+            {options.map((option) => (
+              <div key={option.key} className="flex items-center space-x-2">
+                <Checkbox
+                  id={option.key}
+                  checked={data[option.key] || false}
+                  onCheckedChange={(checked) => handleToggle(option.key, checked as boolean)}
+                />
+                <Label 
+                  htmlFor={option.key}
+                  className="text-sm font-normal cursor-pointer"
+                >
+                  {option.label}
+                </Label>
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>
@@ -492,51 +529,86 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
         </CardContent>
       </Card>
 
-      {/* Lists with Multi-Select */}
+      {/* Lists with Structured Multi-Select */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <MultiSelectEditor
+        <StructuredMultiSelect
           title="Commodités"
-          items={amenities}
-          setItems={setAmenities}
-          options={amenityOptions}
-          table="property_amenities"
-          column="text"
+          data={structuredAmenities}
+          setData={setStructuredAmenities}
+          options={[
+            { key: "piscine", label: "Piscine" },
+            { key: "garage", label: "Garage" },
+            { key: "jardin", label: "Jardin" },
+            { key: "terrasse", label: "Terrasse" },
+            { key: "balcon", label: "Balcon" },
+            { key: "cave", label: "Cave" },
+            { key: "grenier", label: "Grenier" },
+            { key: "buanderie", label: "Buanderie" }
+          ]}
+          table="property_amenities_structured"
         />
 
-        <MultiSelectEditor
+        <StructuredMultiSelect
           title="Sécurité"
-          items={securityFeatures}
-          setItems={setSecurityFeatures}
-          options={securityOptions}
-          table="property_security"
-          column="text"
+          data={structuredSecurity}
+          setData={setStructuredSecurity}
+          options={[
+            { key: "gardien", label: "Gardien" },
+            { key: "ascenseur", label: "Ascenseur" },
+            { key: "acces_handicape", label: "Accès handicapé" },
+            { key: "video_surveillance", label: "Vidéo surveillance" },
+            { key: "digicode", label: "Digicode" },
+            { key: "interphone", label: "Interphone" },
+            { key: "alarme", label: "Alarme" },
+            { key: "portail_electrique", label: "Portail électrique" }
+          ]}
+          table="property_security_structured"
         />
 
-        <MultiSelectEditor
-          title="Caractéristiques du bâtiment"
-          items={buildingFeatures}
-          setItems={setBuildingFeatures}
-          options={buildingOptions}
-          table="property_building"
-          column="text"
-        />
-
-        <MultiSelectEditor
+        <StructuredMultiSelect
           title="À proximité"
-          items={nearby}
-          setItems={setNearby}
-          options={nearbyOptions}
-          table="property_nearby"
-          column="text"
+          data={structuredNearby}
+          setData={setStructuredNearby}
+          options={[
+            { key: "ecoles", label: "Écoles" },
+            { key: "universites", label: "Universités" },
+            { key: "commerces", label: "Commerces" },
+            { key: "restaurants", label: "Restaurants" },
+            { key: "aeroports", label: "Aéroports" },
+            { key: "hopitaux", label: "Hôpitaux" },
+            { key: "transports_publics", label: "Transports publics" },
+            { key: "parcs", label: "Parcs" },
+            { key: "plages", label: "Plages" },
+            { key: "mosquees", label: "Mosquées" },
+            { key: "banques", label: "Banques" },
+            { key: "pharmacies", label: "Pharmacies" }
+          ]}
+          table="property_nearby_structured"
         />
 
-        <MultiSelectEditor
+        <StructuredMultiSelect
           title="Documents"
-          items={documents}
-          setItems={setDocuments}
-          options={documentOptions}
-          table="property_documents"
-          column="text"
+          data={structuredDocuments}
+          setData={setStructuredDocuments}
+          options={[
+            { key: "acte_propriete", label: "Acte de propriété" },
+            { key: "titre_propriete", label: "Titre de propriété" },
+            { key: "livret_foncier", label: "Livret foncier" },
+            { key: "certificat_inscription_fonciere", label: "Certificat d'inscription foncière" },
+            { key: "fiche_fiscale", label: "Fiche fiscale" },
+            { key: "documents_cadastraux", label: "Documents cadastraux" },
+            { key: "plans_cadastraux", label: "Plans cadastraux" },
+            { key: "certificat_urbanisme", label: "Certificat d'urbanisme" },
+            { key: "permis_construire", label: "Permis de construire" },
+            { key: "certification_conformite", label: "Certification de conformité" },
+            { key: "promesse_vente", label: "Promesse de vente" },
+            { key: "mainlevee", label: "Mainlevée" },
+            { key: "permis_exploitation", label: "Permis d'exploitation" },
+            { key: "certificat_non_negativite", label: "Certificat de non-négativité" },
+            { key: "contrat_location", label: "Contrat de location" },
+            { key: "certification_possession", label: "Certification de possession" }
+          ]}
+          table="property_documents_structured"
         />
 
         <Card>
