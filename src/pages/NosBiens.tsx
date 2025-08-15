@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, Heart, BarChart3 } from "lucide-react";
+import { MapPin, Heart, BarChart3, Bed, Bath, Square } from "lucide-react";
 import PropertyFilters, { FilterState } from "@/components/PropertyFilters";
 import { useFavorites } from "@/components/FavoritesSystem";
 import { useComparison } from "@/components/ComparisonSystem";
@@ -508,24 +508,44 @@ const NosBiens = () => {
                     </div>
 
                     <CardContent className="p-6">
-                      <h3 className="text-xl font-bold mb-2 text-foreground">
+                      <h3 className="text-xl font-bold mb-3 text-foreground">
                         {property.title}
                       </h3>
-                       <div className="flex items-center text-muted-foreground mb-3">
-                         <MapPin className="h-4 w-4 mr-1" />
-                         <span className="text-sm">{property.localities?.name || "N/A"}</span>
-                       </div>
-                       <div className="flex justify-between items-center">
-                         <div className="flex gap-2">
-                           <span className="text-sm px-3 py-1 bg-muted rounded-full text-muted-foreground">
-                             {property.typology || "N/A"}
-                           </span>
-                           {property.surface && (
-                             <span className="text-sm px-3 py-1 bg-muted rounded-full text-muted-foreground">
-                               {property.surface} m²
-                             </span>
-                           )}
+                      
+                      {/* Property Details Row */}
+                      {property.property_details && property.property_details.length > 0 && (
+                        <div className="flex items-center gap-4 mb-3 text-sm text-muted-foreground">
+                          {property.property_details[0].bedrooms !== null && (
+                            <div className="flex items-center gap-1">
+                              <Bed className="h-4 w-4" />
+                              <span>{property.property_details[0].bedrooms}</span>
+                            </div>
+                          )}
+                          {property.property_details[0].bathrooms !== null && (
+                            <div className="flex items-center gap-1">
+                              <Bath className="h-4 w-4" />
+                              <span>{property.property_details[0].bathrooms}</span>
+                            </div>
+                          )}
+                          {property.surface && (
+                            <div className="flex items-center gap-1">
+                              <Square className="h-4 w-4" />
+                              <span>{property.surface} m²</span>
+                            </div>
+                          )}
                         </div>
+                      )}
+
+                      {/* Location */}
+                      <div className="flex items-center text-muted-foreground mb-4">
+                        <MapPin className="h-4 w-4 mr-1" />
+                        <span className="text-sm">{property.localities?.name || "N/A"}</span>
+                      </div>
+
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm px-3 py-1 bg-muted rounded-full text-muted-foreground">
+                          {property.typology || "N/A"}
+                        </span>
                         <Button variant="outline" size="sm">
                           Voir détails
                         </Button>
