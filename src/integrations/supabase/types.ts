@@ -235,7 +235,7 @@ export type Database = {
           {
             foreignKeyName: "property_amenities_structured_property_id_fkey"
             columns: ["property_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "properties"
             referencedColumns: ["id"]
           },
@@ -420,7 +420,7 @@ export type Database = {
           {
             foreignKeyName: "property_documents_structured_property_id_fkey"
             columns: ["property_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "properties"
             referencedColumns: ["id"]
           },
@@ -560,7 +560,7 @@ export type Database = {
           {
             foreignKeyName: "property_security_structured_property_id_fkey"
             columns: ["property_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "properties"
             referencedColumns: ["id"]
           },
