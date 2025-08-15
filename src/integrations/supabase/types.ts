@@ -114,6 +114,7 @@ export type Database = {
           latitude: number | null
           locality_id: number | null
           longitude: number | null
+          phone_whatsapp: string
           price: number | null
           status: string | null
           surface: number | null
@@ -128,6 +129,7 @@ export type Database = {
           latitude?: number | null
           locality_id?: number | null
           longitude?: number | null
+          phone_whatsapp?: string
           price?: number | null
           status?: string | null
           surface?: number | null
@@ -142,6 +144,7 @@ export type Database = {
           latitude?: number | null
           locality_id?: number | null
           longitude?: number | null
+          phone_whatsapp?: string
           price?: number | null
           status?: string | null
           surface?: number | null

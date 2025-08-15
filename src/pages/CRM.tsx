@@ -19,7 +19,7 @@ import { ImageUploadDropzone } from "@/components/ImageUploadDropzone";
 interface PropertyFormData {
   title: string;
   description: string;
-  status: "available" | "sold" | "rented";
+  status: "À Vendre" | "Vendu" | "À louer";
   surface: string;
   price: string;
   typology: string;
@@ -27,13 +27,14 @@ interface PropertyFormData {
   image_url: string;
   latitude: string;
   longitude: string;
+  phone_whatsapp: string;
 }
 
 interface Property {
   id: string;
   title: string;
   description?: string | null;
-  status: "available" | "sold" | "rented";
+  status: "À Vendre" | "Vendu" | "À louer";
   surface: number | null;
   price: number | null;
   typology: string | null;
@@ -41,6 +42,7 @@ interface Property {
   image_url: string | null;
   latitude: number | null;
   longitude: number | null;
+  phone_whatsapp: string;
   created_at: string;
   updated_at: string;
 }
@@ -56,7 +58,7 @@ const CRM = () => {
   const [formData, setFormData] = useState<PropertyFormData>({
     title: "",
     description: "",
-    status: "available",
+    status: "À Vendre",
     surface: "",
     price: "",
     typology: "",
@@ -64,23 +66,21 @@ const CRM = () => {
     image_url: "",
     latitude: "",
     longitude: "",
+    phone_whatsapp: "+213",
   });
 
   const typologies = [
-    "Appartement",
-    "Villa", 
-    "Maison",
-    "Studio",
-    "Duplex",
-    "Triplex",
-    "Loft",
-    "Terrain",
-    "Locaux commerciaux",
-    "Immeuble commercial",
-    "Complexe touristique",
-    "Hôtel",
-    "Ranch",
-    "Propriété de campagne"
+    "appartement",
+    "villa", 
+    "maison",
+    "studio",
+    "duplex",
+    "triplex",
+    "loft",
+    "terrain",
+    "local commercial",
+    "penthouse",
+    "bureau"
   ];
 
   const [localities, setLocalities] = useState<Array<{id: number, name: string}>>([]);
@@ -147,10 +147,10 @@ const CRM = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.title || !formData.status || !formData.surface || !formData.locality_id) {
+    if (!formData.title || !formData.status || !formData.surface || !formData.locality_id || !formData.phone_whatsapp) {
       toast({
         title: "Erreur",
-        description: "Le titre, le statut, la surface et la localité sont obligatoires",
+        description: "Le titre, le statut, la surface, la localité et le WhatsApp sont obligatoires",
         variant: "destructive",
       });
       return;
@@ -169,6 +169,7 @@ const CRM = () => {
         image_url: formData.image_url || null,
         latitude: formData.latitude ? parseFloat(formData.latitude) : null,
         longitude: formData.longitude ? parseFloat(formData.longitude) : null,
+        phone_whatsapp: formData.phone_whatsapp,
       };
 
       const { data, error } = await supabase
@@ -190,7 +191,7 @@ const CRM = () => {
       setFormData({
         title: "",
         description: "",
-        status: "available",
+        status: "À Vendre",
         surface: "",
         price: "",
         typology: "",
@@ -198,6 +199,7 @@ const CRM = () => {
         image_url: "",
         latitude: "",
         longitude: "",
+        phone_whatsapp: "+213",
       });
       
       // Set the new property for details editing
@@ -232,6 +234,7 @@ const CRM = () => {
       image_url: property.image_url || "",
       latitude: property.latitude?.toString() || "",
       longitude: property.longitude?.toString() || "",
+      phone_whatsapp: property.phone_whatsapp || "+213",
     });
     setActiveTab("add");
   };
@@ -241,10 +244,10 @@ const CRM = () => {
     
     if (!editingProperty) return;
     
-    if (!formData.title || !formData.status || !formData.surface || !formData.locality_id) {
+    if (!formData.title || !formData.status || !formData.surface || !formData.locality_id || !formData.phone_whatsapp) {
       toast({
         title: "Erreur",
-        description: "Le titre, le statut, la surface et la localité sont obligatoires",
+        description: "Le titre, le statut, la surface, la localité et le WhatsApp sont obligatoires",
         variant: "destructive",
       });
       return;
@@ -263,6 +266,7 @@ const CRM = () => {
         image_url: formData.image_url || null,
         latitude: formData.latitude ? parseFloat(formData.latitude) : null,
         longitude: formData.longitude ? parseFloat(formData.longitude) : null,
+        phone_whatsapp: formData.phone_whatsapp,
       };
 
       const { error } = await supabase
@@ -284,7 +288,7 @@ const CRM = () => {
       setFormData({
         title: "",
         description: "",
-        status: "available",
+        status: "À Vendre",
         surface: "",
         price: "",
         typology: "",
@@ -292,6 +296,7 @@ const CRM = () => {
         image_url: "",
         latitude: "",
         longitude: "",
+        phone_whatsapp: "+213",
       });
       loadProperties();
 
@@ -312,7 +317,7 @@ const CRM = () => {
     setFormData({
       title: "",
       description: "",
-      status: "available",
+      status: "À Vendre",
       surface: "",
       price: "",
       typology: "",
@@ -320,15 +325,16 @@ const CRM = () => {
       image_url: "",
       latitude: "",
       longitude: "",
+      phone_whatsapp: "+213",
     });
     setActiveTab("list");
   };
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case "available": return "Disponible";
-      case "sold": return "Vendu";
-      case "rented": return "Loué";
+      case "À Vendre": return "À Vendre";
+      case "Vendu": return "Vendu";
+      case "À louer": return "À louer";
       default: return status;
     }
   };
@@ -388,6 +394,7 @@ const CRM = () => {
                             <TableHead>Localité</TableHead>
                             <TableHead>Surface</TableHead>
                             <TableHead>Prix</TableHead>
+                            <TableHead>WhatsApp</TableHead>
                             <TableHead>Statut</TableHead>
                             <TableHead>Actions</TableHead>
                           </TableRow>
@@ -405,11 +412,14 @@ const CRM = () => {
                                   : "Non spécifié"
                                 }
                               </TableCell>
+                              <TableCell className="font-mono text-sm">
+                                {property.phone_whatsapp}
+                              </TableCell>
                               <TableCell>
                                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                  ${property.status === 'sold' ? 'bg-green-100 text-green-800' : 
-                                    property.status === 'rented' ? 'bg-blue-100 text-blue-800' : 
-                                    'bg-yellow-100 text-yellow-800'}`}>
+                                  ${property.status === 'Vendu' ? 'bg-red-100 text-red-800' : 
+                                    property.status === 'À louer' ? 'bg-blue-100 text-blue-800' : 
+                                    'bg-green-100 text-green-800'}`}>
                                   {getStatusLabel(property.status)}
                                 </span>
                               </TableCell>
@@ -491,9 +501,9 @@ const CRM = () => {
                             <SelectValue placeholder="Sélectionner le statut" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="available">Disponible</SelectItem>
-                            <SelectItem value="sold">Vendu</SelectItem>
-                            <SelectItem value="rented">Loué</SelectItem>
+                            <SelectItem value="À Vendre">À Vendre</SelectItem>
+                            <SelectItem value="Vendu">Vendu</SelectItem>
+                            <SelectItem value="À louer">À louer</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -604,6 +614,19 @@ const CRM = () => {
                           value={formData.longitude}
                           onChange={(e) => handleInputChange("longitude", e.target.value)}
                           placeholder="Ex: 3.0588"
+                        />
+                      </div>
+
+                      {/* WhatsApp */}
+                      <div className="space-y-2 md:col-span-2">
+                        <Label htmlFor="phone_whatsapp">Numéro WhatsApp *</Label>
+                        <Input
+                          id="phone_whatsapp"
+                          type="tel"
+                          value={formData.phone_whatsapp}
+                          onChange={(e) => handleInputChange("phone_whatsapp", e.target.value)}
+                          placeholder="Ex: +213556123456"
+                          required
                         />
                       </div>
                     </div>
