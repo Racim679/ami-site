@@ -11,7 +11,8 @@ import {
   Shield,
   MapPin,
   FileText,
-  Star
+  Star,
+  Check
 } from 'lucide-react';
 
 interface PropertyInfo {
@@ -188,6 +189,69 @@ export const PropertyListSection: React.FC<PropertyListSectionProps> = ({
   );
 };
 
+// À proximité Section
+interface PropertyNearbyProps {
+  nearby: {
+    ecoles?: boolean;
+    pharmacies?: boolean;
+    mosquees?: boolean;
+    transports_publics?: boolean;
+    banques?: boolean;
+    universites?: boolean;
+    commerces?: boolean;
+    restaurants?: boolean;
+    aeroports?: boolean;
+    hopitaux?: boolean;
+    parcs?: boolean;
+    plages?: boolean;
+  };
+}
+
+export const PropertyNearbySection: React.FC<PropertyNearbyProps> = ({ nearby }) => {
+  const nearbyLabels = {
+    ecoles: "Écoles",
+    pharmacies: "Pharmacies",
+    mosquees: "Mosquées",
+    transports_publics: "Transports publics",
+    banques: "Banques",
+    universites: "Universités",
+    commerces: "Commerces",
+    restaurants: "Restaurants",
+    aeroports: "Aéroports",
+    hopitaux: "Hôpitaux",
+    parcs: "Parcs",
+    plages: "Plages"
+  };
+
+  const availableNearby = Object.entries(nearby)
+    .filter(([_, value]) => value === true)
+    .map(([key, _]) => nearbyLabels[key as keyof typeof nearbyLabels])
+    .filter(Boolean);
+
+  if (availableNearby.length === 0) return null;
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <MapPin className="w-5 h-5" />
+          À proximité
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 gap-2">
+          {availableNearby.map((item, index) => (
+            <div key={index} className="flex items-center gap-2 p-2 bg-muted rounded-lg">
+              <Check className="w-4 h-4 text-green-600" />
+              <span className="text-sm">{item}</span>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
 // Amenities section with structured data
 export const PropertyAmenitiesSection: React.FC<{ 
   amenities: {
@@ -263,14 +327,6 @@ export const PropertyBuildingSection: React.FC<{ items: Array<{ building_feature
   />
 );
 
-// Nearby section
-export const PropertyNearbySection: React.FC<{ items: Array<{ nearby_feature: string }> }> = ({ items }) => (
-  <PropertyListSection
-    title="À proximité"
-    items={items}
-    icon={<MapPin className="w-5 h-5" />}
-  />
-);
 
 // Documents section with structured data
 export const PropertyDocumentsSection: React.FC<{ 

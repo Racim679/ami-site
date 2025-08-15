@@ -12,7 +12,7 @@ import PropertyCarousel from '@/components/PropertyCarousel';
 import PropertyVideoCarousel from '@/components/PropertyVideoCarousel';
 import PropertyInfoSection from '@/components/PropertyInfoSection';
 import PropertyMap from '@/components/PropertyMap';
-import { PropertyAmenitiesSection, PropertySecuritySection, PropertyDocumentsSection } from '@/components/PropertyInfoSection';
+import { PropertyAmenitiesSection, PropertySecuritySection, PropertyDocumentsSection, PropertyNearbySection } from '@/components/PropertyInfoSection';
 
 interface PropertyDetailData {
   id: string;
@@ -87,6 +87,20 @@ interface PropertyDetailData {
     certificat_non_negativite?: boolean;
     certification_possession?: boolean;
   };
+  property_nearby_structured?: {
+    ecoles?: boolean;
+    pharmacies?: boolean;
+    mosquees?: boolean;
+    transports_publics?: boolean;
+    banques?: boolean;
+    universites?: boolean;
+    commerces?: boolean;
+    restaurants?: boolean;
+    aeroports?: boolean;
+    hopitaux?: boolean;
+    parcs?: boolean;
+    plages?: boolean;
+  };
 }
 
 const PropertyDetail: React.FC = () => {
@@ -113,7 +127,8 @@ const PropertyDetail: React.FC = () => {
             property_videos(text),
             property_amenities_structured(*),
             property_security_structured(*),
-            property_documents_structured(*)
+            property_documents_structured(*),
+            property_nearby_structured(*)
           `)
           .eq('id', id)
           .maybeSingle();
@@ -130,6 +145,7 @@ const PropertyDetail: React.FC = () => {
             property_amenities_structured: data.property_amenities_structured?.[0] || null,
             property_security_structured: data.property_security_structured?.[0] || null,
             property_documents_structured: data.property_documents_structured?.[0] || null,
+            property_nearby_structured: data.property_nearby_structured?.[0] || null,
           };
           setProperty(transformedData);
         }
@@ -297,6 +313,10 @@ const PropertyDetail: React.FC = () => {
               
               {property.property_security_structured && (
                 <PropertySecuritySection security={property.property_security_structured} />
+              )}
+              
+              {property.property_nearby_structured && (
+                <PropertyNearbySection nearby={property.property_nearby_structured} />
               )}
             </div>
 
