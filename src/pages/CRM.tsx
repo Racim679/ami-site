@@ -173,6 +173,10 @@ const CRM = () => {
         phone_whatsapp: formData.phone_whatsapp,
       };
 
+      console.log('=== DEBUG AJOUT ===');
+      console.log('formData.description:', formData.description);
+      console.log('propertyData à envoyer:', propertyData);
+
       const { data, error } = await supabase
         .from("properties")
         .insert([propertyData])
@@ -270,6 +274,10 @@ const CRM = () => {
         longitude: formData.longitude ? parseFloat(formData.longitude) : null,
         phone_whatsapp: formData.phone_whatsapp,
       };
+
+      console.log('=== DEBUG MODIFICATION ===');
+      console.log('formData.description:', formData.description);
+      console.log('propertyData à envoyer:', propertyData);
 
       const { error } = await supabase
         .from("properties")
