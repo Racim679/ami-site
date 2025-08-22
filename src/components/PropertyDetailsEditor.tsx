@@ -31,42 +31,6 @@ interface ListItem {
   text: string;
 }
 
-// Options prédéfinies pour les sélections multiples
-const amenityOptions = [
-  'Climatisation', 'Chauffage central', 'Cuisine équipée', 'Dressing', 'Cheminée',
-  'Cave à vin', 'Balcon', 'Terrasse', 'Jardin', 'Piscine', 'Garage',
-  'Parking privé', 'Buanderie', 'Grenier', 'Cave'
-];
-
-const securityOptions = [
-  'Interphone', 'Digicode', 'Alarme', 'Vidéosurveillance', 'Gardien',
-  'Portail électrique', 'Ascenseur', 'Accès handicapé'
-];
-
-const buildingOptions = [
-  'Ascenseur', 'Parking souterrain', 'Local vélos', 'Salle de sport',
-  'Concierge', 'Espaces verts communs', 'Toiture-terrasse', 'Débarras'
-];
-
-const nearbyOptions = [
-  'École primaire', 'Collège', 'Lycée', 'Université', 'Transports publics',
-  'Commerces', 'Restaurants', 'Banques', 'Pharmacies', 'Hôpitaux',
-  'Parcs', 'Plages', 'Mosquées', 'Aéroports'
-];
-
-const documentOptions = [
-  'Titre de propriété', 'Acte de propriété', 'Livret foncier',
-  'Certificat d\'inscription foncière', 'Fiche fiscale', 'Documents cadastraux',
-  'Plans cadastraux', 'Certificat d\'urbanisme', 'Permis de construire',
-  'Certification de conformité', 'Promesse de vente', 'Contrat de location',
-  'Mainlevée', 'Permis d\'exploitation', 'Certificat de non-négativité',
-  'Certification de possession'
-];
-
-const conditionOptions = [
-  'Excellent', 'Très bon', 'Bon', 'Correct', 'À rafraîchir', 'À rénover', 'Neuf'
-];
-
 const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyId }) => {
   const { toast } = useToast();
   const [details, setDetails] = useState<PropertyDetail>({});
@@ -75,22 +39,19 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
   const [propertyTitle, setPropertyTitle] = useState('');
   const [propertyDescription, setPropertyDescription] = useState('');
   
-  const [amenities, setAmenities] = useState<ListItem[]>([]);
-  const [securityFeatures, setSecurityFeatures] = useState<ListItem[]>([]);
   const [buildingFeatures, setBuildingFeatures] = useState<ListItem[]>([]);
-  const [nearby, setNearby] = useState<ListItem[]>([]);
-  const [documents, setDocuments] = useState<ListItem[]>([]);
   const [photos, setPhotos] = useState<ListItem[]>([]);
   const [videos, setVideos] = useState<ListItem[]>([]);
   
-  const [newAmenity, setNewAmenity] = useState('');
-  const [newSecurity, setNewSecurity] = useState('');
   const [newBuilding, setNewBuilding] = useState('');
-  const [newNearby, setNewNearby] = useState('');
-  const [newDocument, setNewDocument] = useState('');
-  const [newPhoto, setNewPhoto] = useState('');
   const [newVideo, setNewVideo] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Structured data states
+  const [structuredAmenities, setStructuredAmenities] = useState<any>({});
+  const [structuredSecurity, setStructuredSecurity] = useState<any>({});
+  const [structuredNearby, setStructuredNearby] = useState<any>({});
+  const [structuredDocuments, setStructuredDocuments] = useState<any>({});
 
   useEffect(() => {
     if (propertyId) {
@@ -198,45 +159,13 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
         setDetails({});
       }
 
-      // Load amenities
-      const { data: amenitiesData } = await supabase
-        .from('property_amenities')
-        .select('*')
-        .eq('property_id', propertyId)
-        .order('created_at');
-      setAmenities(amenitiesData?.map((item: any) => ({ id: String(item.id), text: item.text })) || []);
-
-      // Load security features
-      const { data: securityData } = await supabase
-        .from('property_security')
-        .select('*')
-        .eq('property_id', propertyId)
-        .order('created_at');
-      setSecurityFeatures(securityData?.map((item: any) => ({ id: String(item.id), text: item.text })) || []);
-
-      // Load building features
+      // Load building features (seule table de liste restante)
       const { data: buildingData } = await supabase
         .from('property_building')
         .select('*')
         .eq('property_id', propertyId)
         .order('created_at');
       setBuildingFeatures(buildingData?.map((item: any) => ({ id: String(item.id), text: item.text })) || []);
-
-      // Load nearby
-      const { data: nearbyData } = await supabase
-        .from('property_nearby')
-        .select('*')
-        .eq('property_id', propertyId)
-        .order('created_at');
-      setNearby(nearbyData?.map((item: any) => ({ id: String(item.id), text: item.text })) || []);
-
-      // Load documents
-      const { data: documentsData } = await supabase
-        .from('property_documents')
-        .select('*')
-        .eq('property_id', propertyId)
-        .order('created_at');
-      setDocuments(documentsData?.map((item: any) => ({ id: String(item.id), text: item.text })) || []);
 
       // Load photos
       const { data: photosData } = await supabase
@@ -426,11 +355,6 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
     }
   };
 
-  // Nouveaux states pour les tables structurées
-  const [structuredAmenities, setStructuredAmenities] = useState<any>({});
-  const [structuredSecurity, setStructuredSecurity] = useState<any>({});
-  const [structuredNearby, setStructuredNearby] = useState<any>({});
-  const [structuredDocuments, setStructuredDocuments] = useState<any>({});
 
   const StructuredMultiSelect = ({ 
     title, 
@@ -658,7 +582,7 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
         </CardContent>
       </Card>
 
-      {/* Lists with Structured Multi-Select */}
+      {/* Structured Multi-Select Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <StructuredMultiSelect
           title="Commodités"
@@ -721,16 +645,67 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
           setData={setStructuredDocuments}
           options={[
             { key: "acte_propriete", label: "Acte de propriété" },
+            { key: "titre_propriete", label: "Titre de propriété" },
+            { key: "livret_foncier", label: "Livret foncier" },
+            { key: "certificat_inscription_fonciere", label: "Certificat d'inscription foncière" },
+            { key: "fiche_fiscale", label: "Fiche fiscale" },
+            { key: "documents_cadastraux", label: "Documents cadastraux" },
+            { key: "plans_cadastraux", label: "Plans cadastraux" },
+            { key: "certificat_urbanisme", label: "Certificat d'urbanisme" },
             { key: "permis_construire", label: "Permis de construire" },
-            { key: "certification_conformite", label: "Certificat de conformité" },
-            { key: "documents_cadastraux", label: "Diagnostic énergétique" },
-            { key: "plans_cadastraux", label: "Expertise technique" },
-            { key: "certificat_urbanisme", label: "Plans" },
-            { key: "livret_foncier", label: "Cadastre" },
-            { key: "fiche_fiscale", label: "Assurance" }
+            { key: "certification_conformite", label: "Certification de conformité" },
+            { key: "promesse_vente", label: "Promesse de vente" },
+            { key: "contrat_location", label: "Contrat de location" },
+            { key: "mainlevee", label: "Mainlevée" },
+            { key: "permis_exploitation", label: "Permis d'exploitation" },
+            { key: "certificat_non_negativite", label: "Certificat de non-négativité" },
+            { key: "certification_possession", label: "Certification de possession" }
           ]}
           table="property_documents_structured"
         />
+
+        {/* Building Features - reste en liste car pas de table structurée */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Caractéristiques du bâtiment</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex gap-2">
+                <Input
+                  value={newBuilding}
+                  onChange={(e) => setNewBuilding(e.target.value)}
+                  placeholder="Ajouter une caractéristique..."
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      addItem('property_building', 'text', buildingFeatures, setBuildingFeatures, newBuilding, setNewBuilding);
+                    }
+                  }}
+                  disabled={loading}
+                />
+                <Button
+                  size="sm"
+                  onClick={() => addItem('property_building', 'text', buildingFeatures, setBuildingFeatures, newBuilding, setNewBuilding)}
+                  disabled={loading}
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {buildingFeatures.map((item) => (
+                  <Badge key={item.id} variant="secondary" className="flex items-center gap-1">
+                    {item.text}
+                    <X 
+                      className="h-3 w-3 cursor-pointer" 
+                      onClick={() => removeItem('property_building', buildingFeatures, setBuildingFeatures, item.id!)}
+                    />
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         <Card>
           <CardHeader>

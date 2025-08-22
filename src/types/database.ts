@@ -125,46 +125,6 @@ export interface Database {
           updated_at?: string;
         };
       };
-      property_amenities: {
-        Row: {
-          id: string;
-          property_id: string | null;
-          text: string;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          property_id?: string | null;
-          text: string;
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          property_id?: string | null;
-          text?: string;
-          created_at?: string;
-        };
-      };
-      property_security: {
-        Row: {
-          id: string;
-          property_id: string | null;
-          text: string;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          property_id?: string | null;
-          text: string;
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          property_id?: string | null;
-          text?: string;
-          created_at?: string;
-        };
-      };
       property_building: {
         Row: {
           id: string;
@@ -185,44 +145,216 @@ export interface Database {
           created_at?: string;
         };
       };
-      property_nearby: {
+      property_amenities_structured: {
         Row: {
           id: string;
           property_id: string | null;
-          text: string;
+          piscine: boolean | null;
+          garage: boolean | null;
+          jardin: boolean | null;
+          terrasse: boolean | null;
+          balcon: boolean | null;
+          cave: boolean | null;
+          grenier: boolean | null;
+          buanderie: boolean | null;
           created_at: string;
+          updated_at: string;
         };
         Insert: {
           id?: string;
           property_id?: string | null;
-          text: string;
+          piscine?: boolean | null;
+          garage?: boolean | null;
+          jardin?: boolean | null;
+          terrasse?: boolean | null;
+          balcon?: boolean | null;
+          cave?: boolean | null;
+          grenier?: boolean | null;
+          buanderie?: boolean | null;
           created_at?: string;
+          updated_at?: string;
         };
         Update: {
           id?: string;
           property_id?: string | null;
-          text?: string;
+          piscine?: boolean | null;
+          garage?: boolean | null;
+          jardin?: boolean | null;
+          terrasse?: boolean | null;
+          balcon?: boolean | null;
+          cave?: boolean | null;
+          grenier?: boolean | null;
+          buanderie?: boolean | null;
           created_at?: string;
+          updated_at?: string;
         };
       };
-      property_documents: {
+      property_security_structured: {
         Row: {
           id: string;
           property_id: string | null;
-          text: string;
+          gardien: boolean | null;
+          ascenseur: boolean | null;
+          acces_handicape: boolean | null;
+          video_surveillance: boolean | null;
+          digicode: boolean | null;
+          interphone: boolean | null;
+          alarme: boolean | null;
+          portail_electrique: boolean | null;
           created_at: string;
+          updated_at: string;
         };
         Insert: {
           id?: string;
           property_id?: string | null;
-          text: string;
+          gardien?: boolean | null;
+          ascenseur?: boolean | null;
+          acces_handicape?: boolean | null;
+          video_surveillance?: boolean | null;
+          digicode?: boolean | null;
+          interphone?: boolean | null;
+          alarme?: boolean | null;
+          portail_electrique?: boolean | null;
           created_at?: string;
+          updated_at?: string;
         };
         Update: {
           id?: string;
           property_id?: string | null;
-          text?: string;
+          gardien?: boolean | null;
+          ascenseur?: boolean | null;
+          acces_handicape?: boolean | null;
+          video_surveillance?: boolean | null;
+          digicode?: boolean | null;
+          interphone?: boolean | null;
+          alarme?: boolean | null;
+          portail_electrique?: boolean | null;
           created_at?: string;
+          updated_at?: string;
+        };
+      };
+      property_nearby_structured: {
+        Row: {
+          id: string;
+          property_id: string | null;
+          ecoles: boolean | null;
+          pharmacies: boolean | null;
+          mosquees: boolean | null;
+          transports_publics: boolean | null;
+          banques: boolean | null;
+          universites: boolean | null;
+          commerces: boolean | null;
+          restaurants: boolean | null;
+          aeroports: boolean | null;
+          hopitaux: boolean | null;
+          parcs: boolean | null;
+          plages: boolean | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          property_id?: string | null;
+          ecoles?: boolean | null;
+          pharmacies?: boolean | null;
+          mosquees?: boolean | null;
+          transports_publics?: boolean | null;
+          banques?: boolean | null;
+          universites?: boolean | null;
+          commerces?: boolean | null;
+          restaurants?: boolean | null;
+          aeroports?: boolean | null;
+          hopitaux?: boolean | null;
+          parcs?: boolean | null;
+          plages?: boolean | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          property_id?: string | null;
+          ecoles?: boolean | null;
+          pharmacies?: boolean | null;
+          mosquees?: boolean | null;
+          transports_publics?: boolean | null;
+          banques?: boolean | null;
+          universites?: boolean | null;
+          commerces?: boolean | null;
+          restaurants?: boolean | null;
+          aeroports?: boolean | null;
+          hopitaux?: boolean | null;
+          parcs?: boolean | null;
+          plages?: boolean | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      property_documents_structured: {
+        Row: {
+          id: string;
+          property_id: string | null;
+          livret_foncier: boolean | null;
+          acte_propriete: boolean | null;
+          titre_propriete: boolean | null;
+          contrat_location: boolean | null;
+          certification_possession: boolean | null;
+          certificat_inscription_fonciere: boolean | null;
+          fiche_fiscale: boolean | null;
+          documents_cadastraux: boolean | null;
+          plans_cadastraux: boolean | null;
+          certificat_urbanisme: boolean | null;
+          permis_construire: boolean | null;
+          certification_conformite: boolean | null;
+          promesse_vente: boolean | null;
+          mainlevee: boolean | null;
+          permis_exploitation: boolean | null;
+          certificat_non_negativite: boolean | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          property_id?: string | null;
+          livret_foncier?: boolean | null;
+          acte_propriete?: boolean | null;
+          titre_propriete?: boolean | null;
+          contrat_location?: boolean | null;
+          certification_possession?: boolean | null;
+          certificat_inscription_fonciere?: boolean | null;
+          fiche_fiscale?: boolean | null;
+          documents_cadastraux?: boolean | null;
+          plans_cadastraux?: boolean | null;
+          certificat_urbanisme?: boolean | null;
+          permis_construire?: boolean | null;
+          certification_conformite?: boolean | null;
+          promesse_vente?: boolean | null;
+          mainlevee?: boolean | null;
+          permis_exploitation?: boolean | null;
+          certificat_non_negativite?: boolean | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          property_id?: string | null;
+          livret_foncier?: boolean | null;
+          acte_propriete?: boolean | null;
+          titre_propriete?: boolean | null;
+          contrat_location?: boolean | null;
+          certification_possession?: boolean | null;
+          certificat_inscription_fonciere?: boolean | null;
+          fiche_fiscale?: boolean | null;
+          documents_cadastraux?: boolean | null;
+          plans_cadastraux?: boolean | null;
+          certificat_urbanisme?: boolean | null;
+          permis_construire?: boolean | null;
+          certification_conformite?: boolean | null;
+          promesse_vente?: boolean | null;
+          mainlevee?: boolean | null;
+          permis_exploitation?: boolean | null;
+          certificat_non_negativite?: boolean | null;
+          created_at?: string;
+          updated_at?: string;
         };
       };
       property_photos: {
