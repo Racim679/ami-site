@@ -12,7 +12,7 @@ import PropertyCarousel from '@/components/PropertyCarousel';
 import PropertyVideoCarousel from '@/components/PropertyVideoCarousel';
 import PropertyInfoSection from '@/components/PropertyInfoSection';
 import PropertyMap from '@/components/PropertyMap';
-import { PropertyAmenitiesSection, PropertySecuritySection, PropertyDocumentsSection, PropertyNearbySection } from '@/components/PropertyInfoSection';
+import { PropertyAmenitiesSection, PropertySecuritySection, PropertyDocumentsSection, PropertyNearbySection, PropertyBuildingSection } from '@/components/PropertyInfoSection';
 
 interface PropertyDetailData {
   id: string;
@@ -49,6 +49,7 @@ interface PropertyDetailData {
   };
   property_photos?: Array<{ photo_url: string; caption?: string }>;
   property_videos?: Array<{ video_url: string; video_type?: string }>;
+  property_building?: Array<{ text: string }>;
   property_amenities_structured?: {
     piscine?: boolean;
     garage?: boolean;
@@ -125,6 +126,7 @@ const PropertyDetail: React.FC = () => {
             property_details(*),
             property_photos(text),
             property_videos(text),
+            property_building(text),
             property_amenities_structured(*),
             property_security_structured(*),
             property_documents_structured(*),
@@ -142,6 +144,7 @@ const PropertyDetail: React.FC = () => {
             property_details: data.property_details?.[0] || null,
             property_photos: data.property_photos?.map(p => ({ photo_url: p.text })) || [],
             property_videos: data.property_videos?.map(v => ({ video_url: v.text, video_type: 'youtube' })) || [],
+            property_building: data.property_building || [],
             property_amenities_structured: data.property_amenities_structured?.[0] || null,
             property_security_structured: data.property_security_structured?.[0] || null,
             property_documents_structured: data.property_documents_structured?.[0] || null,
@@ -319,6 +322,13 @@ const PropertyDetail: React.FC = () => {
                 <PropertyNearbySection nearby={property.property_nearby_structured} />
               )}
             </div>
+
+            {/* Building Features */}
+            {property.property_building && property.property_building.length > 0 && (
+              <div className="mb-8">
+                <PropertyBuildingSection items={property.property_building.map(b => ({ building_feature: b.text }))} />
+              </div>
+            )}
 
             {/* Documents */}
             {property.property_documents_structured && (
