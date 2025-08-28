@@ -285,6 +285,30 @@ const PropertyDetail: React.FC = () => {
                 <MapPin className="w-5 h-5 mr-2" />
                 <span className="text-lg">{getLocationText()}</span>
               </div>
+              
+              {/* Additional Property Info */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                {property.surface && (
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm font-medium">Surface:</span>
+                    <span className="text-sm font-bold">{property.surface} m²</span>
+                  </div>
+                )}
+                {property.typology && (
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm font-medium">Type:</span>
+                    <span className="text-sm font-bold">{property.typology}</span>
+                  </div>
+                )}
+                {property.status && (
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm font-medium">Statut:</span>
+                    <span className="inline-block px-2 py-1 bg-primary/10 text-primary rounded text-xs font-medium">
+                      {property.status}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Property Details */}
