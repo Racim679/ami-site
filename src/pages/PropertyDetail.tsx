@@ -7,7 +7,7 @@ import { ArrowLeft, MapPin, Phone, MessageCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import PropertyQuoteForm from '@/components/PropertyQuoteForm';
+import SimilarPropertiesCarousel from '@/components/SimilarPropertiesCarousel';
 import PropertyCarousel from '@/components/PropertyCarousel';
 import PropertyVideoCarousel from '@/components/PropertyVideoCarousel';
 import PropertyInfoSection from '@/components/PropertyInfoSection';
@@ -430,11 +430,12 @@ const PropertyDetail: React.FC = () => {
         </div>
       </main>
       
-      {/* Section de demande de devis */}
-      <PropertyQuoteForm 
-        propertyTitle={property.title}
-        latitude={property.latitude}
-        longitude={property.longitude}
+      {/* Section des biens similaires */}
+      <SimilarPropertiesCarousel 
+        currentPropertyId={property.id}
+        typology={property.typology}
+        cityName={property.locality?.city?.name}
+        surface={property.surface}
       />
       
       <Footer />
