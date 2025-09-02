@@ -69,11 +69,6 @@ const Vendre = () => {
       title: "Marketing professionnel",
       description: "Photos, visite virtuelle et diffusion multi-canaux",
       icon: Camera
-    },
-    {
-      title: "Négociation experte",
-      description: "Nos agents négocient le meilleur prix pour vous",
-      icon: Users
     }
   ];
 
