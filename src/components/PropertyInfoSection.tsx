@@ -280,13 +280,30 @@ export const PropertyAmenitiesSection: React.FC<{
   if (amenities.grenier) amenityItems.push({ amenity: 'Grenier' });
   if (amenities.buanderie) amenityItems.push({ amenity: 'Buanderie' });
 
+  // Toujours afficher la section, même si vide
   return (
-    <PropertyListSection 
-      title="Commodités" 
-      items={amenityItems} 
-      icon={<Home className="w-5 h-5" />}
-      emptyMessage="Aucune commodité spécifiée"
-    />
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Home className="w-5 h-5" />
+          Commodités
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        {amenityItems.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {amenityItems.map((item, index) => (
+              <div key={index} className="flex items-center gap-2 p-2 bg-muted/50 rounded-lg">
+                <Check className="w-4 h-4 text-green-600" />
+                <span className="text-sm">{item.amenity}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-muted-foreground text-sm">Aucune commodité spécifiée</p>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
@@ -313,13 +330,30 @@ export const PropertySecuritySection: React.FC<{
   if (security.ascenseur) securityItems.push({ security_feature: 'Ascenseur' });
   if (security.acces_handicape) securityItems.push({ security_feature: 'Accès handicapé' });
 
+  // Toujours afficher la section, même si vide
   return (
-    <PropertyListSection 
-      title="Sécurité & Accessibilité" 
-      items={securityItems} 
-      icon={<Shield className="w-5 h-5" />}
-      emptyMessage="Aucune information de sécurité"
-    />
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Shield className="w-5 h-5" />
+          Sécurité & Accessibilité
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        {securityItems.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {securityItems.map((item, index) => (
+              <div key={index} className="flex items-center gap-2 p-2 bg-muted/50 rounded-lg">
+                <Check className="w-4 h-4 text-green-600" />
+                <span className="text-sm">{item.security_feature}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-muted-foreground text-sm">Aucune information de sécurité disponible</p>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
