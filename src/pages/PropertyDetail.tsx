@@ -321,6 +321,13 @@ const PropertyDetail: React.FC = () => {
               </div>
             )}
 
+            {/* Documents associés */}
+            {property.property_documents_structured && (
+              <div className="mb-8">
+                <PropertyDocumentsSection documents={property.property_documents_structured} />
+              </div>
+            )}
+
             {/* Description */}
             {property.description && (
               <Card className="mb-8">
@@ -354,13 +361,6 @@ const PropertyDetail: React.FC = () => {
             {property.property_building && property.property_building.length > 0 && (
               <div className="mb-8">
                 <PropertyBuildingSection items={property.property_building.map(b => ({ building_feature: b.text }))} />
-              </div>
-            )}
-
-            {/* Documents */}
-            {property.property_documents_structured && (
-              <div className="mb-8">
-                <PropertyDocumentsSection documents={property.property_documents_structured} />
               </div>
             )}
 
