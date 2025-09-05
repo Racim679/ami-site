@@ -149,10 +149,10 @@ const PropertyDetail: React.FC = () => {
             property_photos: data.property_photos?.map(p => ({ photo_url: p.text })) || [],
             property_videos: data.property_videos?.map(v => ({ video_url: v.text, video_type: 'youtube' })) || [],
             property_building: data.property_building || [],
-            property_amenities_structured: data.property_amenities_structured?.[0] || null,
-            property_security_structured: data.property_security_structured?.[0] || null,
-            property_documents_structured: data.property_documents_structured?.[0] || null,
-            property_nearby_structured: data.property_nearby_structured?.[0] || null,
+            property_amenities_structured: data.property_amenities_structured || null,
+            property_security_structured: data.property_security_structured || null,
+            property_documents_structured: data.property_documents_structured || null,
+            property_nearby_structured: data.property_nearby_structured || null,
           };
           
           console.log('Transformed data:', transformedData);
