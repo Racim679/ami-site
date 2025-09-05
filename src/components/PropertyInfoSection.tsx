@@ -83,74 +83,68 @@ const PropertyInfoSection: React.FC<PropertyInfoSectionProps> = ({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {bedrooms !== undefined && bedrooms > 0 && (
-            <div className="flex items-center gap-2">
-              <Bed className="w-4 h-4 text-primary" />
-              <span className="text-sm">
-                <strong>{bedrooms}</strong> chambre{bedrooms > 1 ? 's' : ''}
-              </span>
+            <div className="text-center p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+              <Bed className="w-8 h-8 text-primary mx-auto mb-3" />
+              <div className="text-2xl font-bold text-primary mb-1">{bedrooms}</div>
+              <div className="text-sm text-muted-foreground">Chambre{bedrooms > 1 ? 's' : ''}</div>
             </div>
           )}
           
           {bathrooms !== undefined && bathrooms > 0 && (
-            <div className="flex items-center gap-2">
-              <Bath className="w-4 h-4 text-primary" />
-              <span className="text-sm">
-                <strong>{bathrooms}</strong> salle{bathrooms > 1 ? 's' : ''} de bain
-              </span>
+            <div className="text-center p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+              <Bath className="w-8 h-8 text-primary mx-auto mb-3" />
+              <div className="text-2xl font-bold text-primary mb-1">{bathrooms}</div>
+              <div className="text-sm text-muted-foreground">Salle{bathrooms > 1 ? 's' : ''} de bain</div>
             </div>
           )}
           
           {rooms !== undefined && rooms > 0 && (
-            <div className="flex items-center gap-2">
-              <Home className="w-4 h-4 text-primary" />
-              <span className="text-sm">
-                <strong>{rooms}</strong> pièce{rooms > 1 ? 's' : ''}
-              </span>
+            <div className="text-center p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+              <Home className="w-8 h-8 text-primary mx-auto mb-3" />
+              <div className="text-2xl font-bold text-primary mb-1">{rooms}</div>
+              <div className="text-sm text-muted-foreground">Pièce{rooms > 1 ? 's' : ''}</div>
             </div>
           )}
           
           {floors !== undefined && floors > 0 && (
-            <div className="flex items-center gap-2">
-              <Building className="w-4 h-4 text-primary" />
-              <span className="text-sm">
-                <strong>{floors}</strong> étage{floors > 1 ? 's' : ''}
-              </span>
+            <div className="text-center p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+              <Building className="w-8 h-8 text-primary mx-auto mb-3" />
+              <div className="text-2xl font-bold text-primary mb-1">{floors}</div>
+              <div className="text-sm text-muted-foreground">Étage{floors > 1 ? 's' : ''}</div>
             </div>
           )}
           
           {surface !== undefined && surface > 0 && (
-            <div className="flex items-center gap-2">
-              <Ruler className="w-4 h-4 text-primary" />
-              <span className="text-sm">
-                <strong>{surface} m²</strong> surface
-              </span>
+            <div className="text-center p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+              <Ruler className="w-8 h-8 text-primary mx-auto mb-3" />
+              <div className="text-2xl font-bold text-primary mb-1">{surface}</div>
+              <div className="text-sm text-muted-foreground">m² Surface</div>
             </div>
           )}
           
           {living_area !== undefined && living_area > 0 && (
-            <div className="flex items-center gap-2">
-              <Ruler className="w-4 h-4 text-primary" />
-              <span className="text-sm">
-                <strong>{living_area} m²</strong> habitables
-              </span>
+            <div className="text-center p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+              <Home className="w-8 h-8 text-primary mx-auto mb-3" />
+              <div className="text-2xl font-bold text-primary mb-1">{living_area}</div>
+              <div className="text-sm text-muted-foreground">m² Habitable</div>
             </div>
           )}
           
           {getViewText() && (
-            <div className="flex items-center gap-2">
-              <Eye className="w-4 h-4 text-primary" />
-              <span className="text-sm">Vue: <strong>{getViewText()}</strong></span>
+            <div className="text-center p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+              <Eye className="w-8 h-8 text-primary mx-auto mb-3" />
+              <div className="text-sm font-bold text-primary mb-1">Vue</div>
+              <div className="text-sm text-muted-foreground">{getViewText()}</div>
             </div>
           )}
           
           {condition && (
-            <div className="flex items-center gap-2">
-              <Settings className="w-4 h-4 text-primary" />
-              <span className="text-sm">
-                État: <strong>{condition}</strong>
-              </span>
+            <div className="text-center p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+              <Settings className="w-8 h-8 text-primary mx-auto mb-3" />
+              <div className="text-sm font-bold text-primary mb-1">État</div>
+              <div className="text-sm text-muted-foreground">{condition}</div>
             </div>
           )}
         </div>
