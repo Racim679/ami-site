@@ -326,9 +326,52 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
   };
 
   const addPhoto = async (photoUrl: string) => {
-    if (!photoUrl || !propertyId) return;
-    
+    console.log('🔍 [DEBUG] Tentative d\'ajout de photo:', {
+      photoUrl,
+      propertyId,
+      photosCount: photos.length
+    });
+
+    if (!photoUrl) {
+      console.error('❌ [ERROR] URL de photo manquante');
+      toast({
+        title: "Erreur",
+        description: "URL de photo manquante",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!propertyId) {
+      console.error('❌ [ERROR] PropertyId manquant');
+      toast({
+        title: "Erreur",
+        description: "Veuillez d'abord sauvegarder la propriété avant d'ajouter des photos",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
+      // Vérifier si la propriété existe
+      console.log('🔍 [DEBUG] Vérification de l\'existence de la propriété...');
+      const { data: propertyExists } = await supabase
+        .from('properties')
+        .select('id')
+        .eq('id', propertyId)
+        .single();
+
+      if (!propertyExists) {
+        console.error('❌ [ERROR] Propriété non trouvée:', propertyId);
+        toast({
+          title: "Erreur",
+          description: "Propriété non trouvée. Veuillez d'abord sauvegarder la propriété.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      console.log('✅ [DEBUG] Propriété trouvée, insertion de la photo...');
       const { data, error } = await supabase
         .from('property_photos')
         .insert({
@@ -338,20 +381,28 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('❌ [ERROR] Erreur lors de l\'insertion:', error);
+        throw error;
+      }
 
+      console.log('✅ [DEBUG] Photo insérée avec succès:', data);
       const newPhoto = { id: String(data.id), text: photoUrl };
-      setPhotos([...photos, newPhoto]);
+      setPhotos(prevPhotos => {
+        const updatedPhotos = [...prevPhotos, newPhoto];
+        console.log('✅ [DEBUG] Photos mises à jour:', updatedPhotos);
+        return updatedPhotos;
+      });
 
       toast({
         title: "Succès",
-        description: "Photo ajoutée avec succès",
+        description: `Photo ajoutée avec succès (${photos.length + 1} photos au total)`,
       });
     } catch (error) {
-      console.error('Erreur lors de l\'ajout de la photo:', error);
+      console.error('❌ [ERROR] Erreur complète lors de l\'ajout de la photo:', error);
       toast({
         title: "Erreur",
-        description: "Impossible d'ajouter la photo",
+        description: `Impossible d'ajouter la photo: ${error.message || 'Erreur inconnue'}`,
         variant: "destructive",
       });
     }
