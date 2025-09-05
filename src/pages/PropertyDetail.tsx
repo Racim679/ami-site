@@ -325,13 +325,8 @@ const PropertyDetail: React.FC = () => {
             <div className="mb-8">
               <h2 className="text-2xl font-bold mb-6">Points forts</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {property.property_amenities_structured && (
-                  <PropertyAmenitiesSection amenities={property.property_amenities_structured} />
-                )}
-                
-                {property.property_security_structured && (
-                  <PropertySecuritySection security={property.property_security_structured} />
-                )}
+                <PropertyAmenitiesSection amenities={property.property_amenities_structured || {}} />
+                <PropertySecuritySection security={property.property_security_structured || {}} />
               </div>
             </div>
 

@@ -270,6 +270,8 @@ export const PropertyAmenitiesSection: React.FC<{
     buanderie?: boolean;
   }
 }> = ({ amenities }) => {
+  console.log('PropertyAmenitiesSection received amenities:', amenities);
+  
   const amenityItems = [];
   if (amenities.piscine) amenityItems.push({ amenity: 'Piscine' });
   if (amenities.garage) amenityItems.push({ amenity: 'Garage' });
@@ -279,6 +281,8 @@ export const PropertyAmenitiesSection: React.FC<{
   if (amenities.cave) amenityItems.push({ amenity: 'Cave' });
   if (amenities.grenier) amenityItems.push({ amenity: 'Grenier' });
   if (amenities.buanderie) amenityItems.push({ amenity: 'Buanderie' });
+  
+  console.log('Generated amenity items:', amenityItems);
 
   // Toujours afficher la section, même si vide
   return (
@@ -320,6 +324,8 @@ export const PropertySecuritySection: React.FC<{
     acces_handicape?: boolean;
   }
 }> = ({ security }) => {
+  console.log('PropertySecuritySection received security:', security);
+  
   const securityItems = [];
   if (security.gardien) securityItems.push({ security_feature: 'Gardien' });
   if (security.video_surveillance) securityItems.push({ security_feature: 'Vidéo surveillance' });
@@ -329,6 +335,8 @@ export const PropertySecuritySection: React.FC<{
   if (security.portail_electrique) securityItems.push({ security_feature: 'Portail électrique' });
   if (security.ascenseur) securityItems.push({ security_feature: 'Ascenseur' });
   if (security.acces_handicape) securityItems.push({ security_feature: 'Accès handicapé' });
+  
+  console.log('Generated security items:', securityItems);
 
   // Toujours afficher la section, même si vide
   return (
