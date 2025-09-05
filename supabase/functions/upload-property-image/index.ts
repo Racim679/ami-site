@@ -24,8 +24,9 @@ serve(async (req) => {
     const formData = await req.formData()
     const file = formData.get('file') as File
     const propertyId = formData.get('propertyId') as string
+    const bucketType = formData.get('bucketType') as string
 
-    console.log('Form data parsed:', { fileName: file?.name, propertyId })
+    console.log('Form data parsed:', { fileName: file?.name, propertyId, bucketType })
 
     if (!file || !propertyId) {
       console.error('Missing file or propertyId')
@@ -35,18 +36,21 @@ serve(async (req) => {
       )
     }
 
+    // Determine which bucket to use
+    const bucketName = bucketType === 'main' ? 'photo_principale' : 'property-images'
+    
     // Create unique filename
     const fileExt = file.name.split('.').pop()
     const fileName = `${propertyId}/${crypto.randomUUID()}.${fileExt}`
 
-    console.log('Uploading file:', fileName)
+    console.log('Uploading file to bucket:', bucketName, 'fileName:', fileName)
 
     // Convert File to ArrayBuffer first
     const fileBuffer = await file.arrayBuffer()
     
     // Upload to storage
     const { data: uploadData, error: uploadError } = await supabaseClient.storage
-      .from('property-images')
+      .from(bucketName)
       .upload(fileName, fileBuffer, {
         cacheControl: '3600',
         upsert: false,
@@ -65,7 +69,7 @@ serve(async (req) => {
 
     // Get public URL
     const { data: urlData } = supabaseClient.storage
-      .from('property-images')
+      .from(bucketName)
       .getPublicUrl(fileName)
 
     console.log('Public URL generated:', urlData.publicUrl)

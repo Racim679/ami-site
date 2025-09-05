@@ -8,9 +8,10 @@ interface ImageUploadDropzoneProps {
   onImageUploaded: (url: string) => void;
   propertyId: string;
   className?: string;
+  bucketType?: 'main' | 'gallery';
 }
 
-export const ImageUploadDropzone = ({ onImageUploaded, propertyId, className }: ImageUploadDropzoneProps) => {
+export const ImageUploadDropzone = ({ onImageUploaded, propertyId, className, bucketType = 'gallery' }: ImageUploadDropzoneProps) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
@@ -22,6 +23,7 @@ export const ImageUploadDropzone = ({ onImageUploaded, propertyId, className }: 
       const formData = new FormData();
       formData.append('file', file);
       formData.append('propertyId', propertyId);
+      formData.append('bucketType', bucketType);
 
       const { data, error } = await supabase.functions.invoke('upload-property-image', {
         body: formData,

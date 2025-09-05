@@ -674,6 +674,7 @@ const CRM = () => {
                           onImageUploaded={(url) => handleInputChange("image_url", url)}
                           propertyId={editingProperty?.id || "temp"}
                           className="h-32"
+                          bucketType="main"
                         />
                         {formData.image_url && (
                           <div className="mt-2">

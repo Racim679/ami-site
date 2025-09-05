@@ -165,35 +165,6 @@ export type Database = {
           },
         ]
       }
-      property_amenities: {
-        Row: {
-          created_at: string | null
-          id: string
-          property_id: string | null
-          text: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          property_id?: string | null
-          text: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          property_id?: string | null
-          text?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "property_amenities_property_id_fkey"
-            columns: ["property_id"]
-            isOneToOne: false
-            referencedRelation: "properties"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       property_amenities_structured: {
         Row: {
           balcon: boolean | null
@@ -344,35 +315,6 @@ export type Database = {
           },
         ]
       }
-      property_documents: {
-        Row: {
-          created_at: string | null
-          id: string
-          property_id: string | null
-          text: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          property_id?: string | null
-          text: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          property_id?: string | null
-          text?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "property_documents_property_id_fkey"
-            columns: ["property_id"]
-            isOneToOne: false
-            referencedRelation: "properties"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       property_documents_structured: {
         Row: {
           acte_propriete: boolean | null
@@ -445,35 +387,6 @@ export type Database = {
             foreignKeyName: "property_documents_structured_property_id_fkey"
             columns: ["property_id"]
             isOneToOne: true
-            referencedRelation: "properties"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      property_nearby: {
-        Row: {
-          created_at: string | null
-          id: string
-          property_id: string | null
-          text: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          property_id?: string | null
-          text: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          property_id?: string | null
-          text?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "property_nearby_property_id_fkey"
-            columns: ["property_id"]
-            isOneToOne: false
             referencedRelation: "properties"
             referencedColumns: ["id"]
           },
@@ -566,35 +479,6 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "property_photos_property_id_fkey"
-            columns: ["property_id"]
-            isOneToOne: false
-            referencedRelation: "properties"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      property_security: {
-        Row: {
-          created_at: string | null
-          id: string
-          property_id: string | null
-          text: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          property_id?: string | null
-          text: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          property_id?: string | null
-          text?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "property_security_property_id_fkey"
             columns: ["property_id"]
             isOneToOne: false
             referencedRelation: "properties"
