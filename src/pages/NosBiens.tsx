@@ -571,8 +571,7 @@ const NosBiens = () => {
         </div>
       </AnimatedSection>
 
-
-      {/* Scroll to Top Button */}
+      {/* Footer removed - Scroll to Top Button */}
       <ScrollToTop />
     </div>
   );
