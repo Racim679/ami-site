@@ -20,6 +20,7 @@ interface PropertyInfo {
   bathrooms?: number;
   rooms?: number;
   floors?: number;
+  surface?: number;
   living_area?: number;
   condition?: string;
   vue_ville?: boolean;
@@ -44,6 +45,7 @@ const PropertyInfoSection: React.FC<PropertyInfoSectionProps> = ({
     bathrooms,
     rooms,
     floors,
+    surface,
     living_area,
     condition,
     vue_ville,
@@ -114,6 +116,15 @@ const PropertyInfoSection: React.FC<PropertyInfoSectionProps> = ({
               <Building className="w-4 h-4 text-primary" />
               <span className="text-sm">
                 <strong>{floors}</strong> étage{floors > 1 ? 's' : ''}
+              </span>
+            </div>
+          )}
+          
+          {surface !== undefined && surface > 0 && (
+            <div className="flex items-center gap-2">
+              <Ruler className="w-4 h-4 text-primary" />
+              <span className="text-sm">
+                <strong>{surface} m²</strong> surface
               </span>
             </div>
           )}

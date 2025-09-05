@@ -314,7 +314,10 @@ const PropertyDetail: React.FC = () => {
             {/* Property Details */}
             {property.property_details && (
               <div className="mb-8">
-                <PropertyInfoSection propertyInfo={property.property_details} />
+                <PropertyInfoSection propertyInfo={{
+                  ...property.property_details,
+                  surface: property.surface
+                }} />
               </div>
             )}
 
