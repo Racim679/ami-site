@@ -128,6 +128,87 @@ const CRM = () => {
     }
   };
 
+  // Fonction pour créer les structures par défaut pour un nouveau bien
+  const createDefaultPropertyStructures = async (propertyId: string) => {
+    try {
+      // Créer les commodités par défaut
+      await supabase
+        .from("property_amenities_structured")
+        .insert([{
+          property_id: propertyId,
+          piscine: false,
+          garage: false,
+          jardin: false,
+          terrasse: false,
+          balcon: false,
+          cave: false,
+          grenier: false,
+          buanderie: false
+        }]);
+
+      // Créer la sécurité par défaut
+      await supabase
+        .from("property_security_structured")
+        .insert([{
+          property_id: propertyId,
+          gardien: false,
+          video_surveillance: false,
+          alarme: false,
+          digicode: false,
+          interphone: false,
+          portail_electrique: false,
+          ascenseur: false,
+          acces_handicape: false
+        }]);
+
+      // Créer les documents par défaut
+      await supabase
+        .from("property_documents_structured")
+        .insert([{
+          property_id: propertyId,
+          titre_propriete: false,
+          acte_propriete: false,
+          livret_foncier: false,
+          certificat_inscription_fonciere: false,
+          plans_cadastraux: false,
+          documents_cadastraux: false,
+          fiche_fiscale: false,
+          certificat_urbanisme: false,
+          permis_construire: false,
+          certification_conformite: false,
+          contrat_location: false,
+          promesse_vente: false,
+          mainlevee: false,
+          permis_exploitation: false,
+          certificat_non_negativite: false,
+          certification_possession: false
+        }]);
+
+      // Créer les éléments à proximité par défaut
+      await supabase
+        .from("property_nearby_structured")
+        .insert([{
+          property_id: propertyId,
+          ecoles: false,
+          pharmacies: false,
+          mosquees: false,
+          transports_publics: false,
+          banques: false,
+          universites: false,
+          commerces: false,
+          restaurants: false,
+          aeroports: false,
+          hopitaux: false,
+          parcs: false,
+          plages: false
+        }]);
+
+    } catch (error) {
+      console.error("Erreur lors de la création des structures par défaut:", error);
+      // Ne pas interrompre le processus si ces insertions échouent
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("crmAuth");
     toast({
@@ -186,6 +267,9 @@ const CRM = () => {
       if (error) {
         throw error;
       }
+
+      // Créer les lignes par défaut dans les tables liées
+      await createDefaultPropertyStructures(data.id);
 
       toast({
         title: "Succès",
