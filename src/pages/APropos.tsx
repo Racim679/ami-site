@@ -6,8 +6,8 @@ const APropos = () => {
       <Header />
       <main className="container mx-auto px-4 py-8">
         <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4 text-foreground">À Propos</h1>
-          <p className="text-xl text-muted-foreground">
+          <h1 className="text-4xl font-bold mb-4 text-foreground page-heading">À Propos</h1>
+          <p className="text-xl text-muted-foreground description">
             Découvrez notre histoire et nos valeurs
           </p>
         </div>

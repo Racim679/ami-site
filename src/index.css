@@ -2,12 +2,74 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Gotham Font Family - For headings and branding */
+@font-face {
+  font-family: 'Gotham';
+  src: url('./assets/gotham/gotham/Gotham Fonts Family/Gotham-Book.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gotham';
+  src: url('./assets/gotham/gotham/Gotham Fonts Family/Gotham-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gotham';
+  src: url('./assets/gotham/gotham/Gotham Fonts Family/GOTHAM-BOLD.TTF') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gotham';
+  src: url('./assets/gotham/gotham/Gotham Fonts Family/GOTHAM-BLACK.TTF') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Freight Text Font Family - For body text and descriptions */
+@font-face {
+  font-family: 'Freight Text';
+  src: url('./assets/Freight Text/fonnts.com-Freight-Text-Pro-Book-.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Freight Text';
+  src: url('./assets/Freight Text/fonnts.com-Freight-Text-Pro-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Freight Text';
+  src: url('./assets/Freight Text/fonnts.com-Freight-Text-Pro-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
+    /* Font family variables */
+    --font-heading: 'Gotham', 'Helvetica Neue', Arial, sans-serif;
+    --font-body: 'Freight Text', Georgia, 'Times New Roman', serif;
+    
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -110,10 +172,92 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+
+  /* Apply Gotham to headings and branding elements */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+  }
+
+  /* Specific heading weights */
+  h1 {
+    font-weight: 900; /* Black for main titles */
+  }
+
+  h2 {
+    font-weight: 700; /* Bold for section titles */
+  }
+
+  h3, h4 {
+    font-weight: 500; /* Medium for subsections */
+  }
+
+  /* Button elements */
+  button, .btn {
+    font-family: var(--font-heading);
+    font-weight: 500;
+  }
+
+  /* Navigation elements */
+  nav, .nav-menu {
+    font-family: var(--font-heading);
+    font-weight: 400;
   }
 }
 
 @layer utilities {
+  /* Font family utilities */
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  /* Specific font styling classes */
+  .site-title {
+    font-family: var(--font-heading);
+    font-weight: 900;
+  }
+
+  .section-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+  }
+
+  .stats-number {
+    font-family: var(--font-heading);
+    font-weight: 900;
+  }
+
+  .property-type {
+    font-family: var(--font-heading);
+    font-weight: 500;
+  }
+
+  .page-heading {
+    font-family: var(--font-heading);
+    font-weight: 700;
+  }
+
+  .tagline, .description {
+    font-family: var(--font-body);
+    font-weight: 400;
+  }
+
+  .step-description, .service-description {
+    font-family: var(--font-body);
+    font-weight: 400;
+  }
+
+  .property-details {
+    font-family: var(--font-body);
+    font-weight: 400;
+  }
+
   /* Line clamp utilities */
   .line-clamp-1 {
     overflow: hidden;

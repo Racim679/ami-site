@@ -33,8 +33,8 @@ const ProjectsSection = () => {
     <section className="py-20 px-4 bg-muted/30">
       <div className="container mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4 text-foreground">Nos Projets</h2>
-          <p className="text-xl text-muted-foreground">
+          <h2 className="text-4xl font-bold mb-4 text-foreground section-title">Nos Projets</h2>
+          <p className="text-xl text-muted-foreground description">
             Découvrez l'évolution de nos projets immobiliers
           </p>
         </div>
@@ -43,7 +43,7 @@ const ProjectsSection = () => {
           {projectCategories.map((category, index) => (
             <Card key={index} className="h-full">
               <CardHeader>
-                <CardTitle className="text-xl text-center">{category.title}</CardTitle>
+                <CardTitle className="text-xl text-center font-heading font-medium">{category.title}</CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3">

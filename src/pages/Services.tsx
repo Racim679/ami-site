@@ -6,8 +6,8 @@ const Services = () => {
       <Header />
       <main className="container mx-auto px-4 py-8">
         <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4 text-foreground">Nos Services</h1>
-          <p className="text-xl text-muted-foreground">
+          <h1 className="text-4xl font-bold mb-4 text-foreground page-heading">Nos Services</h1>
+          <p className="text-xl text-muted-foreground description">
             Découvrez tous nos services immobiliers
           </p>
         </div>

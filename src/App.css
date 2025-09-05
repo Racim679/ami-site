@@ -1,21 +1,3 @@
-@font-face {
-  font-family: 'Canela Text';
-  src: url('./assets/canela-text-trial/CanelaText-Regular-Trial.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Canela Text';
-  src: url('./assets/canela-text-trial/CanelaText-Bold-Trial.otf') format('opentype');
-  font-weight: bold;
-  font-style: normal;
-}
-
-body {
-  font-family: 'Canela Text', sans-serif;
-}
-
 #root {
   max-width: 1280px;
   margin: 0 auto;

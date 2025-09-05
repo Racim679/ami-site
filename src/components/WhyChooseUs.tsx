@@ -3,10 +3,10 @@ const WhyChooseUs = () => {
     <section className="py-20 px-4 bg-muted/30">
       <div className="container mx-auto">
         <div className="text-center">
-          <h2 className="text-4xl font-bold mb-4 text-foreground">
+          <h2 className="text-4xl font-bold mb-4 text-foreground section-title">
             Pourquoi nous choisir
           </h2>
-          <p className="text-xl text-muted-foreground mb-16">
+          <p className="text-xl text-muted-foreground mb-16 description">
             Section à élaborer ultérieurement
           </p>
           

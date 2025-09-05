@@ -44,7 +44,7 @@ const Header = () => {
                   <Link
                     to={item.path}
                     className={cn(
-                      "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary",
+                      "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary font-heading",
                       location.pathname === item.path
                         ? "text-primary"
                         : "text-muted-foreground"
@@ -64,7 +64,7 @@ const Header = () => {
                   <Link
                     to={item.path}
                     className={cn(
-                      "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary",
+                      "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary font-heading",
                       location.pathname === item.path
                         ? "text-primary"
                         : "text-muted-foreground"
@@ -84,7 +84,7 @@ const Header = () => {
                   <Link
                     to={item.path}
                     className={cn(
-                      "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary",
+                      "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary font-heading",
                       location.pathname === item.path
                         ? "text-primary"
                         : "text-muted-foreground"
@@ -101,9 +101,9 @@ const Header = () => {
             {/* Logo mobile (visible seulement sur mobile) */}
             <Link to="/" className="flex items-center lg:hidden">
               <div className="bg-primary text-primary-foreground px-3 py-1 rounded">
-                <span className="text-lg font-bold">aymen</span>
+                <span className="text-lg font-bold site-title">aymen</span>
               </div>
-              <span className="ml-2 text-sm text-muted-foreground">Promotion</span>
+              <span className="ml-2 text-sm text-muted-foreground font-heading">Promotion</span>
             </Link>
 
             {/* Bouton menu mobile */}
@@ -125,9 +125,9 @@ const Header = () => {
             <div className="flex items-center justify-between p-4 border-b border-slate-700">
               <Link to="/" className="flex items-center" onClick={toggleMobileMenu}>
                 <div className="bg-primary text-primary-foreground px-3 py-1 rounded">
-                  <span className="text-lg font-bold">aymen</span>
+                  <span className="text-lg font-bold site-title">aymen</span>
                 </div>
-                <span className="ml-2 text-sm text-slate-300">Promotion</span>
+                <span className="ml-2 text-sm text-slate-300 font-heading">Promotion</span>
               </Link>
               <button
                 onClick={toggleMobileMenu}
@@ -146,7 +146,7 @@ const Header = () => {
                       to={item.path}
                       onClick={toggleMobileMenu}
                       className={cn(
-                        "flex items-center justify-between text-lg font-medium transition-colors",
+                        "flex items-center justify-between text-lg font-medium transition-colors font-heading",
                         location.pathname === item.path
                           ? "text-primary"
                           : "text-white hover:text-primary"
