@@ -321,6 +321,20 @@ const PropertyDetail: React.FC = () => {
               </div>
             )}
 
+            {/* Points forts */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold mb-6">Points forts</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {property.property_amenities_structured && (
+                  <PropertyAmenitiesSection amenities={property.property_amenities_structured} />
+                )}
+                
+                {property.property_security_structured && (
+                  <PropertySecuritySection security={property.property_security_structured} />
+                )}
+              </div>
+            </div>
+
             {/* Documents associés */}
             {property.property_documents_structured && (
               <div className="mb-8">
@@ -342,20 +356,12 @@ const PropertyDetail: React.FC = () => {
               </Card>
             )}
 
-            {/* Points Forts - Two columns */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              {property.property_amenities_structured && (
-                <PropertyAmenitiesSection amenities={property.property_amenities_structured} />
-              )}
-              
-              {property.property_security_structured && (
-                <PropertySecuritySection security={property.property_security_structured} />
-              )}
-              
-              {property.property_nearby_structured && (
+            {/* Points Forts - À proximité */}
+            {property.property_nearby_structured && (
+              <div className="mb-8">
                 <PropertyNearbySection nearby={property.property_nearby_structured} />
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Building Features */}
             {property.property_building && property.property_building.length > 0 && (
