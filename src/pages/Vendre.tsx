@@ -22,7 +22,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { AnimatedSection } from "@/components/AnimatedComponents";
 
@@ -456,8 +455,6 @@ const Vendre = () => {
         </div>
       </AnimatedSection>
 
-      {/* Footer */}
-      <Footer />
 
       {/* Scroll to Top Button */}
       <ScrollToTop />

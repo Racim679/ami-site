@@ -9,7 +9,6 @@ import { MapPin, Heart, BarChart3, Bed, Bath, Square } from "lucide-react";
 import PropertyFilters, { FilterState } from "@/components/PropertyFilters";
 import { useFavorites } from "@/components/FavoritesSystem";
 import { useComparison } from "@/components/ComparisonSystem";
-import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { AnimatedSection, AnimatedCard } from "@/components/AnimatedComponents";
 import { supabase } from "@/integrations/supabase/client";
@@ -375,7 +374,6 @@ const NosBiens = () => {
             <p>Chargement des propriétés...</p>
           </div>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -573,8 +571,6 @@ const NosBiens = () => {
         </div>
       </AnimatedSection>
 
-      {/* Footer */}
-      <Footer />
 
       {/* Scroll to Top Button */}
       <ScrollToTop />

@@ -4,7 +4,6 @@ import BiensSection from "@/components/BiensSection";
 import ApartmentExplorer from "@/components/ApartmentExplorer";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import ProjectsSection from "@/components/ProjectsSection";
-import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import Chatbot from "@/components/Chatbot";
 import WhatsAppFloatingButton from "@/components/WhatsAppFloatingButton";
@@ -30,8 +29,6 @@ const Index = () => {
         <ProjectsSection />
       </main>
       
-      {/* Footer */}
-      <Footer />
       
       {/* Scroll to Top Button */}
       <ScrollToTop />

@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, MapPin, Phone, MessageCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import SimilarPropertiesCarousel from '@/components/SimilarPropertiesCarousel';
 import PropertyCarousel from '@/components/PropertyCarousel';
 import PropertyVideoCarousel from '@/components/PropertyVideoCarousel';
@@ -183,7 +182,6 @@ const PropertyDetail: React.FC = () => {
         <main className="container mx-auto px-4 py-8">
           <div className="text-center">Chargement...</div>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -207,7 +205,6 @@ const PropertyDetail: React.FC = () => {
             </CardContent>
           </Card>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -450,8 +447,6 @@ const PropertyDetail: React.FC = () => {
         cityName={property.locality?.city?.name}
         surface={property.surface}
       />
-      
-      <Footer />
     </div>
   );
 };

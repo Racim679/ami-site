@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Lock, User } from "lucide-react";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -95,8 +94,6 @@ const Login = () => {
           </CardContent>
         </Card>
       </main>
-
-      <Footer />
     </div>
   );
 };

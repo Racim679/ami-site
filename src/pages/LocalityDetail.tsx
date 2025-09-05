@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import FavoritesSystem from "@/components/FavoritesSystem";
 
 interface Locality {
@@ -80,7 +79,6 @@ const LocalityDetail = () => {
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">Chargement...</div>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -92,7 +90,6 @@ const LocalityDetail = () => {
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">Localité non trouvée</div>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -225,8 +222,6 @@ const LocalityDetail = () => {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 };

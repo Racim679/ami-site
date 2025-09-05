@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 
 const PolitiqueConfidentialite = () => {
@@ -82,7 +81,6 @@ const PolitiqueConfidentialite = () => {
           </div>
         </motion.div>
       </main>
-      <Footer />
       <ScrollToTop />
     </div>
   );

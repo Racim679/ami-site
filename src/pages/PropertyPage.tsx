@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, MapPin, Ruler, DollarSign } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import PropertyCarousel from '@/components/PropertyCarousel';
 import PropertyVideoPlayer from '@/components/PropertyVideoPlayer';
 import PropertyInfoSection, {
@@ -182,7 +181,6 @@ const PropertyPage: React.FC = () => {
         <main className="container mx-auto px-4 py-8">
           <div className="text-center">Chargement...</div>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -206,7 +204,6 @@ const PropertyPage: React.FC = () => {
             </CardContent>
           </Card>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -454,8 +451,6 @@ const PropertyPage: React.FC = () => {
         latitude={property.latitude}
         longitude={property.longitude}
       />
-      
-      <Footer />
     </div>
   );
 };

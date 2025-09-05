@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useFavorites } from "@/components/FavoritesSystem";
 import { useComparison } from "@/components/ComparisonSystem";
-import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { AnimatedSection, AnimatedCard } from "@/components/AnimatedComponents";
 
@@ -71,7 +70,6 @@ const Favoris = () => {
           </div>
         </AnimatedSection>
 
-        <Footer />
         <ScrollToTop />
       </div>
     );
@@ -258,9 +256,6 @@ const Favoris = () => {
         </div>
       </AnimatedSection>
 
-      {/* Footer */}
-      <Footer />
-      
       {/* Scroll to Top Button */}
       <ScrollToTop />
     </div>
