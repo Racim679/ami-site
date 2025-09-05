@@ -325,6 +325,38 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
     }
   };
 
+  const addPhoto = async (photoUrl: string) => {
+    if (!photoUrl || !propertyId) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('property_photos')
+        .insert({
+          property_id: propertyId,
+          text: photoUrl
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      const newPhoto = { id: String(data.id), text: photoUrl };
+      setPhotos([...photos, newPhoto]);
+
+      toast({
+        title: "Succès",
+        description: "Photo ajoutée avec succès",
+      });
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout de la photo:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible d'ajouter la photo",
+        variant: "destructive",
+      });
+    }
+  };
+
   const removeItem = async (
     table: string,
     list: ListItem[], 
@@ -714,7 +746,7 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
           <CardContent className="space-y-4">
             <ImageUploadDropzone
               propertyId={propertyId}
-              onImageUploaded={(url) => addItem('property_photos', 'text', photos, setPhotos, url, () => {})}
+              onImageUploaded={addPhoto}
               className="min-h-[200px]"
               bucketType="gallery"
             />
