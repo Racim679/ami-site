@@ -1,7 +1,14 @@
 @font-face {
   font-family: 'Canela Text';
-  src: url('./assets/canela-text-trial') format('woff2');
+  src: url('./assets/canela-text-trial/CanelaText-Regular-Trial.otf') format('opentype');
   font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Canela Text';
+  src: url('./assets/canela-text-trial/CanelaText-Bold-Trial.otf') format('opentype');
+  font-weight: bold;
   font-style: normal;
 }
 
