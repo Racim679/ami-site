@@ -53,7 +53,9 @@ const CRM = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [properties, setProperties] = useState<Property[]>([]);
   const [editingProperty, setEditingProperty] = useState<Property | null>(null);
+  // État pour gérer l'ID de nouvelle propriété
   const [newPropertyId, setNewPropertyId] = useState<string | null>(null);
+  const [tempPropertyId, setTempPropertyId] = useState<string>(() => crypto.randomUUID());
   const [activeTab, setActiveTab] = useState<string>("list");
   const [formData, setFormData] = useState<PropertyFormData>({
     title: "",
@@ -240,7 +242,11 @@ const CRM = () => {
     setIsLoading(true);
 
     try {
+      // Utiliser l'ID temporaire généré au début
+      const propertyId = tempPropertyId;
+      
       const propertyData = {
+        id: propertyId,
         title: formData.title,
         description: formData.description || null,
         status: formData.status,
@@ -294,6 +300,9 @@ const CRM = () => {
       // Set the new property for details editing
       setNewPropertyId(data.id);
       loadProperties();
+      
+      // Générer un nouvel ID temporaire pour la prochaine création
+      setTempPropertyId(crypto.randomUUID());
       
       // Switch to details tab
       setActiveTab("details");
@@ -408,6 +417,7 @@ const CRM = () => {
   const cancelEdit = () => {
     setEditingProperty(null);
     setNewPropertyId(null);
+    setTempPropertyId(crypto.randomUUID()); // Générer un nouvel ID temporaire
     setFormData({
       title: "",
       description: "",
@@ -672,7 +682,7 @@ const CRM = () => {
                         <Label>Image du bien</Label>
                         <ImageUploadDropzone
                           onImageUploaded={(url) => handleInputChange("image_url", url)}
-                          propertyId={editingProperty?.id || "temp"}
+                          propertyId={editingProperty?.id || tempPropertyId}
                           className="h-32"
                           bucketType="main"
                         />

@@ -716,6 +716,7 @@ const PropertyDetailsEditor: React.FC<PropertyDetailsEditorProps> = ({ propertyI
               propertyId={propertyId}
               onImageUploaded={(url) => addItem('property_photos', 'text', photos, setPhotos, url, () => {})}
               className="min-h-[200px]"
+              bucketType="gallery"
             />
             {photos.length > 0 && (
               <div className="space-y-2">

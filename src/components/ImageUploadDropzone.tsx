@@ -34,13 +34,20 @@ export const ImageUploadDropzone = ({ onImageUploaded, propertyId, className, bu
       if (data?.url) {
         onImageUploaded(data.url);
         setPreview(null);
+        console.log('Image uploaded successfully to:', data.url);
+      } else {
+        console.error('No URL returned from upload');
       }
     } catch (error) {
       console.error('Error uploading image:', error);
+      // Show user-friendly error message
+      if (error instanceof Error) {
+        console.error('Upload error details:', error.message);
+      }
     } finally {
       setIsUploading(false);
     }
-  }, [onImageUploaded, propertyId]);
+  }, [onImageUploaded, propertyId, bucketType]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
