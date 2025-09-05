@@ -1,3 +1,14 @@
+@font-face {
+  font-family: 'Canela Text';
+  src: url('./assets/canela-text-trial') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Canela Text', sans-serif;
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
