@@ -139,6 +139,10 @@ const PropertyDetail: React.FC = () => {
         
         // Transform the data to match our interface
         if (data) {
+          console.log('Raw data from Supabase:', data);
+          console.log('property_amenities_structured:', data.property_amenities_structured);
+          console.log('property_security_structured:', data.property_security_structured);
+          
           const transformedData = {
             ...data,
             property_details: data.property_details?.[0] || null,
@@ -150,6 +154,11 @@ const PropertyDetail: React.FC = () => {
             property_documents_structured: data.property_documents_structured?.[0] || null,
             property_nearby_structured: data.property_nearby_structured?.[0] || null,
           };
+          
+          console.log('Transformed data:', transformedData);
+          console.log('Final amenities:', transformedData.property_amenities_structured);
+          console.log('Final security:', transformedData.property_security_structured);
+          
           setProperty(transformedData);
         }
       } catch (error) {
