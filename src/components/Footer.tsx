@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Facebook, Instagram, Linkedin, Youtube, Twitter } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Youtube, Twitter, Phone, Mail, MapPin, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const Footer = () => {
@@ -33,7 +33,6 @@ const Footer = () => {
       return;
     }
 
-    // Simulate email sending
     toast({
       title: "Catalogue envoyé !",
       description: "Le catalogue a été envoyé à votre adresse e-mail.",
@@ -49,78 +48,114 @@ const Footer = () => {
     });
   };
 
-  const socialLinks = [
-    { icon: Facebook, label: "Facebook" },
-    { icon: Instagram, label: "Instagram" },
-    { icon: Linkedin, label: "LinkedIn" },
-    { icon: Youtube, label: "YouTube" },
-    { icon: Twitter, label: "TikTok" },
-    { icon: Twitter, label: "X (Twitter)" }
+  const navigationLinks = [
+    { href: "/", label: "Accueil" },
+    { href: "/services", label: "Services" },
+    { href: "/nos-biens", label: "Nos Biens" },
+    { href: "/a-propos", label: "À propos" },
+    { href: "/contact", label: "Contact" }
   ];
 
-  const localities = [
-    "Casablanca",
-    "Rabat", 
-    "Marrakech",
-    "Tanger",
-    "Agadir",
-    "Fès"
+  const socialLinks = [
+    { icon: Facebook, label: "Facebook", href: "#" },
+    { icon: Instagram, label: "Instagram", href: "#" },
+    { icon: Linkedin, label: "LinkedIn", href: "#" },
+    { icon: Youtube, label: "YouTube", href: "#" }
   ];
 
   return (
-    <footer className="bg-foreground text-background py-16">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Left - Company Info */}
-          <div className="space-y-4">
-            <h3 className="text-2xl font-bold mb-6">IMAN Promotion</h3>
-            <div className="space-y-2">
-              <p>123 Avenue Mohammed V</p>
-              <p>Casablanca, Maroc</p>
-              <p>Tél: +212 5 22 XX XX XX</p>
-              <p>Email: contact@iman-promotion.ma</p>
-            </div>
-            
-            {/* Social Links */}
-            <div className="flex space-x-4 pt-4">
-              {socialLinks.map((social, index) => (
-                <button
-                  key={index}
-                  className="w-10 h-10 bg-background/10 rounded-full flex items-center justify-center hover:bg-background/20 transition-colors"
-                  aria-label={social.label}
-                >
-                  <social.icon className="w-5 h-5" />
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Center - Localities */}
-          <div>
-            <h3 className="text-2xl font-bold mb-6">Nos localités</h3>
-            <div className="grid grid-cols-2 gap-3">
-              {localities.map((locality, index) => (
-                <div 
-                  key={index}
-                  className="p-3 bg-background/10 rounded-lg text-center hover:bg-background/20 transition-colors cursor-pointer"
-                >
-                  {locality}
+    <footer className="relative bg-gradient-to-br from-luxury-dark-900 to-luxury-dark-800 text-accent overflow-hidden">
+      {/* Decorative element */}
+      <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-radial from-accent/10 via-accent/5 to-transparent rounded-full transform translate-x-1/3 -translate-y-1/3"></div>
+      
+      <div className="relative container mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-16">
+          {/* Navigation */}
+          <nav className="flex flex-col gap-6">
+            {navigationLinks.map((link, index) => (
+              <a
+                key={index}
+                href={link.href}
+                className="text-xl font-light text-accent hover:text-background transition-all duration-300 relative group"
+              >
+                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-4 -translate-x-6 group-hover:-translate-x-0"></span>
+                <span className="group-hover:ml-6 transition-all duration-300">{link.label}</span>
+              </a>
+            ))}
+          </nav>
+          
+          {/* Contact Information */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8 bg-accent/5 backdrop-blur-sm rounded-lg border border-accent/20">
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-background uppercase tracking-widest mb-4">Contact</h3>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <Phone className="w-4 h-4 text-accent" />
+                  <span className="text-sm">+212 5 22 XX XX XX</span>
                 </div>
-              ))}
+                <div className="flex items-center gap-3">
+                  <Mail className="w-4 h-4 text-accent" />
+                  <a href="mailto:contact@iman-promotion.ma" className="text-sm hover:text-background transition-colors">
+                    contact@iman-promotion.ma
+                  </a>
+                </div>
+                <div className="flex items-center gap-3">
+                  <MapPin className="w-4 h-4 text-accent" />
+                  <span className="text-sm">Casablanca, Maroc</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-background uppercase tracking-widest mb-4">Horaires</h3>
+              <div className="space-y-2">
+                <p className="text-sm">Lun - Ven: 9h00 - 18h30</p>
+                <p className="text-sm">Samedi: 10h00 - 17h00</p>
+                <p className="text-sm">Dimanche: Sur rendez-vous</p>
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-background uppercase tracking-widest mb-4">Services</h3>
+              <div className="space-y-2">
+                <p className="text-sm">Promotion immobilière</p>
+                <p className="text-sm">Estimation gratuite</p>
+                <p className="text-sm">Conseil personnalisé</p>
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-background uppercase tracking-widest mb-4">Suivez-nous</h3>
+              <div className="flex gap-4">
+                {socialLinks.map((social, index) => (
+                  <a
+                    key={index}
+                    href={social.href}
+                    aria-label={social.label}
+                    className="w-10 h-10 border border-accent rounded-full flex items-center justify-center text-accent hover:bg-accent hover:text-luxury-dark-900 transition-all duration-300 hover:-translate-y-1"
+                  >
+                    <social.icon className="w-5 h-5" />
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
-
-          {/* Right - Catalog */}
-          <div className="text-center">
-            <img
-              src="https://images.unsplash.com/photo-1460925895917-afdab827c52f"
-              alt="Catalogue"
-              className="w-full h-48 object-cover rounded-lg mb-4"
-            />
-            
+        </div>
+        
+        {/* Brand Section */}
+        <div className="text-center py-12 border-t border-accent/20">
+          <h1 className="text-4xl md:text-6xl lg:text-8xl font-light tracking-[0.2em] text-accent opacity-80 mb-3 font-gotham">
+            IMAN PROMOTION
+          </h1>
+          <p className="text-sm tracking-[0.25em] text-background uppercase opacity-60 font-gotham">
+            Excellence Immobilière
+          </p>
+          
+          {/* Catalog Download */}
+          <div className="mt-8 max-w-md mx-auto">
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="secondary" size="lg" className="w-full">
+                <Button variant="luxury" size="lg" className="w-full">
                   Télécharger le catalogue
                 </Button>
               </DialogTrigger>
@@ -190,6 +225,15 @@ const Footer = () => {
               </DialogContent>
             </Dialog>
           </div>
+        </div>
+        
+        {/* Copyright */}
+        <div className="text-center pt-8 border-t border-accent/10">
+          <p className="text-xs text-accent opacity-70">
+            © 2024 IMAN Promotion. Tous droits réservés. | 
+            <a href="/mentions-legales" className="hover:text-background transition-colors ml-1">Mentions légales</a> | 
+            <a href="/politique-confidentialite" className="hover:text-background transition-colors ml-1">Politique de confidentialité</a>
+          </p>
         </div>
       </div>
     </footer>
