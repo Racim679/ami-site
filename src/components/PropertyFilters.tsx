@@ -119,7 +119,7 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
   };
 
   return (
-    <div className={`bg-emerald-700 p-6 rounded-lg ${className}`}>
+    <div className={`bg-gradient-to-br from-primary to-primary-dark p-6 rounded-2xl shadow-luxury ${className}`}>
       {/* Filtres de base */}
       <div className="grid grid-cols-1 md:grid-cols-7 gap-4 items-end">
         {/* Typologie */}
@@ -232,7 +232,7 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
         <div className="mt-6">
           <Button
             onClick={handleSearch}
-            className="bg-amber-500 hover:bg-amber-600 text-white h-12 w-full font-medium"
+            className="bg-gradient-to-r from-accent to-accent-light hover:from-accent-light hover:to-accent text-white h-12 w-full font-medium shadow-elegant hover:shadow-luxury transition-all duration-300 hover:scale-105"
           >
             Rechercher
           </Button>
@@ -257,7 +257,7 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
               <Button
                 variant="outline"
                 onClick={() => setShowCaracteristiques(!showCaracteristiques)}
-                className={`bg-white/10 border-white/20 text-white hover:bg-white/20 ${showCaracteristiques ? 'bg-amber-500 hover:bg-amber-600' : ''}`}
+                className={`bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-300 ${showCaracteristiques ? 'bg-gradient-to-r from-accent to-accent-light hover:from-accent-light hover:to-accent' : ''}`}
               >
                 Caractéristiques
                 <ChevronDown className={`ml-2 h-4 w-4 transition-transform ${showCaracteristiques ? 'rotate-180' : ''}`} />
@@ -266,7 +266,7 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
               <Button
                 variant="outline"
                 onClick={() => setShowCommodites(!showCommodites)}
-                className={`bg-white/10 border-white/20 text-white hover:bg-white/20 ${showCommodites ? 'bg-amber-500 hover:bg-amber-600' : ''}`}
+                className={`bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-300 ${showCommodites ? 'bg-gradient-to-r from-accent to-accent-light hover:from-accent-light hover:to-accent' : ''}`}
               >
                 Commodités
                 <ChevronDown className={`ml-2 h-4 w-4 transition-transform ${showCommodites ? 'rotate-180' : ''}`} />
@@ -275,7 +275,7 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
               <Button
                 variant="outline"
                 onClick={() => setShowSecurite(!showSecurite)}
-                className={`bg-white/10 border-white/20 text-white hover:bg-white/20 ${showSecurite ? 'bg-amber-500 hover:bg-amber-600' : ''}`}
+                className={`bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-300 ${showSecurite ? 'bg-gradient-to-r from-accent to-accent-light hover:from-accent-light hover:to-accent' : ''}`}
               >
                 Sécurité & Accessibilité
                 <ChevronDown className={`ml-2 h-4 w-4 transition-transform ${showSecurite ? 'rotate-180' : ''}`} />
@@ -284,7 +284,7 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
               <Button
                 variant="outline"
                 onClick={() => setShowDocuments(!showDocuments)}
-                className={`bg-white/10 border-white/20 text-white hover:bg-white/20 ${showDocuments ? 'bg-amber-500 hover:bg-amber-600' : ''}`}
+                className={`bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-300 ${showDocuments ? 'bg-gradient-to-r from-accent to-accent-light hover:from-accent-light hover:to-accent' : ''}`}
               >
                 Documents Associés
                 <ChevronDown className={`ml-2 h-4 w-4 transition-transform ${showDocuments ? 'rotate-180' : ''}`} />
@@ -293,7 +293,7 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
               <Button
                 variant="outline"
                 onClick={() => setShowProximite(!showProximite)}
-                className={`bg-white/10 border-white/20 text-white hover:bg-white/20 ${showProximite ? 'bg-amber-500 hover:bg-amber-600' : ''}`}
+                className={`bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-300 ${showProximite ? 'bg-gradient-to-r from-accent to-accent-light hover:from-accent-light hover:to-accent' : ''}`}
               >
                 Proximité
                 <ChevronDown className={`ml-2 h-4 w-4 transition-transform ${showProximite ? 'rotate-180' : ''}`} />
@@ -302,7 +302,7 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
               <Button
                 variant="outline"
                 onClick={() => setShowVue(!showVue)}
-                className={`bg-white/10 border-white/20 text-white hover:bg-white/20 ${showVue ? 'bg-amber-500 hover:bg-amber-600' : ''}`}
+                className={`bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-300 ${showVue ? 'bg-gradient-to-r from-accent to-accent-light hover:from-accent-light hover:to-accent' : ''}`}
               >
                 Vue
                 <ChevronDown className={`ml-2 h-4 w-4 transition-transform ${showVue ? 'rotate-180' : ''}`} />
