@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import ModernHeader from "@/components/ModernHeader";
 import HeroCarousel from "@/components/HeroCarousel";
 import BiensSection from "@/components/BiensSection";
 import ApartmentExplorer from "@/components/ApartmentExplorer";
@@ -11,7 +11,7 @@ import WhatsAppFloatingButton from "@/components/WhatsAppFloatingButton";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <ModernHeader />
       <main>
         {/* Hero Section - Video Carousel */}
         <HeroCarousel />
