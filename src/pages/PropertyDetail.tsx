@@ -7,6 +7,8 @@ import { ArrowLeft, MapPin, Phone, MessageCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
 import SimilarPropertiesCarousel from '@/components/SimilarPropertiesCarousel';
+import DynamicTypeCarousel from '@/components/DynamicTypeCarousel';
+import { usePropertyTypeStorage } from '@/hooks/usePropertyTypeStorage';
 import PropertyCarousel from '@/components/PropertyCarousel';
 import PropertyVideoCarousel from '@/components/PropertyVideoCarousel';
 import PropertyInfoSection from '@/components/PropertyInfoSection';
@@ -108,6 +110,7 @@ const PropertyDetail: React.FC = () => {
   const [property, setProperty] = useState<PropertyDetailData | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const { storePropertyType } = usePropertyTypeStorage();
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -159,6 +162,11 @@ const PropertyDetail: React.FC = () => {
           console.log('Final security:', transformedData.property_security_structured);
           
           setProperty(transformedData);
+          
+          // Stocker le type de bien dans localStorage si disponible
+          if (transformedData.typology) {
+            storePropertyType(transformedData.typology);
+          }
         }
       } catch (error) {
         console.error('Erreur lors du chargement de la propriété:', error);
@@ -439,6 +447,11 @@ const PropertyDetail: React.FC = () => {
           </div>
         </div>
       </main>
+      
+      {/* Carrousel dynamique par type */}
+      <DynamicTypeCarousel 
+        currentPropertyId={property.id}
+      />
       
       {/* Section des biens similaires */}
       <SimilarPropertiesCarousel 

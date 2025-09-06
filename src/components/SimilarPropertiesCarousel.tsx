@@ -6,6 +6,7 @@ import { MapPin, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
+import { usePropertyTypeStorage } from '@/hooks/usePropertyTypeStorage';
 
 interface Property {
   id: string;
@@ -38,6 +39,7 @@ const SimilarPropertiesCarousel: React.FC<SimilarPropertiesCarouselProps> = ({
 }) => {
   const [similarProperties, setSimilarProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
+  const { storePropertyType } = usePropertyTypeStorage();
   
   const [emblaRef] = useEmblaCarousel(
     { loop: true, dragFree: true },
@@ -143,6 +145,12 @@ const SimilarPropertiesCarousel: React.FC<SimilarPropertiesCarouselProps> = ({
     return parts.join(', ') || 'Localisation non spécifiée';
   };
 
+  const handlePropertyClick = (property: Property) => {
+    if (property.typology) {
+      storePropertyType(property.typology);
+    }
+  };
+
   return (
     <section className="py-16 bg-muted/30">
       <div className="container mx-auto px-4">
@@ -202,7 +210,10 @@ const SimilarPropertiesCarousel: React.FC<SimilarPropertiesCarouselProps> = ({
                       )}
                     </div>
 
-                    <Link to={`/bien/${property.id}`}>
+                    <Link 
+                      to={`/bien/${property.id}`}
+                      onClick={() => handlePropertyClick(property)}
+                    >
                       <Button className="w-full group">
                         Voir les détails
                         <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />

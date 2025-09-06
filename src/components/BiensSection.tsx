@@ -3,9 +3,12 @@ import { Button } from "@/components/ui/button";
 import { EnhancedCard, EnhancedCardContent } from "@/components/ui/enhanced-card";
 import { Section, SectionHeader, SectionTitle, SectionSubtitle } from "@/components/ui/section";
 import { MapPin, Bed, Bath, Square, Eye, Heart } from "lucide-react";
+import { Link } from "react-router-dom";
 import PropertyFilters, { FilterState } from "@/components/PropertyFilters";
 import FavoritesSystem from "./FavoritesSystem";
+import { usePropertyTypeStorage } from "@/hooks/usePropertyTypeStorage";
 const BiensSection = () => {
+  const { storePropertyType } = usePropertyTypeStorage();
   const [filters, setFilters] = useState<FilterState>({
     typeOffre: "",
     type: "",
@@ -174,6 +177,12 @@ const BiensSection = () => {
     const increment = window.innerWidth >= 768 ? 9 : 3;
     setVisibleResidences(prev => prev + increment);
   };
+
+  const handlePropertyClick = (residence: any) => {
+    if (residence.typology) {
+      storePropertyType(residence.typology);
+    }
+  };
   return <>
     {/* Hero Section with Enhanced Header */}
     <Section variant="gradient" className="py-12 md:py-16">
@@ -247,10 +256,15 @@ const BiensSection = () => {
 
               {/* Hover Actions */}
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/20">
-                <Button variant="glass" size="lg" className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                  <Eye className="mr-2 h-4 w-4" />
-                  Voir les détails
-                </Button>
+                <Link 
+                  to={`/bien/${residence.id}`}
+                  onClick={() => handlePropertyClick(residence)}
+                >
+                  <Button variant="glass" size="lg" className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                    <Eye className="mr-2 h-4 w-4" />
+                    Voir les détails
+                  </Button>
+                </Link>
               </div>
             </div>
 
@@ -292,9 +306,14 @@ const BiensSection = () => {
                     {residence.typology}
                   </span>
                 </div>
-                <Button variant="outline" size="sm" className="font-semibold">
-                  Détails
-                </Button>
+                <Link 
+                  to={`/bien/${residence.id}`}
+                  onClick={() => handlePropertyClick(residence)}
+                >
+                  <Button variant="outline" size="sm" className="font-semibold">
+                    Détails
+                  </Button>
+                </Link>
               </div>
             </EnhancedCardContent>
           </EnhancedCard>
