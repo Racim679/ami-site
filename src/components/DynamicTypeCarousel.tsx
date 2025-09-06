@@ -109,7 +109,6 @@ const DynamicTypeCarousel: React.FC<DynamicTypeCarouselProps> = ({
     if (emblaApi) emblaApi.scrollNext();
   };
 
-  // Ne pas afficher si pas de type sélectionné ou pas de propriétés
   console.log('DynamicTypeCarousel - Render conditions:', {
     selectedType,
     loading,
@@ -117,23 +116,38 @@ const DynamicTypeCarousel: React.FC<DynamicTypeCarouselProps> = ({
     shouldRender: selectedType && !loading && properties.length > 0
   });
 
-  if (!selectedType || loading) {
-    console.log('DynamicTypeCarousel - Not rendering: no type or loading');
+  if (!selectedType && !loading) {
+    console.log('DynamicTypeCarousel - Not rendering: no type selected');
     return null;
+  }
+
+  if (loading) {
+    return (
+      <section className={`py-20 bg-gradient-subtle ${className}`}>
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <div className="animate-pulse">
+              <div className="h-8 bg-muted rounded w-64 mx-auto mb-4"></div>
+              <div className="h-4 bg-muted rounded w-96 mx-auto"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
   }
 
   if (properties.length === 0) {
     console.log('DynamicTypeCarousel - Not rendering: no properties found');
-    // Afficher un message d'information au lieu de ne rien afficher
     return (
-      <section className={`py-16 bg-gradient-subtle ${className}`}>
+      <section className={`py-20 bg-gradient-subtle ${className}`}>
         <div className="container mx-auto px-4">
           <div className="text-center">
-            <h2 className="text-3xl font-bold mb-4 text-luxury-navy">
-              Biens de type "{selectedType}"
+            <h2 className="text-3xl font-bold mb-4 text-secondary">
+              Autres biens de type "{selectedType}"
             </h2>
             <p className="text-muted-foreground text-lg">
-              Aucun autre bien de ce type n'est actuellement disponible
+              Aucun autre bien de ce type n'est actuellement disponible. 
+              Explorez nos autres propriétés disponibles.
             </p>
           </div>
         </div>

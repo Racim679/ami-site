@@ -2,7 +2,7 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 interface SectionProps extends React.HTMLAttributes<HTMLElement> {
-  variant?: "default" | "gradient" | "dark" | "muted" | "accent"
+  variant?: "default" | "gradient" | "dark" | "muted" | "accent" | "luxury" | "premium"
   container?: boolean
 }
 
@@ -13,11 +13,13 @@ const Section = React.forwardRef<HTMLElement, SectionProps>(
       gradient: "bg-gradient-to-br from-muted via-background to-muted/50",
       dark: "bg-secondary text-secondary-foreground",
       muted: "bg-muted/30 text-foreground",
-      accent: "bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5"
+      accent: "bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5",
+      luxury: "bg-gradient-to-br from-background via-muted/20 to-accent/5",
+      premium: "bg-gradient-to-br from-primary/3 via-background to-accent/3 relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-primary/5 before:to-transparent before:animate-gradient"
     }
 
     const content = container ? (
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 lg:px-8">
         {children}
       </div>
     ) : children
@@ -26,7 +28,7 @@ const Section = React.forwardRef<HTMLElement, SectionProps>(
       <section
         ref={ref}
         className={cn(
-          "py-16 md:py-24 transition-all duration-300",
+          "py-20 md:py-28 lg:py-32 transition-all duration-300",
           variants[variant],
           className
         )}
@@ -58,7 +60,7 @@ const SectionTitle = React.forwardRef<
   <h2
     ref={ref}
     className={cn(
-      "text-4xl md:text-5xl lg:text-6xl font-bold font-heading mb-6 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent leading-tight",
+      "text-4xl md:text-5xl lg:text-7xl font-bold font-heading mb-8 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent leading-tight tracking-tight",
       className
     )}
     {...props}
@@ -73,7 +75,7 @@ const SectionSubtitle = React.forwardRef<
   <p
     ref={ref}
     className={cn(
-      "text-xl md:text-2xl text-muted-foreground font-body leading-relaxed",
+      "text-xl md:text-2xl lg:text-3xl text-muted-foreground font-body leading-relaxed max-w-4xl mx-auto",
       className
     )}
     {...props}

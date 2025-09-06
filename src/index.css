@@ -74,19 +74,19 @@ All colors MUST be HSL.
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     
-    /* Brand Colors - Luxury Real Estate Palette */
-    --primary: 24 84% 48%;        /* Warm gold/amber */
-    --primary-light: 35 88% 65%;  /* Lighter gold */
-    --primary-dark: 18 80% 35%;   /* Deep amber */
+    /* Brand Colors - Luxury Real Estate Palette with #beaf87 */
+    --primary: 45 35% 64%;        /* #beaf87 - Luxury green-gold */
+    --primary-light: 45 45% 72%;  /* Lighter green-gold */
+    --primary-dark: 45 25% 56%;   /* Deeper green-gold */
     --primary-foreground: 0 0% 100%;
     
-    --secondary: 215 28% 17%;     /* Deep navy blue */
-    --secondary-light: 215 35% 25%;
+    --secondary: 210 40% 25%;     /* Deep navy blue for elegance */
+    --secondary-light: 210 35% 35%;
     --secondary-foreground: 0 0% 100%;
     
-    --accent: 343 75% 51%;        /* Elegant rose gold */
-    --accent-light: 343 80% 70%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 42 40% 68%;         /* Champagne gold complement */
+    --accent-light: 42 50% 76%;
+    --accent-foreground: 210 40% 15%;
     
     /* Surface Colors */
     --card: 0 0% 100%;
@@ -114,19 +114,22 @@ All colors MUST be HSL.
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
     
-    /* Gradients */
+    /* Luxury Gradients with #beaf87 */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-light)) 100%);
     --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--secondary-light)) 100%);
     --gradient-hero: linear-gradient(135deg, hsl(var(--primary-dark)) 0%, hsl(var(--primary)) 50%, hsl(var(--accent)) 100%);
+    --gradient-luxury: linear-gradient(145deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
     --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--muted)) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--muted)) 100%);
     
-    /* Shadows */
+    /* Luxury Shadows */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    --shadow-luxury: 0 25px 50px -12px rgba(24, 78, 42, 0.25);
-    --shadow-gold: 0 8px 32px rgba(245, 158, 11, 0.35);
+    --shadow-luxury: 0 25px 50px -12px rgba(190, 175, 135, 0.3);
+    --shadow-gold: 0 8px 32px rgba(190, 175, 135, 0.4);
+    --shadow-elegant: 0 10px 30px -10px rgba(190, 175, 135, 0.25);
     
     /* Component-specific */
     --sidebar-background: 0 0% 100%;
@@ -138,9 +141,9 @@ All colors MUST be HSL.
     --sidebar-border: 214.3 31.8% 91.4%;
     --sidebar-ring: 24 84% 48%;
     
-    --chatbot-primary: 24 84% 48%;
+    --chatbot-primary: 45 35% 64%;
     --chatbot-primary-foreground: 0 0% 100%;
-    --chatbot-hover: 35 88% 65%;
+    --chatbot-hover: 45 45% 72%;
     
     --radius: 12px;
   }
@@ -149,17 +152,17 @@ All colors MUST be HSL.
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
     
-    --primary: 35 88% 65%;
-    --primary-light: 45 93% 75%;
-    --primary-dark: 24 84% 48%;
+    --primary: 45 45% 72%;
+    --primary-light: 45 55% 80%;
+    --primary-dark: 45 35% 64%;
     --primary-foreground: 240 10% 3.9%;
     
-    --secondary: 215 50% 25%;
-    --secondary-light: 215 55% 35%;
+    --secondary: 210 50% 30%;
+    --secondary-light: 210 45% 40%;
     --secondary-foreground: 0 0% 98%;
     
-    --accent: 343 85% 65%;
-    --accent-light: 343 90% 80%;
+    --accent: 42 50% 76%;
+    --accent-light: 42 60% 84%;
     --accent-foreground: 240 10% 3.9%;
     
     --card: 240 10% 8%;
@@ -199,9 +202,9 @@ All colors MUST be HSL.
     --sidebar-border: 240 10% 20%;
     --sidebar-ring: 35 88% 65%;
     
-    --chatbot-primary: 35 88% 65%;
+    --chatbot-primary: 45 45% 72%;
     --chatbot-primary-foreground: 240 10% 3.9%;
-    --chatbot-hover: 45 93% 75%;
+    --chatbot-hover: 45 55% 80%;
   }
 }
 
