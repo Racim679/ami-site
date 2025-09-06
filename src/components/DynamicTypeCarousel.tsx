@@ -58,13 +58,17 @@ const DynamicTypeCarousel: React.FC<DynamicTypeCarouselProps> = ({
   useEffect(() => {
     // Récupérer le type stocké dans localStorage
     const storedType = getStoredPropertyType();
+    console.log('DynamicTypeCarousel - Stored type from localStorage:', storedType);
     setSelectedType(storedType);
 
     const fetchPropertiesByType = async () => {
       if (!storedType) {
+        console.log('DynamicTypeCarousel - No stored type found, not loading');
         setLoading(false);
         return;
       }
+
+      console.log('DynamicTypeCarousel - Fetching properties for type:', storedType);
 
       try {
         const { data, error } = await supabase
@@ -76,13 +80,16 @@ const DynamicTypeCarousel: React.FC<DynamicTypeCarouselProps> = ({
               city:cities(name)
             )
           `)
-          .eq('status', 'available')
+          .neq('status', 'Vendu')
           .eq('typology', storedType)
           .neq('id', currentPropertyId || '')
           .limit(12);
 
+        console.log('DynamicTypeCarousel - Query result:', { data, error });
+
         if (error) throw error;
 
+        console.log('DynamicTypeCarousel - Found properties count:', data?.length || 0);
         setProperties(data || []);
       } catch (error) {
         console.error('Erreur lors du chargement des biens par type:', error);
@@ -103,8 +110,35 @@ const DynamicTypeCarousel: React.FC<DynamicTypeCarouselProps> = ({
   };
 
   // Ne pas afficher si pas de type sélectionné ou pas de propriétés
-  if (!selectedType || loading || properties.length === 0) {
+  console.log('DynamicTypeCarousel - Render conditions:', {
+    selectedType,
+    loading,
+    propertiesCount: properties.length,
+    shouldRender: selectedType && !loading && properties.length > 0
+  });
+
+  if (!selectedType || loading) {
+    console.log('DynamicTypeCarousel - Not rendering: no type or loading');
     return null;
+  }
+
+  if (properties.length === 0) {
+    console.log('DynamicTypeCarousel - Not rendering: no properties found');
+    // Afficher un message d'information au lieu de ne rien afficher
+    return (
+      <section className={`py-16 bg-gradient-subtle ${className}`}>
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold mb-4 text-luxury-navy">
+              Biens de type "{selectedType}"
+            </h2>
+            <p className="text-muted-foreground text-lg">
+              Aucun autre bien de ce type n'est actuellement disponible
+            </p>
+          </div>
+        </div>
+      </section>
+    );
   }
 
   const formatPrice = (price?: number) => {
