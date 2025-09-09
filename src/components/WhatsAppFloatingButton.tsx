@@ -7,9 +7,19 @@ interface WhatsAppFloatingButtonProps {
 const WhatsAppFloatingButton = ({ phoneNumber }: WhatsAppFloatingButtonProps) => {
   const cleanPhoneNumber = phoneNumber.replace(/[^0-9]/g, '');
   const whatsappUrl = `https://api.whatsapp.com/send/?phone=${cleanPhoneNumber}&text=Bonjour%2C+je+vous+contacte+concernant+le+bien+que+vous+proposez+via+AMI+Immobilier.+Pourriez-vous+me+donner+plus+d%27informations+s%27il+vous+pla%C3%AEt+%3F&type=phone_number&app_absent=0`;
+  const [isVisible, setIsVisible] = React.useState(true);
 
   useEffect(() => {
-    console.log('WhatsApp component mounted, setting up popup');
+    console.log('WhatsApp component mounted, setting up popup and chatbot listener');
+    
+    // Écouter les changements d'état du chatbot
+    const handleChatbotStateChange = (event: CustomEvent) => {
+      const { isOpen } = event.detail;
+      console.log('Chatbot state changed:', isOpen);
+      setIsVisible(!isOpen);
+    };
+
+    window.addEventListener('chatbot-state-change', handleChatbotStateChange as EventListener);
     
     const setupPopup = () => {
       const button = document.getElementById('whatsappButton');
@@ -25,8 +35,10 @@ const WhatsAppFloatingButton = ({ phoneNumber }: WhatsAppFloatingButtonProps) =>
 
       // Afficher le popup automatiquement après 3 secondes
       const showPopupTimeout = setTimeout(() => {
-        console.log('Showing WhatsApp popup automatically');
-        popup.classList.add('active');
+        if (isVisible) {
+          console.log('Showing WhatsApp popup automatically');
+          popup.classList.add('active');
+        }
       }, 3000);
       
       // Fermer le popup
@@ -69,8 +81,9 @@ const WhatsAppFloatingButton = ({ phoneNumber }: WhatsAppFloatingButtonProps) =>
     
     return () => {
       clearTimeout(setupTimeout);
+      window.removeEventListener('chatbot-state-change', handleChatbotStateChange as EventListener);
     };
-  }, []);
+  }, [isVisible]);
 
   return (
     <>
@@ -134,6 +147,36 @@ const WhatsAppFloatingButton = ({ phoneNumber }: WhatsAppFloatingButtonProps) =>
             right: 24px;
             z-index: 9999;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(0) scale(1);
+            opacity: 1;
+          }
+
+          .whatsapp-widget.hidden {
+            transform: translateX(100px) scale(0.8);
+            opacity: 0;
+            pointer-events: none;
+          }
+
+          .whatsapp-widget.visible {
+            transform: translateX(0) scale(1);
+            opacity: 1;
+            animation: whatsapp-appear 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+          }
+
+          @keyframes whatsapp-appear {
+            0% {
+              transform: translateX(100px) scale(0.8) rotate(180deg);
+              opacity: 0;
+            }
+            50% {
+              transform: translateX(-10px) scale(1.1) rotate(0deg);
+              opacity: 0.8;
+            }
+            100% {
+              transform: translateX(0) scale(1) rotate(0deg);
+              opacity: 1;
+            }
           }
 
           .whatsapp-button {
@@ -315,7 +358,7 @@ const WhatsAppFloatingButton = ({ phoneNumber }: WhatsAppFloatingButtonProps) =>
         `}
       </style>
       
-      <div className="whatsapp-widget" id="whatsappWidget">
+      <div className={`whatsapp-widget ${isVisible ? 'visible' : 'hidden'}`} id="whatsappWidget">
         {/* Popup */}
         <div className="whatsapp-popup" id="whatsappPopup">
           <button className="popup-close" id="popupClose" aria-label="Fermer">

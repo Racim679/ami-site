@@ -38,6 +38,10 @@ const Chatbot = () => {
     if (isOpen && inputRef.current) {
       inputRef.current.focus();
     }
+    
+    // Émettre un événement pour informer les autres composants de l'état du chatbot
+    const event = new CustomEvent('chatbot-state-change', { detail: { isOpen } });
+    window.dispatchEvent(event);
   }, [isOpen]);
 
   const sendMessage = async () => {
