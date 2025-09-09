@@ -66,7 +66,7 @@ const WhatsAppFloatingButton = ({ phoneNumber }: WhatsAppFloatingButtonProps) =>
 
           .whatsapp-widget {
             position: fixed;
-            bottom: 24px;
+            bottom: 90px;
             right: 24px;
             z-index: 9999;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -239,7 +239,7 @@ const WhatsAppFloatingButton = ({ phoneNumber }: WhatsAppFloatingButtonProps) =>
 
           @media (max-width: 480px) {
             .whatsapp-widget {
-              bottom: 16px;
+              bottom: 80px;
               right: 16px;
             }
 
