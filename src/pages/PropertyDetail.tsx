@@ -13,6 +13,7 @@ import PropertyCarousel from '@/components/PropertyCarousel';
 import PropertyVideoCarousel from '@/components/PropertyVideoCarousel';
 import PropertyInfoSection from '@/components/PropertyInfoSection';
 import PropertyMap from '@/components/PropertyMap';
+import MediaCarousel from '@/components/MediaCarousel';
 import { PropertyAmenitiesSection, PropertySecuritySection, PropertyDocumentsSection, PropertyNearbySection, PropertyBuildingSection } from '@/components/PropertyInfoSection';
 
 interface PropertyDetailData {
@@ -109,6 +110,8 @@ const PropertyDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [property, setProperty] = useState<PropertyDetailData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [carouselOpen, setCarouselOpen] = useState(false);
+  const [carouselIndex, setCarouselIndex] = useState(0);
   const { toast } = useToast();
   const { storePropertyType } = usePropertyTypeStorage();
 
@@ -237,6 +240,39 @@ const PropertyDetail: React.FC = () => {
     return `https://wa.me/${property.phone_whatsapp.replace(/[^0-9]/g, '')}?text=${message}`;
   };
 
+  const getMediaItems = () => {
+    const media = [];
+    
+    // Ajouter les photos
+    if (property?.property_photos) {
+      property.property_photos.forEach(photo => {
+        media.push({
+          type: 'image' as const,
+          url: photo.photo_url,
+          caption: photo.caption
+        });
+      });
+    }
+    
+    // Ajouter les vidéos
+    if (property?.property_videos) {
+      property.property_videos.forEach(video => {
+        media.push({
+          type: 'video' as const,
+          url: video.video_url,
+          videoType: video.video_type || 'youtube'
+        });
+      });
+    }
+    
+    return media;
+  };
+
+  const openCarousel = (index: number) => {
+    setCarouselIndex(index);
+    setCarouselOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -257,9 +293,9 @@ const PropertyDetail: React.FC = () => {
             {/* Main Image */}
             <div className="mb-8">
               <div 
-                className="w-full rounded-lg overflow-hidden bg-muted cursor-pointer"
+                className="w-full rounded-lg overflow-hidden bg-muted cursor-pointer hover:opacity-95 transition-opacity"
                 style={{ height: '82vh' }}
-                onClick={() => property.property_photos && property.property_photos.length > 0 && window.open(property.property_photos[0].photo_url, '_blank')}
+                onClick={() => openCarousel(0)}
               >
                 {property.image_url ? (
                   <img
@@ -285,7 +321,32 @@ const PropertyDetail: React.FC = () => {
             {/* Photo Carousel */}
             {property.property_photos && property.property_photos.length > 0 && (
               <div className="mb-8">
-                <PropertyCarousel photos={property.property_photos} />
+                <div className="relative">
+                  <h3 className="text-2xl font-bold mb-4">Photos de la propriété</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {property.property_photos.slice(0, 4).map((photo, index) => (
+                      <div 
+                        key={index}
+                        className="aspect-video rounded-lg overflow-hidden bg-muted cursor-pointer hover:opacity-90 transition-opacity"
+                        onClick={() => openCarousel(index)}
+                      >
+                        <img
+                          src={photo.photo_url}
+                          alt={photo.caption || `Photo ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-center text-sm text-muted-foreground mt-2">
+                    Affichage de {Math.min(4, property.property_photos.length)} sur {property.property_photos.length} photo{property.property_photos.length > 1 ? 's' : ''}
+                    {property.property_photos.length > 4 && (
+                      <span className="block mt-1 text-primary cursor-pointer" onClick={() => openCarousel(0)}>
+                        Cliquez sur une image pour voir toutes les photos et vidéos
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
             )}
 
@@ -459,6 +520,14 @@ const PropertyDetail: React.FC = () => {
         typology={property.typology}
         cityName={property.locality?.city?.name}
         surface={property.surface}
+      />
+
+      {/* Media Carousel */}
+      <MediaCarousel
+        isOpen={carouselOpen}
+        onClose={() => setCarouselOpen(false)}
+        media={getMediaItems()}
+        initialIndex={carouselIndex}
       />
     </div>
   );

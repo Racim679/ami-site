@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
 import PropertyCarousel from '@/components/PropertyCarousel';
 import PropertyVideoPlayer from '@/components/PropertyVideoPlayer';
+import MediaCarousel from '@/components/MediaCarousel';
 import PropertyInfoSection, {
   PropertyAmenitiesSection,
   PropertySecuritySection,
@@ -60,6 +61,8 @@ const PropertyPage: React.FC = () => {
   const { propertyId } = useParams<{ propertyId: string }>();
   const [property, setProperty] = useState<PropertyPageData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [carouselOpen, setCarouselOpen] = useState(false);
+  const [carouselIndex, setCarouselIndex] = useState(0);
   const { toast } = useToast();
 
   console.log('PropertyPage - propertyId from URL:', propertyId);
@@ -223,6 +226,39 @@ const PropertyPage: React.FC = () => {
     return parts.join(', ') || 'Localisation non spécifiée';
   };
 
+  const getMediaItems = () => {
+    const media = [];
+    
+    // Ajouter les photos
+    if (property?.photos) {
+      property.photos.forEach(photo => {
+        media.push({
+          type: 'image' as const,
+          url: photo.photo_url,
+          caption: photo.caption
+        });
+      });
+    }
+    
+    // Ajouter les vidéos
+    if (property?.videos) {
+      property.videos.forEach(video => {
+        media.push({
+          type: 'video' as const,
+          url: video.video_url,
+          videoType: video.video_type || 'youtube'
+        });
+      });
+    }
+    
+    return media;
+  };
+
+  const openCarousel = (index: number) => {
+    setCarouselIndex(index);
+    setCarouselOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -242,7 +278,10 @@ const PropertyPage: React.FC = () => {
           {property.photos && property.photos.length > 0 ? (
             <div className="relative">
               {/* Main large image */}
-              <div className="aspect-[16/9] rounded-lg overflow-hidden bg-muted mb-4">
+              <div 
+                className="aspect-[16/9] rounded-lg overflow-hidden bg-muted mb-4 cursor-pointer hover:opacity-95 transition-opacity"
+                onClick={() => openCarousel(0)}
+              >
                 <img
                   src={property.photos[0].photo_url}
                   alt={property.photos[0].caption || property.title}
@@ -254,7 +293,11 @@ const PropertyPage: React.FC = () => {
               {property.photos.length > 1 && (
                 <div className="grid grid-cols-4 gap-2">
                   {property.photos.slice(1, 5).map((photo, index) => (
-                    <div key={index} className="relative aspect-video rounded-lg overflow-hidden bg-muted">
+                    <div 
+                      key={index} 
+                      className="relative aspect-video rounded-lg overflow-hidden bg-muted cursor-pointer hover:opacity-90 transition-opacity"
+                      onClick={() => openCarousel(index + 1)}
+                    >
                       <img
                         src={photo.photo_url}
                         alt={photo.caption || `Photo ${index + 2}`}
@@ -271,7 +314,10 @@ const PropertyPage: React.FC = () => {
               )}
             </div>
           ) : property.image_url ? (
-            <div className="aspect-[16/9] rounded-lg overflow-hidden bg-muted">
+            <div 
+              className="aspect-[16/9] rounded-lg overflow-hidden bg-muted cursor-pointer hover:opacity-95 transition-opacity"
+              onClick={() => openCarousel(0)}
+            >
               <img
                 src={property.image_url}
                 alt={property.title}
@@ -450,6 +496,14 @@ const PropertyPage: React.FC = () => {
         propertyTitle={property.title}
         latitude={property.latitude}
         longitude={property.longitude}
+      />
+
+      {/* Media Carousel */}
+      <MediaCarousel
+        isOpen={carouselOpen}
+        onClose={() => setCarouselOpen(false)}
+        media={getMediaItems()}
+        initialIndex={carouselIndex}
       />
     </div>
   );
