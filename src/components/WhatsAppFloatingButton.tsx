@@ -270,9 +270,9 @@ const WhatsAppFloatingButton = ({ phoneNumber }: WhatsAppFloatingButtonProps) =>
             
             <div className="popup-text">
               <h3 className="popup-title" id="popupTitle">AMI Immobilier</h3>
-              <div className="popup-subtitle" id="popupSubtitle">Support Client</div>
+              <div className="popup-subtitle" id="popupSubtitle">Propriétaire du bien</div>
               <div className="popup-message" id="popupMessage">
-                Bonjour ! Contactez-nous via WhatsApp pour plus d'informations sur ce bien immobilier.
+                Contactez le propriétaire du bien en cliquant sur ce bouton.
               </div>
             </div>
           </div>
