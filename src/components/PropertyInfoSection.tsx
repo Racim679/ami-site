@@ -83,68 +83,68 @@ const PropertyInfoSection: React.FC<PropertyInfoSectionProps> = ({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
           {bedrooms !== undefined && bedrooms > 0 && (
-            <div className="text-center p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
-              <Bed className="w-8 h-8 text-primary mx-auto mb-3" />
-              <div className="text-2xl font-bold text-primary mb-1">{bedrooms}</div>
-              <div className="text-sm text-muted-foreground">Chambre{bedrooms > 1 ? 's' : ''}</div>
+            <div className="text-center p-2 md:p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+              <Bed className="w-6 md:w-8 h-6 md:h-8 text-primary mx-auto mb-2 md:mb-3" />
+              <div className="text-lg md:text-2xl font-bold text-primary mb-1">{bedrooms}</div>
+              <div className="text-xs md:text-sm text-muted-foreground">Chambre{bedrooms > 1 ? 's' : ''}</div>
             </div>
           )}
           
           {bathrooms !== undefined && bathrooms > 0 && (
-            <div className="text-center p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
-              <Bath className="w-8 h-8 text-primary mx-auto mb-3" />
-              <div className="text-2xl font-bold text-primary mb-1">{bathrooms}</div>
-              <div className="text-sm text-muted-foreground">Salle{bathrooms > 1 ? 's' : ''} de bain</div>
+            <div className="text-center p-2 md:p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+              <Bath className="w-6 md:w-8 h-6 md:h-8 text-primary mx-auto mb-2 md:mb-3" />
+              <div className="text-lg md:text-2xl font-bold text-primary mb-1">{bathrooms}</div>
+              <div className="text-xs md:text-sm text-muted-foreground">Salle{bathrooms > 1 ? 's' : ''} de bain</div>
             </div>
           )}
           
           {rooms !== undefined && rooms > 0 && (
-            <div className="text-center p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
-              <Home className="w-8 h-8 text-primary mx-auto mb-3" />
-              <div className="text-2xl font-bold text-primary mb-1">{rooms}</div>
-              <div className="text-sm text-muted-foreground">Pièce{rooms > 1 ? 's' : ''}</div>
+            <div className="text-center p-2 md:p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+              <Home className="w-6 md:w-8 h-6 md:h-8 text-primary mx-auto mb-2 md:mb-3" />
+              <div className="text-lg md:text-2xl font-bold text-primary mb-1">{rooms}</div>
+              <div className="text-xs md:text-sm text-muted-foreground">Pièce{rooms > 1 ? 's' : ''}</div>
             </div>
           )}
           
           {floors !== undefined && floors > 0 && (
-            <div className="text-center p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
-              <Building className="w-8 h-8 text-primary mx-auto mb-3" />
-              <div className="text-2xl font-bold text-primary mb-1">{floors}</div>
-              <div className="text-sm text-muted-foreground">Étage{floors > 1 ? 's' : ''}</div>
+            <div className="text-center p-2 md:p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+              <Building className="w-6 md:w-8 h-6 md:h-8 text-primary mx-auto mb-2 md:mb-3" />
+              <div className="text-lg md:text-2xl font-bold text-primary mb-1">{floors}</div>
+              <div className="text-xs md:text-sm text-muted-foreground">Étage{floors > 1 ? 's' : ''}</div>
             </div>
           )}
           
           {surface !== undefined && surface > 0 && (
-            <div className="text-center p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
-              <Ruler className="w-8 h-8 text-primary mx-auto mb-3" />
-              <div className="text-2xl font-bold text-primary mb-1">{surface}</div>
-              <div className="text-sm text-muted-foreground">m² Surface</div>
+            <div className="text-center p-2 md:p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+              <Ruler className="w-6 md:w-8 h-6 md:h-8 text-primary mx-auto mb-2 md:mb-3" />
+              <div className="text-lg md:text-2xl font-bold text-primary mb-1">{surface}</div>
+              <div className="text-xs md:text-sm text-muted-foreground">m² Surface</div>
             </div>
           )}
           
           {living_area !== undefined && living_area > 0 && (
-            <div className="text-center p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
-              <Home className="w-8 h-8 text-primary mx-auto mb-3" />
-              <div className="text-2xl font-bold text-primary mb-1">{living_area}</div>
-              <div className="text-sm text-muted-foreground">m² Habitable</div>
+            <div className="text-center p-2 md:p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+              <Home className="w-6 md:w-8 h-6 md:h-8 text-primary mx-auto mb-2 md:mb-3" />
+              <div className="text-lg md:text-2xl font-bold text-primary mb-1">{living_area}</div>
+              <div className="text-xs md:text-sm text-muted-foreground">m² Habitable</div>
             </div>
           )}
           
           {getViewText() && (
-            <div className="text-center p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
-              <Eye className="w-8 h-8 text-primary mx-auto mb-3" />
-              <div className="text-sm font-bold text-primary mb-1">Vue</div>
-              <div className="text-sm text-muted-foreground">{getViewText()}</div>
+            <div className="text-center p-2 md:p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+              <Eye className="w-6 md:w-8 h-6 md:h-8 text-primary mx-auto mb-2 md:mb-3" />
+              <div className="text-xs md:text-sm font-bold text-primary mb-1">Vue</div>
+              <div className="text-xs md:text-sm text-muted-foreground">{getViewText()}</div>
             </div>
           )}
           
           {condition && (
-            <div className="text-center p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
-              <Settings className="w-8 h-8 text-primary mx-auto mb-3" />
-              <div className="text-sm font-bold text-primary mb-1">État</div>
-              <div className="text-sm text-muted-foreground">{condition}</div>
+            <div className="text-center p-2 md:p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+              <Settings className="w-6 md:w-8 h-6 md:h-8 text-primary mx-auto mb-2 md:mb-3" />
+              <div className="text-xs md:text-sm font-bold text-primary mb-1">État</div>
+              <div className="text-xs md:text-sm text-muted-foreground">{condition}</div>
             </div>
           )}
         </div>

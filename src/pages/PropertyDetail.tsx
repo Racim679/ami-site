@@ -15,6 +15,7 @@ import PropertyInfoSection from '@/components/PropertyInfoSection';
 import PropertyMap from '@/components/PropertyMap';
 import MediaCarousel from '@/components/MediaCarousel';
 import { PropertyAmenitiesSection, PropertySecuritySection, PropertyDocumentsSection, PropertyNearbySection, PropertyBuildingSection } from '@/components/PropertyInfoSection';
+import PropertyFeaturesTabsSection from '@/components/PropertyFeaturesTabsSection';
 import { formatPrice } from '@/lib/utils';
 
 interface PropertyDetailData {
@@ -401,23 +402,23 @@ const PropertyDetail: React.FC = () => {
               </div>
               
               {/* Additional Property Info */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div className="grid grid-cols-3 md:grid-cols-3 gap-2 md:gap-4 mb-6">
                 {property.surface && (
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm font-medium">Surface:</span>
-                    <span className="text-sm font-bold">{property.surface} m²</span>
+                  <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
+                    <span className="text-xs md:text-sm font-medium">Surface:</span>
+                    <span className="text-xs md:text-sm font-bold">{property.surface} m²</span>
                   </div>
                 )}
                 {property.typology && (
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm font-medium">Type:</span>
-                    <span className="text-sm font-bold">{property.typology}</span>
+                  <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
+                    <span className="text-xs md:text-sm font-medium">Type:</span>
+                    <span className="text-xs md:text-sm font-bold">{property.typology}</span>
                   </div>
                 )}
                 {property.status && (
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm font-medium">Statut:</span>
-                    <span className="inline-block px-2 py-1 bg-primary/10 text-primary rounded text-xs font-medium">
+                  <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
+                    <span className="text-xs md:text-sm font-medium">Statut:</span>
+                    <span className="inline-block px-1 md:px-2 py-1 bg-primary/10 text-primary rounded text-xs font-medium">
                       {property.status}
                     </span>
                   </div>
@@ -428,56 +429,39 @@ const PropertyDetail: React.FC = () => {
             {/* Property Details */}
             {property.property_details && (
               <div className="mb-8">
-                <PropertyInfoSection propertyInfo={{
-                  ...property.property_details,
-                  surface: property.surface
-                }} />
+                <PropertyInfoSection 
+                  propertyInfo={{
+                    ...property.property_details,
+                    surface: property.surface
+                  }} 
+                  className="md:block"
+                />
               </div>
             )}
 
-            {/* Points forts */}
+            {/* Points forts - Onglets */}
             <div className="mb-8">
-              <h2 className="text-2xl font-bold mb-6">Points forts</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <PropertyAmenitiesSection amenities={property.property_amenities_structured || {}} />
-                <PropertySecuritySection security={property.property_security_structured || {}} />
-              </div>
+              <PropertyFeaturesTabsSection 
+                amenities={property.property_amenities_structured || {}}
+                security={property.property_security_structured || {}}
+                documents={property.property_documents_structured || {}}
+                nearby={property.property_nearby_structured || {}}
+                building={property.property_building || []}
+              />
             </div>
 
-            {/* Documents associés */}
-            {property.property_documents_structured && (
-              <div className="mb-8">
-                <PropertyDocumentsSection documents={property.property_documents_structured} />
-              </div>
-            )}
 
             {/* Description */}
             {property.description && (
-              <Card className="mb-8">
-                <CardHeader>
-                  <CardTitle>Description</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground leading-relaxed text-lg">
-                    {property.description}
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Points Forts - À proximité */}
-            {property.property_nearby_structured && (
               <div className="mb-8">
-                <PropertyNearbySection nearby={property.property_nearby_structured} />
+                <h2 className="text-2xl font-bold mb-4">Description</h2>
+                <p className="text-muted-foreground leading-relaxed text-sm md:text-base">
+                  {property.description}
+                </p>
               </div>
             )}
 
-            {/* Building Features */}
-            {property.property_building && property.property_building.length > 0 && (
-              <div className="mb-8">
-                <PropertyBuildingSection items={property.property_building.map(b => ({ building_feature: b.text }))} />
-              </div>
-            )}
+
 
             {/* Map */}
             {property.latitude && property.longitude && (
