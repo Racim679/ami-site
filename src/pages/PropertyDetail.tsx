@@ -323,28 +323,49 @@ const PropertyDetail: React.FC = () => {
             <div className="px-4">
               <div className="relative">
                 <h3 className="text-2xl font-bold mb-4">Photos de la propriété</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {property.property_photos.slice(0, 4).map((photo, index) => (
-                    <div 
-                      key={index}
-                      className="h-48 md:h-56 rounded-lg overflow-hidden bg-muted cursor-pointer hover:opacity-90 transition-opacity"
-                      onClick={() => openCarousel(index)}
-                    >
-                      <img
-                        src={photo.photo_url}
-                        alt={photo.caption || `Photo ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  ))}
+                
+                {/* Mobile: Une seule image */}
+                <div className="block md:hidden">
+                  <div 
+                    className="h-64 rounded-lg overflow-hidden bg-muted cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => openCarousel(0)}
+                  >
+                    <img
+                      src={property.property_photos[0].photo_url}
+                      alt={property.property_photos[0].caption || `Photo principale`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="text-center text-sm text-muted-foreground mt-2">
+                    Cliquez pour voir toutes les {property.property_photos.length} photo{property.property_photos.length > 1 ? 's' : ''}
+                  </div>
                 </div>
-                <div className="text-center text-sm text-muted-foreground mt-2">
-                  Affichage de {Math.min(4, property.property_photos.length)} sur {property.property_photos.length} photo{property.property_photos.length > 1 ? 's' : ''}
-                  {property.property_photos.length > 4 && (
-                    <span className="block mt-1 text-primary cursor-pointer" onClick={() => openCarousel(0)}>
-                      Cliquez sur une image pour voir toutes les photos et vidéos
-                    </span>
-                  )}
+
+                {/* Desktop: Grille de photos */}
+                <div className="hidden md:block">
+                  <div className="grid grid-cols-4 gap-4">
+                    {property.property_photos.slice(0, 4).map((photo, index) => (
+                      <div 
+                        key={index}
+                        className="h-56 rounded-lg overflow-hidden bg-muted cursor-pointer hover:opacity-90 transition-opacity"
+                        onClick={() => openCarousel(index)}
+                      >
+                        <img
+                          src={photo.photo_url}
+                          alt={photo.caption || `Photo ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-center text-sm text-muted-foreground mt-2">
+                    Affichage de {Math.min(4, property.property_photos.length)} sur {property.property_photos.length} photo{property.property_photos.length > 1 ? 's' : ''}
+                    {property.property_photos.length > 4 && (
+                      <span className="block mt-1 text-primary cursor-pointer" onClick={() => openCarousel(0)}>
+                        Cliquez sur une image pour voir toutes les photos et vidéos
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
