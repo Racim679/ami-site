@@ -291,7 +291,7 @@ const PropertyDetail: React.FC = () => {
         <div className="mb-8 -mx-4">
           <div 
             className="w-full bg-muted cursor-pointer hover:opacity-95 transition-opacity"
-            style={{ height: '82vh' }}
+            style={{ height: '90vh' }}
             onClick={() => openCarousel(0)}
           >
             {property.image_url ? (
