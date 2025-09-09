@@ -80,20 +80,20 @@ const MediaCarousel: React.FC<MediaCarouselProps> = ({
   if (!isOpen || !media.length) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-2 md:p-4">
+    <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
       {/* Close Button */}
       <Button
         variant="ghost"
         size="icon"
         onClick={onClose}
-        className="absolute top-2 right-2 md:top-4 md:right-4 z-10 text-white hover:bg-white/20 w-8 h-8 md:w-10 md:h-10"
+        className="absolute top-4 right-4 z-10 text-white hover:bg-white/20 w-10 h-10 md:w-12 md:h-12"
       >
-        <X className="w-4 h-4 md:w-6 md:h-6" />
+        <X className="w-6 h-6 md:w-8 md:h-8" />
       </Button>
 
       {/* Carousel Container */}
-      <div className="w-full max-w-7xl bg-white rounded-lg md:rounded-2xl overflow-hidden shadow-2xl">
-        <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+      <div className="w-full h-full bg-black overflow-hidden">
+        <div className="relative w-full h-full">
           {/* Track */}
           <div 
             className="absolute top-0 left-0 w-full h-full flex transition-transform duration-500 ease-out"
