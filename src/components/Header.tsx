@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { MobileFilters } from "./MobileFilters";
 
 
 const Header = () => {
@@ -98,13 +99,20 @@ const Header = () => {
 
             </nav>
 
-            {/* Logo mobile (visible seulement sur mobile) */}
-            <Link to="/" className="flex items-center lg:hidden">
-              <div className="bg-primary text-primary-foreground px-3 py-1 rounded">
-                <span className="text-lg font-bold site-title">aymen</span>
+            {/* Logo mobile ou Filtres (visible seulement sur mobile) */}
+            {location.pathname === '/nos-biens' ? (
+              <div className="flex items-center lg:hidden">
+                <MobileFilters />
+                <span className="ml-2 text-sm text-muted-foreground font-heading">Filtres</span>
               </div>
-              <span className="ml-2 text-sm text-muted-foreground font-heading">Promotion</span>
-            </Link>
+            ) : (
+              <Link to="/" className="flex items-center lg:hidden">
+                <div className="bg-primary text-primary-foreground px-3 py-1 rounded">
+                  <span className="text-lg font-bold site-title">aymen</span>
+                </div>
+                <span className="ml-2 text-sm text-muted-foreground font-heading">Promotion</span>
+              </Link>
+            )}
 
             {/* Bouton menu mobile */}
             <button
