@@ -18,6 +18,7 @@ import PropertyInfoSection, {
   PropertyDocumentsSection
 } from '@/components/PropertyInfoSection';
 import PropertyQuoteForm from '@/components/PropertyQuoteForm';
+import WhatsAppFloatingButton from "@/components/WhatsAppFloatingButton";
 
 interface PropertyPageData {
   id: string;
@@ -27,6 +28,7 @@ interface PropertyPageData {
   prix_dinar?: number;
   status: string;
   image_url?: string;
+  phone_whatsapp: string;
   created_at: string;
   latitude?: number;
   longitude?: number;
@@ -498,6 +500,9 @@ const PropertyPage: React.FC = () => {
         media={getMediaItems()}
         initialIndex={carouselIndex}
       />
+      
+      {/* WhatsApp Floating Button */}
+      <WhatsAppFloatingButton phoneNumber={property.phone_whatsapp} />
     </div>
   );
 };

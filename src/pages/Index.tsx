@@ -6,7 +6,7 @@ import WhyChooseUs from "@/components/WhyChooseUs";
 import ProjectsSection from "@/components/ProjectsSection";
 import ScrollToTop from "@/components/ScrollToTop";
 import Chatbot from "@/components/Chatbot";
-import WhatsAppFloatingButton from "@/components/WhatsAppFloatingButton";
+
 
 const Index = () => {
   return (
@@ -36,8 +36,6 @@ const Index = () => {
       {/* Chatbot */}
       <Chatbot />
       
-      {/* WhatsApp Button */}
-      <WhatsAppFloatingButton />
     </div>
   );
 };

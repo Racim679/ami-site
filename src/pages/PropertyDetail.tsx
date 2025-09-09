@@ -17,6 +17,7 @@ import MediaCarousel from '@/components/MediaCarousel';
 import { PropertyAmenitiesSection, PropertySecuritySection, PropertyDocumentsSection, PropertyNearbySection, PropertyBuildingSection } from '@/components/PropertyInfoSection';
 import PropertyFeaturesTabsSection from '@/components/PropertyFeaturesTabsSection';
 import { formatPrice } from '@/lib/utils';
+import WhatsAppFloatingButton from "@/components/WhatsAppFloatingButton";
 
 interface PropertyDetailData {
   id: string;
@@ -552,6 +553,9 @@ const PropertyDetail: React.FC = () => {
         media={getMediaItems()}
         initialIndex={carouselIndex}
       />
+      
+      {/* WhatsApp Floating Button */}
+      <WhatsAppFloatingButton phoneNumber={property.phone_whatsapp} />
     </div>
   );
 };

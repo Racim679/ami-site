@@ -1,10 +1,12 @@
 import React from 'react';
 
-const WhatsAppFloatingButton = () => {
-  const phoneNumber = "33765683250";
-  const message = "Bonjour, j'ai été redirigé via votre site web vers vous.\n\nMa demande : [Veuillez indiquer votre demande - vente, location ou achat]";
-  
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+interface WhatsAppFloatingButtonProps {
+  phoneNumber: string;
+}
+
+const WhatsAppFloatingButton = ({ phoneNumber }: WhatsAppFloatingButtonProps) => {
+  const cleanPhoneNumber = phoneNumber.replace(/[^0-9]/g, '');
+  const whatsappUrl = `https://api.whatsapp.com/send/?phone=${cleanPhoneNumber}&text=Bonjour%2C+je+vous+contacte+concernant+le+bien+que+vous+proposez+via+AMI+Immobilier.+Pourriez-vous+me+donner+plus+d%27informations+s%27il+vous+pla%C3%AEt+%3F&type=phone_number&app_absent=0`;
 
   return (
     <>
