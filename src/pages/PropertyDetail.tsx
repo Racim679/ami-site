@@ -291,7 +291,7 @@ const PropertyDetail: React.FC = () => {
         <div className="mb-8 -mx-4">
           <div 
             className="w-full bg-muted cursor-pointer hover:opacity-95 transition-opacity"
-            style={{ height: '90vh' }}
+            style={{ height: '77vh' }}
             onClick={() => openCarousel(0)}
           >
             {property.image_url ? (
@@ -327,7 +327,7 @@ const PropertyDetail: React.FC = () => {
                   {property.property_photos.slice(0, 4).map((photo, index) => (
                     <div 
                       key={index}
-                      className="aspect-video rounded-lg overflow-hidden bg-muted cursor-pointer hover:opacity-90 transition-opacity"
+                      className="h-64 md:h-80 rounded-lg overflow-hidden bg-muted cursor-pointer hover:opacity-90 transition-opacity"
                       onClick={() => openCarousel(index)}
                     >
                       <img
