@@ -250,8 +250,8 @@ const PropertyDetail: React.FC = () => {
   };
 
   const getWhatsAppLink = () => {
-    const message = encodeURIComponent(`Bonjour, je suis intéressé par votre propriété "${property.title}"`);
-    return `https://wa.me/${property.phone_whatsapp.replace(/[^0-9]/g, '')}?text=${message}`;
+    const cleanPhoneNumber = property.phone_whatsapp.replace(/[^0-9]/g, '');
+    return `https://api.whatsapp.com/send/?phone=${cleanPhoneNumber}&text=Bonjour%2C+je+vous+contacte+concernant+le+bien+que+vous+proposez+via+AMI+Immobilier.+Pourriez-vous+me+donner+plus+d%27informations+s%27il+vous+pla%C3%AEt+%3F&type=phone_number&app_absent=0`;
   };
 
   const getMediaItems = () => {
