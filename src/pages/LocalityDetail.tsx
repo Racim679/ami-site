@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import FavoritesSystem from "@/components/FavoritesSystem";
+import { formatPrice } from "@/lib/utils";
 
 interface Locality {
   id: string;
@@ -63,14 +64,6 @@ const LocalityDetail = () => {
 
     fetchLocalityAndProperties();
   }, [localityId]);
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('fr-DZ', {
-      style: 'currency',
-      currency: 'DZD',
-      minimumFractionDigits: 0,
-    }).format(price);
-  };
 
   if (loading) {
     return (

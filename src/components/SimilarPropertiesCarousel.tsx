@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { usePropertyTypeStorage } from '@/hooks/usePropertyTypeStorage';
+import { formatPrice } from '@/lib/utils';
 
 interface Property {
   id: string;
@@ -129,14 +130,6 @@ const SimilarPropertiesCarousel: React.FC<SimilarPropertiesCarouselProps> = ({
   if (loading || similarProperties.length === 0) {
     return null;
   }
-
-  const formatPrice = (price?: number) => {
-    if (!price) return 'Prix sur demande';
-    return new Intl.NumberFormat('fr-TN', {
-      style: 'decimal',
-      minimumFractionDigits: 0,
-    }).format(price) + ' DT';
-  };
 
   const getLocationText = (property: Property) => {
     const parts = [];

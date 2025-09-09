@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, MapPin, Ruler, DollarSign } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { formatPrice } from '@/lib/utils';
 import Header from '@/components/Header';
 import PropertyCarousel from '@/components/PropertyCarousel';
 import PropertyVideoPlayer from '@/components/PropertyVideoPlayer';
@@ -210,14 +211,6 @@ const PropertyPage: React.FC = () => {
       </div>
     );
   }
-
-  const formatPrice = (price?: number) => {
-    if (!price) return 'Prix sur demande';
-    return new Intl.NumberFormat('fr-TN', {
-      style: 'decimal',
-      minimumFractionDigits: 0,
-    }).format(price) + ' DT';
-  };
 
   const getLocationText = () => {
     const parts = [];

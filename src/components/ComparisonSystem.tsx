@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { X, BarChart3, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { formatPrice } from "@/lib/utils";
 
 interface Property {
   id: string;
@@ -57,11 +58,6 @@ const ComparisonSystem: React.FC<ComparisonSystemProps> = ({ className = "" }) =
 
   const isInComparison = (propertyId: string) => {
     return comparisonItems.some(item => item.id === propertyId);
-  };
-
-  const formatPrice = (price: number, status?: string) => {
-    const isRental = status === "À louer" || status === "Loué";
-    return `${price.toLocaleString('fr-FR')} €${isRental ? '/mois' : ''}`;
   };
 
   if (comparisonItems.length === 0) {
@@ -122,7 +118,7 @@ const ComparisonSystem: React.FC<ComparisonSystemProps> = ({ className = "" }) =
                 <div className="mt-2 text-xs">
                   <p className="font-medium text-gray-900 truncate">{property.title}</p>
                   <p className="text-green-600 font-semibold">
-                    {formatPrice(property.price, property.status)}
+                    {formatPrice(property.price)}
                   </p>
                   <p className="text-gray-600 truncate">{property.location}</p>
                 </div>

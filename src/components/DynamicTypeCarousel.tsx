@@ -6,6 +6,7 @@ import { MapPin, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
+import { formatPrice } from '@/lib/utils';
 
 interface Property {
   id: string;
@@ -154,14 +155,6 @@ const DynamicTypeCarousel: React.FC<DynamicTypeCarouselProps> = ({
       </section>
     );
   }
-
-  const formatPrice = (price?: number) => {
-    if (!price) return 'Prix sur demande';
-    return new Intl.NumberFormat('fr-TN', {
-      style: 'decimal',
-      minimumFractionDigits: 0,
-    }).format(price) + ' DT';
-  };
 
   const getLocationText = (property: Property) => {
     const parts = [];

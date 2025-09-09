@@ -4,6 +4,7 @@ import { ArrowLeft, Trash2, BarChart3, X } from "lucide-react";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { formatPrice } from "@/lib/utils";
 
 interface Property {
   id: string;
@@ -35,11 +36,6 @@ const Comparaison: React.FC = () => {
   const clearComparison = () => {
     setComparisonItems([]);
     localStorage.removeItem('comparison');
-  };
-
-  const formatPrice = (price: number, status?: string) => {
-    const isRental = status === "À louer" || status === "Loué";
-    return `${price.toLocaleString('fr-FR')} €${isRental ? '/mois' : ''}`;
   };
 
   if (comparisonItems.length === 0) {
@@ -160,7 +156,7 @@ const Comparaison: React.FC = () => {
                             />
                           ) : field.type === 'price' ? (
                             <span className="font-semibold text-green-600">
-                              {formatPrice(property.price, property.status)}
+                              {formatPrice(property.price)}
                             </span>
                           ) : (
                             <span>{property[field.key as keyof Property] as string || 'N/A'}</span>
