@@ -287,68 +287,73 @@ const PropertyDetail: React.FC = () => {
           </Link>
         </div>
 
+        {/* Main Image - Full Width */}
+        <div className="mb-8 -mx-4">
+          <div 
+            className="w-full bg-muted cursor-pointer hover:opacity-95 transition-opacity"
+            style={{ height: '82vh' }}
+            onClick={() => openCarousel(0)}
+          >
+            {property.image_url ? (
+              <img
+                src={property.image_url}
+                alt={property.title}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                Aucune image disponible
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Video Carousel - Full Width */}
+        {property.property_videos && property.property_videos.length > 0 && (
+          <div className="mb-8 -mx-4">
+            <div className="px-4">
+              <PropertyVideoCarousel videos={property.property_videos} />
+            </div>
+          </div>
+        )}
+
+        {/* Photo Carousel - Full Width */}
+        {property.property_photos && property.property_photos.length > 0 && (
+          <div className="mb-8 -mx-4">
+            <div className="px-4">
+              <div className="relative">
+                <h3 className="text-2xl font-bold mb-4">Photos de la propriété</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {property.property_photos.slice(0, 4).map((photo, index) => (
+                    <div 
+                      key={index}
+                      className="aspect-video rounded-lg overflow-hidden bg-muted cursor-pointer hover:opacity-90 transition-opacity"
+                      onClick={() => openCarousel(index)}
+                    >
+                      <img
+                        src={photo.photo_url}
+                        alt={photo.caption || `Photo ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div className="text-center text-sm text-muted-foreground mt-2">
+                  Affichage de {Math.min(4, property.property_photos.length)} sur {property.property_photos.length} photo{property.property_photos.length > 1 ? 's' : ''}
+                  {property.property_photos.length > 4 && (
+                    <span className="block mt-1 text-primary cursor-pointer" onClick={() => openCarousel(0)}>
+                      Cliquez sur une image pour voir toutes les photos et vidéos
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Main Content */}
           <div className="flex-1 lg:w-2/3">
-            {/* Main Image */}
-            <div className="mb-8">
-              <div 
-                className="w-full rounded-lg overflow-hidden bg-muted cursor-pointer hover:opacity-95 transition-opacity"
-                style={{ height: '82vh' }}
-                onClick={() => openCarousel(0)}
-              >
-                {property.image_url ? (
-                  <img
-                    src={property.image_url}
-                    alt={property.title}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                    Aucune image disponible
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Video Carousel */}
-            {property.property_videos && property.property_videos.length > 0 && (
-              <div className="mb-8">
-                <PropertyVideoCarousel videos={property.property_videos} />
-              </div>
-            )}
-
-            {/* Photo Carousel */}
-            {property.property_photos && property.property_photos.length > 0 && (
-              <div className="mb-8">
-                <div className="relative">
-                  <h3 className="text-2xl font-bold mb-4">Photos de la propriété</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {property.property_photos.slice(0, 4).map((photo, index) => (
-                      <div 
-                        key={index}
-                        className="aspect-video rounded-lg overflow-hidden bg-muted cursor-pointer hover:opacity-90 transition-opacity"
-                        onClick={() => openCarousel(index)}
-                      >
-                        <img
-                          src={photo.photo_url}
-                          alt={photo.caption || `Photo ${index + 1}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  <div className="text-center text-sm text-muted-foreground mt-2">
-                    Affichage de {Math.min(4, property.property_photos.length)} sur {property.property_photos.length} photo{property.property_photos.length > 1 ? 's' : ''}
-                    {property.property_photos.length > 4 && (
-                      <span className="block mt-1 text-primary cursor-pointer" onClick={() => openCarousel(0)}>
-                        Cliquez sur une image pour voir toutes les photos et vidéos
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
 
             {/* Property Title & Basic Info */}
             <div className="mb-8">
