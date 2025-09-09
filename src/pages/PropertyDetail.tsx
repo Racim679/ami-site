@@ -287,8 +287,8 @@ const PropertyDetail: React.FC = () => {
           </Link>
         </div>
 
-        {/* Main Image - Full Width */}
-        <div className="mb-8 -mx-4">
+        {/* Main Image - Full Width - Hidden on mobile */}
+        <div className="mb-8 -mx-4 hidden md:block">
           <div 
             className="w-full bg-muted cursor-pointer hover:opacity-95 transition-opacity"
             style={{ height: '80vh' }}
@@ -322,7 +322,7 @@ const PropertyDetail: React.FC = () => {
           <div className="mb-8 -mx-4">
             <div className="px-4">
               <div className="relative">
-                <h3 className="text-2xl font-bold mb-4">Photos de la propriété</h3>
+                <h3 className="text-2xl font-bold mb-4 hidden md:block">Photos de la propriété</h3>
                 
                 {/* Mobile: Une seule image */}
                 <div className="block md:hidden">
