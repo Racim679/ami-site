@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface WhatsAppFloatingButtonProps {
   phoneNumber: string;
@@ -7,6 +7,70 @@ interface WhatsAppFloatingButtonProps {
 const WhatsAppFloatingButton = ({ phoneNumber }: WhatsAppFloatingButtonProps) => {
   const cleanPhoneNumber = phoneNumber.replace(/[^0-9]/g, '');
   const whatsappUrl = `https://api.whatsapp.com/send/?phone=${cleanPhoneNumber}&text=Bonjour%2C+je+vous+contacte+concernant+le+bien+que+vous+proposez+via+AMI+Immobilier.+Pourriez-vous+me+donner+plus+d%27informations+s%27il+vous+pla%C3%AEt+%3F&type=phone_number&app_absent=0`;
+
+  useEffect(() => {
+    console.log('WhatsApp component mounted, setting up popup');
+    
+    const setupPopup = () => {
+      const button = document.getElementById('whatsappButton');
+      const popup = document.getElementById('whatsappPopup');
+      const closeBtn = document.getElementById('popupClose');
+      
+      console.log('Setting up WhatsApp popup elements:', { button, popup, closeBtn });
+      
+      if (!button || !popup || !closeBtn) {
+        console.error('WhatsApp elements not found');
+        return;
+      }
+
+      // Afficher le popup automatiquement après 3 secondes
+      const showPopupTimeout = setTimeout(() => {
+        console.log('Showing WhatsApp popup automatically');
+        popup.classList.add('active');
+      }, 3000);
+      
+      // Fermer le popup
+      const handleClose = () => {
+        console.log('Closing WhatsApp popup');
+        popup.classList.remove('active');
+      };
+      
+      closeBtn.addEventListener('click', handleClose);
+      
+      // Fermer le popup en cliquant ailleurs
+      const handleClickOutside = (e: Event) => {
+        if (!popup.contains(e.target as Node) && !button.contains(e.target as Node)) {
+          console.log('Closing popup - clicked outside');
+          popup.classList.remove('active');
+        }
+      };
+      
+      document.addEventListener('click', handleClickOutside);
+      
+      // Empêcher la fermeture lors du clic sur le bouton WhatsApp
+      const handleButtonClick = () => {
+        console.log('WhatsApp button clicked, closing popup');
+        popup.classList.remove('active');
+      };
+      
+      button.addEventListener('click', handleButtonClick);
+      
+      // Cleanup
+      return () => {
+        clearTimeout(showPopupTimeout);
+        closeBtn.removeEventListener('click', handleClose);
+        document.removeEventListener('click', handleClickOutside);
+        button.removeEventListener('click', handleButtonClick);
+      };
+    };
+
+    // Délai pour s'assurer que les éléments DOM sont rendus
+    const setupTimeout = setTimeout(setupPopup, 100);
+    
+    return () => {
+      clearTimeout(setupTimeout);
+    };
+  }, []);
 
   return (
     <>
@@ -294,38 +358,6 @@ const WhatsAppFloatingButton = ({ phoneNumber }: WhatsAppFloatingButtonProps) =>
           </svg>
         </a>
       </div>
-
-      <script dangerouslySetInnerHTML={{
-        __html: `
-          document.addEventListener('DOMContentLoaded', function() {
-            const button = document.getElementById('whatsappButton');
-            const popup = document.getElementById('whatsappPopup');
-            const closeBtn = document.getElementById('popupClose');
-            
-            // Afficher le popup automatiquement après 3 secondes
-            setTimeout(() => {
-              popup.classList.add('active');
-            }, 3000);
-            
-            // Fermer le popup
-            closeBtn.addEventListener('click', () => {
-              popup.classList.remove('active');
-            });
-            
-            // Fermer le popup en cliquant ailleurs
-            document.addEventListener('click', (e) => {
-              if (!popup.contains(e.target) && !button.contains(e.target)) {
-                popup.classList.remove('active');
-              }
-            });
-            
-            // Empêcher la fermeture lors du clic sur le bouton WhatsApp
-            button.addEventListener('click', (e) => {
-              popup.classList.remove('active');
-            });
-          });
-        `
-      }} />
     </>
   );
 };
