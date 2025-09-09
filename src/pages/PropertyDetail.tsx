@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, MapPin, Phone, MessageCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
+import { ChatbotProvider } from '@/contexts/ChatbotContext';
 import SimilarPropertiesCarousel from '@/components/SimilarPropertiesCarousel';
 import DynamicTypeCarousel from '@/components/DynamicTypeCarousel';
 import { usePropertyTypeStorage } from '@/hooks/usePropertyTypeStorage';
@@ -557,6 +558,7 @@ const PropertyDetail: React.FC = () => {
       {/* WhatsApp Floating Button */}
       <WhatsAppFloatingButton phoneNumber={property.phone_whatsapp} />
     </div>
+    </ChatbotProvider>
   );
 };
 

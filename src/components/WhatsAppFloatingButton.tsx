@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useChatbot } from '@/contexts/ChatbotContext';
 
 interface WhatsAppFloatingButtonProps {
   phoneNumber: string;
@@ -8,18 +9,15 @@ const WhatsAppFloatingButton = ({ phoneNumber }: WhatsAppFloatingButtonProps) =>
   const cleanPhoneNumber = phoneNumber.replace(/[^0-9]/g, '');
   const whatsappUrl = `https://api.whatsapp.com/send/?phone=${cleanPhoneNumber}&text=Bonjour%2C+je+vous+contacte+concernant+le+bien+que+vous+proposez+via+AMI+Immobilier.+Pourriez-vous+me+donner+plus+d%27informations+s%27il+vous+pla%C3%AEt+%3F&type=phone_number&app_absent=0`;
   const [isVisible, setIsVisible] = React.useState(true);
+  const { isOpen: chatbotIsOpen } = useChatbot();
 
+  // Mettre à jour la visibilité en fonction de l'état du chatbot
   useEffect(() => {
-    console.log('WhatsApp component mounted, setting up popup and chatbot listener');
-    
-    // Écouter les changements d'état du chatbot
-    const handleChatbotStateChange = (event: CustomEvent) => {
-      const { isOpen } = event.detail;
-      console.log('Chatbot state changed:', isOpen);
-      setIsVisible(!isOpen);
-    };
-
-    window.addEventListener('chatbot-state-change', handleChatbotStateChange as EventListener);
+    console.log('Chatbot state changed:', chatbotIsOpen, 'Setting visibility to:', !chatbotIsOpen);
+    setIsVisible(!chatbotIsOpen);
+  }, [chatbotIsOpen]);
+  useEffect(() => {
+    console.log('WhatsApp component mounted, setting up popup');
     
     const setupPopup = () => {
       const button = document.getElementById('whatsappButton');
@@ -33,9 +31,9 @@ const WhatsAppFloatingButton = ({ phoneNumber }: WhatsAppFloatingButtonProps) =>
         return;
       }
 
-      // Afficher le popup automatiquement après 3 secondes
+      // Afficher le popup automatiquement après 3 secondes seulement si visible
       const showPopupTimeout = setTimeout(() => {
-        if (isVisible) {
+        if (isVisible && !chatbotIsOpen) {
           console.log('Showing WhatsApp popup automatically');
           popup.classList.add('active');
         }
@@ -81,9 +79,8 @@ const WhatsAppFloatingButton = ({ phoneNumber }: WhatsAppFloatingButtonProps) =>
     
     return () => {
       clearTimeout(setupTimeout);
-      window.removeEventListener('chatbot-state-change', handleChatbotStateChange as EventListener);
     };
-  }, [isVisible]);
+  }, [isVisible, chatbotIsOpen]);
 
   return (
     <>

@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { useChatbot } from '@/contexts/ChatbotContext';
 
 interface Message {
   id: string;
@@ -14,7 +15,7 @@ interface Message {
 }
 
 const Chatbot = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, setIsOpen } = useChatbot();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -38,10 +39,6 @@ const Chatbot = () => {
     if (isOpen && inputRef.current) {
       inputRef.current.focus();
     }
-    
-    // Émettre un événement pour informer les autres composants de l'état du chatbot
-    const event = new CustomEvent('chatbot-state-change', { detail: { isOpen } });
-    window.dispatchEvent(event);
   }, [isOpen]);
 
   const sendMessage = async () => {

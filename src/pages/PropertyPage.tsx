@@ -19,6 +19,7 @@ import PropertyInfoSection, {
 } from '@/components/PropertyInfoSection';
 import PropertyQuoteForm from '@/components/PropertyQuoteForm';
 import WhatsAppFloatingButton from "@/components/WhatsAppFloatingButton";
+import { ChatbotProvider } from '@/contexts/ChatbotContext';
 
 interface PropertyPageData {
   id: string;
@@ -255,8 +256,9 @@ const PropertyPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <ChatbotProvider>
+      <div className="min-h-screen bg-background">
+        <Header />
       
       {/* Breadcrumb Navigation */}
       <div className="bg-muted py-4">
@@ -504,6 +506,7 @@ const PropertyPage: React.FC = () => {
       {/* WhatsApp Floating Button */}
       <WhatsAppFloatingButton phoneNumber={property.phone_whatsapp} />
     </div>
+    </ChatbotProvider>
   );
 };
 
