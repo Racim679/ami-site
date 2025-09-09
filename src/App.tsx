@@ -21,6 +21,7 @@ import Login from "./pages/Login";
 import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
 import ConditionsUtilisation from "./pages/ConditionsUtilisation";
 import { ChatbotWidget } from "./components/ChatbotWidget";
+import { ChatbotProvider } from "./contexts/ChatbotContext";
 import ComparisonSystem from "./components/ComparisonSystem";
 import PWARegistration from "./components/PWARegistration";
 
@@ -29,9 +30,10 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
+      <ChatbotProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/nos-biens" element={<NosBiens />} />
@@ -61,6 +63,7 @@ const App = () => (
         <ComparisonSystem />
         <PWARegistration />
       </BrowserRouter>
+      </ChatbotProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

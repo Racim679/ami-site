@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useChatbot } from '@/contexts/ChatbotContext';
 
 interface ChatbotWidgetProps {
   title: string;
@@ -13,13 +14,13 @@ export const ChatbotWidget = ({
   initialMessage2,
   webhookUrl,
 }: ChatbotWidgetProps) => {
+  const { isOpen, setIsOpen } = useChatbot();
   const [messages, setMessages] = useState([
     { from: 'bot', text: initialMessage1 },
     { from: 'bot', text: initialMessage2 },
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -73,7 +74,10 @@ export const ChatbotWidget = ({
     <>
       {/* Bouton de toggle du chatbot */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
+              onClick={() => {
+                console.log('🔴 ChatbotWidget: Toggle button clicked, current state:', isOpen, 'new state:', !isOpen);
+                setIsOpen(!isOpen);
+              }}
         className={`fixed bottom-4 right-4 md:bottom-6 md:right-6 w-12 h-12 md:w-16 md:h-16 rounded-full shadow-2xl transition-all duration-300 z-50 transform hover:scale-110 active:scale-95 ${
           isOpen ? 'rotate-180' : ''
         } bg-gradient-to-r from-chatbot-primary to-chatbot-primary hover:from-chatbot-hover hover:to-chatbot-hover text-chatbot-primary-foreground`}

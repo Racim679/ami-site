@@ -13,7 +13,7 @@ const WhatsAppFloatingButton = ({ phoneNumber }: WhatsAppFloatingButtonProps) =>
 
   // Mettre à jour la visibilité en fonction de l'état du chatbot
   useEffect(() => {
-    console.log('Chatbot state changed:', chatbotIsOpen, 'Setting visibility to:', !chatbotIsOpen);
+    console.log('🟢 WhatsApp: Chatbot state changed:', chatbotIsOpen, 'Setting visibility to:', !chatbotIsOpen);
     setIsVisible(!chatbotIsOpen);
   }, [chatbotIsOpen]);
   useEffect(() => {

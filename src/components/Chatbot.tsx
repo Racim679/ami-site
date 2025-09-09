@@ -36,6 +36,7 @@ const Chatbot = () => {
   }, [messages]);
 
   useEffect(() => {
+    console.log('🔵 Chatbot: State changed to:', isOpen);
     if (isOpen && inputRef.current) {
       inputRef.current.focus();
     }

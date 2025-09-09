@@ -256,9 +256,8 @@ const PropertyPage: React.FC = () => {
   };
 
   return (
-    <ChatbotProvider>
-      <div className="min-h-screen bg-background">
-        <Header />
+    <div className="min-h-screen bg-background">
+      <Header />
       
       {/* Breadcrumb Navigation */}
       <div className="bg-muted py-4">
@@ -506,7 +505,6 @@ const PropertyPage: React.FC = () => {
       {/* WhatsApp Floating Button */}
       <WhatsAppFloatingButton phoneNumber={property.phone_whatsapp} />
     </div>
-    </ChatbotProvider>
   );
 };
 

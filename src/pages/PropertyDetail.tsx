@@ -290,11 +290,10 @@ const PropertyDetail: React.FC = () => {
   };
 
   return (
-    <ChatbotProvider>
-      <div className="min-h-screen bg-background">
-        <Header />
-        
-        <main className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-background">
+      <Header />
+      
+      <main className="container mx-auto px-4 py-8">
         <div className="mb-6">
           <Link to="/nos-biens">
             <Button variant="outline">
@@ -559,7 +558,6 @@ const PropertyDetail: React.FC = () => {
       {/* WhatsApp Floating Button */}
       <WhatsAppFloatingButton phoneNumber={property.phone_whatsapp} />
     </div>
-    </ChatbotProvider>
   );
 };
 
