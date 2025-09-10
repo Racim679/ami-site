@@ -12,41 +12,103 @@ interface MobileFiltersProps {
   onFiltersChange?: (filters: any) => void;
 }
 
+const initialFilters = {
+  promo: false,
+  typeOffre: {
+    aVendre: false,
+    vendu: false,
+    aLouer: false,
+    loue: false
+  },
+  type: {
+    appartement: false,
+    maison: false,
+    villa: false,
+    studio: false,
+    terrain: false
+  },
+  prix: {
+    min: '',
+    max: '',
+    currency: 'm'
+  },
+  caracteristiques: {
+    bedrooms: 0,
+    bathrooms: 0,
+    rooms: 0,
+    floors: 0
+  },
+  surface: {
+    min: '',
+    max: ''
+  },
+  condition: '',
+  commodites: {
+    piscine: false,
+    garage: false,
+    jardin: false,
+    terrasse: false,
+    balcon: false,
+    cave: false,
+    buanderie: false,
+    grenier: false
+  },
+  securite: {
+    alarme: false,
+    interphone: false,
+    digicode: false,
+    video_surveillance: false,
+    acces_handicape: false,
+    gardien: false,
+    ascenseur: false,
+    portail_electrique: false
+  },
+  documents: {
+    livret_foncier: false,
+    acte_propriete: false,
+    titre_propriete: false,
+    contrat_location: false,
+    certification_possession: false,
+    certificat_inscription_fonciere: false,
+    fiche_fiscale: false,
+    documents_cadastraux: false,
+    plans_cadastraux: false,
+    certificat_urbanisme: false,
+    permis_construire: false,
+    certification_conformite: false,
+    promesse_vente: false,
+    mainlevee: false,
+    permis_exploitation: false,
+    certificat_non_negativite: false
+  },
+  proximite: {
+    ecoles: false,
+    commerces: false,
+    hopitaux: false,
+    transports_publics: false,
+    aeroports: false,
+    restaurants: false,
+    universites: false,
+    banques: false,
+    mosquees: false,
+    pharmacies: false,
+    plages: false,
+    parcs: false
+  },
+  vue: {
+    vue_mer: false,
+    vue_ville: false,
+    vue_montagne: false,
+    vue_jardin: false,
+    vue_cour: false,
+    vue_degagee: false
+  }
+};
+
 export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('principaux');
-  const [filters, setFilters] = useState({
-    promo: false,
-    typeOffre: {
-      aVendre: false,
-      vendu: false,
-      aLouer: false,
-      loue: false
-    },
-    type: {
-      appartement: false,
-      maison: false,
-      villa: false,
-      studio: false,
-      terrain: false
-    },
-    prix: {
-      min: '',
-      max: '',
-      currency: 'm'
-    },
-    etat: {
-      neuf: false,
-      renove: false,
-      bonEtat: false,
-      aRenover: false,
-      aDemolir: false
-    },
-    terrain: {
-      min: '',
-      max: ''
-    }
-  });
+  const [filters, setFilters] = useState(initialFilters);
 
   const handleFilterChange = (category: string, key?: string, value?: any) => {
     if (key) {
@@ -66,44 +128,33 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
   };
 
   const resetFilters = () => {
-    setFilters({
-      promo: false,
-      typeOffre: {
-        aVendre: false,
-        vendu: false,
-        aLouer: false,
-        loue: false
-      },
-      type: {
-        appartement: false,
-        maison: false,
-        villa: false,
-        studio: false,
-        terrain: false
-      },
-      prix: {
-        min: '',
-        max: '',
-        currency: 'm'
-      },
-      etat: {
-        neuf: false,
-        renove: false,
-        bonEtat: false,
-        aRenover: false,
-        aDemolir: false
-      },
-      terrain: {
-        min: '',
-        max: ''
-      }
-    });
+    setFilters(initialFilters);
   };
 
   const applyFilters = () => {
     onFiltersChange?.(filters);
     setIsOpen(false);
   };
+
+  const NumberSelector = ({ value, onChange, max = 6 }: { value: number; onChange: (val: number) => void; max?: number }) => (
+    <div className="flex space-x-1">
+      {Array.from({ length: max + 1 }, (_, i) => (
+        <Button
+          key={i}
+          variant={value === i ? "default" : "outline"}
+          size="sm"
+          className={`w-10 h-10 ${
+            value === i 
+              ? "bg-primary text-primary-foreground" 
+              : "bg-background border-border hover:bg-muted"
+          }`}
+          onClick={() => onChange(i)}
+        >
+          {i === max ? `+${i}` : i}
+        </Button>
+      ))}
+    </div>
+  );
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -249,42 +300,52 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                 </TabsContent>
 
                 <TabsContent value="avancees" className="space-y-6 mt-0">
-                  {/* État */}
-                  <div className="space-y-3">
-                    <h3 className="text-base font-medium">État</h3>
-                    <div className="space-y-2">
-                      {[
-                        { key: 'neuf', label: 'Neuf' },
-                        { key: 'renove', label: 'Rénové' },
-                        { key: 'bonEtat', label: 'Bon état' },
-                        { key: 'aRenover', label: 'À rénover' },
-                        { key: 'aDemolir', label: 'À démolir' }
-                      ].map((item) => (
-                        <div key={item.key} className="flex items-center space-x-3">
-                          <Checkbox
-                            id={`etat-${item.key}`}
-                            checked={filters.etat[item.key as keyof typeof filters.etat]}
-                            onCheckedChange={(checked) => 
-                              handleFilterChange('etat', item.key, checked)
-                            }
-                          />
-                          <Label htmlFor={`etat-${item.key}`} className="text-sm">
-                            {item.label}
-                          </Label>
-                        </div>
-                      ))}
+                  {/* Caractéristiques */}
+                  <div className="space-y-4">
+                    <h3 className="text-base font-medium">Caractéristiques</h3>
+                    
+                    <div className="space-y-3">
+                      <Label className="text-sm">Nombre de chambres</Label>
+                      <NumberSelector
+                        value={filters.caracteristiques.bedrooms}
+                        onChange={(val) => handleFilterChange('caracteristiques', 'bedrooms', val)}
+                      />
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label className="text-sm">Nombre de salles de bain</Label>
+                      <NumberSelector
+                        value={filters.caracteristiques.bathrooms}
+                        onChange={(val) => handleFilterChange('caracteristiques', 'bathrooms', val)}
+                      />
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label className="text-sm">Pièces</Label>
+                      <NumberSelector
+                        value={filters.caracteristiques.rooms}
+                        onChange={(val) => handleFilterChange('caracteristiques', 'rooms', val)}
+                      />
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label className="text-sm">Étages</Label>
+                      <NumberSelector
+                        value={filters.caracteristiques.floors}
+                        onChange={(val) => handleFilterChange('caracteristiques', 'floors', val)}
+                      />
                     </div>
                   </div>
 
-                  {/* Terrain */}
+                  {/* Surface du terrain */}
                   <div className="space-y-3">
-                    <h3 className="text-base font-medium">Terrain</h3>
+                    <h3 className="text-base font-medium">Surface du terrain</h3>
                     <div className="flex space-x-2">
                       <div className="flex-1 relative">
                         <Input
                           placeholder="Min"
-                          value={filters.terrain.min}
-                          onChange={(e) => handleFilterChange('terrain', 'min', e.target.value)}
+                          value={filters.surface.min}
+                          onChange={(e) => handleFilterChange('surface', 'min', e.target.value)}
                           className="pr-12"
                         />
                         <div className="absolute right-2 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground px-2 py-1 rounded text-xs">
@@ -294,14 +355,152 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                       <div className="flex-1 relative">
                         <Input
                           placeholder="Max"
-                          value={filters.terrain.max}
-                          onChange={(e) => handleFilterChange('terrain', 'max', e.target.value)}
+                          value={filters.surface.max}
+                          onChange={(e) => handleFilterChange('surface', 'max', e.target.value)}
                           className="pr-12"
                         />
                         <div className="absolute right-2 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground px-2 py-1 rounded text-xs">
                           m²
                         </div>
                       </div>
+                    </div>
+                  </div>
+
+                  {/* Commodités */}
+                  <div className="space-y-3">
+                    <h3 className="text-base font-medium">Commodités</h3>
+                    <div className="space-y-2">
+                      {[
+                        { key: 'piscine', label: 'Piscine' },
+                        { key: 'garage', label: 'Garage' },
+                        { key: 'jardin', label: 'Jardin' },
+                        { key: 'terrasse', label: 'Terrasse' },
+                        { key: 'balcon', label: 'Balcon' },
+                        { key: 'cave', label: 'Cave' },
+                        { key: 'buanderie', label: 'Buanderie' },
+                        { key: 'grenier', label: 'Grenier' }
+                      ].map((item) => (
+                        <div key={item.key} className="flex items-center space-x-3">
+                          <Checkbox
+                            id={`commodites-${item.key}`}
+                            checked={filters.commodites[item.key as keyof typeof filters.commodites]}
+                            onCheckedChange={(checked) => 
+                              handleFilterChange('commodites', item.key, checked)
+                            }
+                          />
+                          <Label htmlFor={`commodites-${item.key}`} className="text-sm">
+                            {item.label}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Sécurité & Accessibilité */}
+                  <div className="space-y-3">
+                    <h3 className="text-base font-medium">Sécurité & Accessibilité</h3>
+                    <div className="space-y-2">
+                      {[
+                        { key: 'alarme', label: 'Alarme' },
+                        { key: 'interphone', label: 'Interphone' },
+                        { key: 'digicode', label: 'Digicode' },
+                        { key: 'video_surveillance', label: 'Vidéo surveillance' },
+                        { key: 'acces_handicape', label: 'Accès handicapé' },
+                        { key: 'gardien', label: 'Gardien' },
+                        { key: 'ascenseur', label: 'Ascenseur' },
+                        { key: 'portail_electrique', label: 'Portail électrique' }
+                      ].map((item) => (
+                        <div key={item.key} className="flex items-center space-x-3">
+                          <Checkbox
+                            id={`securite-${item.key}`}
+                            checked={filters.securite[item.key as keyof typeof filters.securite]}
+                            onCheckedChange={(checked) => 
+                              handleFilterChange('securite', item.key, checked)
+                            }
+                          />
+                          <Label htmlFor={`securite-${item.key}`} className="text-sm">
+                            {item.label}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Documents de propriété */}
+                  <div className="space-y-3">
+                    <h3 className="text-base font-medium">Documents de propriété</h3>
+                    <div className="space-y-2">
+                      {[
+                        { key: 'livret_foncier', label: 'Livret foncier' },
+                        { key: 'acte_propriete', label: 'Acte de propriété' },
+                        { key: 'titre_propriete', label: 'Titre de propriété' }
+                      ].map((item) => (
+                        <div key={item.key} className="flex items-center space-x-3">
+                          <Checkbox
+                            id={`documents-${item.key}`}
+                            checked={filters.documents[item.key as keyof typeof filters.documents]}
+                            onCheckedChange={(checked) => 
+                              handleFilterChange('documents', item.key, checked)
+                            }
+                          />
+                          <Label htmlFor={`documents-${item.key}`} className="text-sm">
+                            {item.label}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Proximité */}
+                  <div className="space-y-3">
+                    <h3 className="text-base font-medium">Proximité</h3>
+                    <div className="space-y-2">
+                      {[
+                        { key: 'ecoles', label: 'Écoles' },
+                        { key: 'commerces', label: 'Commerces' },
+                        { key: 'hopitaux', label: 'Hôpitaux' },
+                        { key: 'transports_publics', label: 'Transports en commun' },
+                        { key: 'aeroports', label: 'Accès autoroute' }
+                      ].map((item) => (
+                        <div key={item.key} className="flex items-center space-x-3">
+                          <Checkbox
+                            id={`proximite-${item.key}`}
+                            checked={filters.proximite[item.key as keyof typeof filters.proximite]}
+                            onCheckedChange={(checked) => 
+                              handleFilterChange('proximite', item.key, checked)
+                            }
+                          />
+                          <Label htmlFor={`proximite-${item.key}`} className="text-sm">
+                            {item.label}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Vue */}
+                  <div className="space-y-3">
+                    <h3 className="text-base font-medium">Vue</h3>
+                    <div className="space-y-2">
+                      {[
+                        { key: 'vue_mer', label: 'Vue sur la mer' },
+                        { key: 'vue_montagne', label: 'Vue montagne' },
+                        { key: 'vue_ville', label: 'Vue sur la ville' },
+                        { key: 'vue_degagee', label: 'Vue dégagée' }
+                      ].map((item) => (
+                        <div key={item.key} className="flex items-center space-x-3">
+                          <Checkbox
+                            id={`vue-${item.key}`}
+                            checked={filters.vue[item.key as keyof typeof filters.vue]}
+                            onCheckedChange={(checked) => 
+                              handleFilterChange('vue', item.key, checked)
+                            }
+                          />
+                          <Label htmlFor={`vue-${item.key}`} className="text-sm">
+                            {item.label}
+                          </Label>
+                        </div>
+                      ))}
                     </div>
                   </div>
 
