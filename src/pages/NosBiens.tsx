@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Heart, BarChart3, Bed, Bath, Square } from "lucide-react";
 import PropertyFilters, { FilterState } from "@/components/PropertyFilters";
+import { MobileFilters } from "@/components/MobileFilters";
 import { useFavorites } from "@/components/FavoritesSystem";
 import { useComparison } from "@/components/ComparisonSystem";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -406,7 +407,13 @@ const NosBiens = () => {
       </AnimatedSection>
 
       {/* Filtres */}
-      <AnimatedSection className="py-8 bg-muted/30">
+      <AnimatedSection className="block md:hidden py-8 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <MobileFilters onFiltersChange={setFilters} />
+        </div>
+      </AnimatedSection>
+
+      <AnimatedSection className="hidden md:block py-8 bg-muted/30">
         <div className="container mx-auto px-4">
           <PropertyFilters onSearch={setFilters} />
         </div>
