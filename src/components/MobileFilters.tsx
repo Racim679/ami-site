@@ -34,8 +34,8 @@ const initialFilters = {
     min: '',
     max: ''
   },
-  locality_id: '',
-  condition: '',
+  locality_id: 'all',
+  condition: 'all',
   caracteristiques: {
     bedrooms: 0,
     bathrooms: 0,
@@ -317,7 +317,7 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                         <SelectValue placeholder="Sélectionner une localité" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Toutes les localités</SelectItem>
+                        <SelectItem value="all">Toutes les localités</SelectItem>
                         {!localitiesLoading && localities.map((locality) => (
                           <SelectItem key={locality.id} value={locality.id.toString()}>
                             {locality.name}
@@ -338,7 +338,7 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                         <SelectValue placeholder="Sélectionner l'état" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Tous les états</SelectItem>
+                        <SelectItem value="all">Tous les états</SelectItem>
                         <SelectItem value="neuf">Neuf</SelectItem>
                         <SelectItem value="excellent">Excellent</SelectItem>
                         <SelectItem value="bon">Bon état</SelectItem>
