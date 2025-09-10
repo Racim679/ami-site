@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useLocalities } from '@/hooks/useLocalities';
 
 interface MobileFiltersProps {
   onFiltersChange?: (filters: any) => void;
@@ -14,24 +15,27 @@ interface MobileFiltersProps {
 
 const initialFilters = {
   promo: false,
-  typeOffre: {
-    aVendre: false,
-    vendu: false,
-    aLouer: false,
-    loue: false
+  status: {
+    available: false,
+    sold: false,
+    rented: false,
+    reserved: false
   },
-  type: {
+  typology: {
     appartement: false,
     maison: false,
     villa: false,
     studio: false,
-    terrain: false
+    terrain: false,
+    duplex: false,
+    penthouse: false
   },
-  prix: {
+  price: {
     min: '',
-    max: '',
-    currency: 'm'
+    max: ''
   },
+  locality_id: '',
+  condition: '',
   caracteristiques: {
     bedrooms: 0,
     bathrooms: 0,
@@ -42,7 +46,6 @@ const initialFilters = {
     min: '',
     max: ''
   },
-  condition: '',
   commodites: {
     piscine: false,
     garage: false,
@@ -109,6 +112,7 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('principaux');
   const [filters, setFilters] = useState(initialFilters);
+  const { localities, loading: localitiesLoading } = useLocalities();
 
   const handleFilterChange = (category: string, key?: string, value?: any) => {
     if (key) {
@@ -216,25 +220,25 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                     </div>
                   </div>
 
-                  {/* Type d'offre */}
+                  {/* Statut */}
                   <div className="space-y-3">
-                    <h3 className="text-base font-medium">Type d'offre</h3>
+                    <h3 className="text-base font-medium">Statut</h3>
                     <div className="space-y-2">
                       {[
-                        { key: 'aVendre', label: 'À vendre' },
-                        { key: 'vendu', label: 'Vendu' },
-                        { key: 'aLouer', label: 'À louer' },
-                        { key: 'loue', label: 'Loué' }
+                        { key: 'available', label: 'Disponible' },
+                        { key: 'sold', label: 'Vendu' },
+                        { key: 'rented', label: 'Loué' },
+                        { key: 'reserved', label: 'Réservé' }
                       ].map((item) => (
                         <div key={item.key} className="flex items-center space-x-3">
                           <Checkbox
-                            id={`typeOffre-${item.key}`}
-                            checked={filters.typeOffre[item.key as keyof typeof filters.typeOffre]}
+                            id={`status-${item.key}`}
+                            checked={filters.status[item.key as keyof typeof filters.status]}
                             onCheckedChange={(checked) => 
-                              handleFilterChange('typeOffre', item.key, checked)
+                              handleFilterChange('status', item.key, checked)
                             }
                           />
-                          <Label htmlFor={`typeOffre-${item.key}`} className="text-sm">
+                          <Label htmlFor={`status-${item.key}`} className="text-sm">
                             {item.label}
                           </Label>
                         </div>
@@ -251,17 +255,19 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                         { key: 'maison', label: 'Maison' },
                         { key: 'villa', label: 'Villa' },
                         { key: 'studio', label: 'Studio' },
-                        { key: 'terrain', label: 'Terrain' }
+                        { key: 'terrain', label: 'Terrain' },
+                        { key: 'duplex', label: 'Duplex' },
+                        { key: 'penthouse', label: 'Penthouse' }
                       ].map((item) => (
                         <div key={item.key} className="flex items-center space-x-3">
                           <Checkbox
-                            id={`type-${item.key}`}
-                            checked={filters.type[item.key as keyof typeof filters.type]}
+                            id={`typology-${item.key}`}
+                            checked={filters.typology[item.key as keyof typeof filters.typology]}
                             onCheckedChange={(checked) => 
-                              handleFilterChange('type', item.key, checked)
+                              handleFilterChange('typology', item.key, checked)
                             }
                           />
-                          <Label htmlFor={`type-${item.key}`} className="text-sm">
+                          <Label htmlFor={`typology-${item.key}`} className="text-sm">
                             {item.label}
                           </Label>
                         </div>
@@ -276,26 +282,70 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                       <div className="flex-1 relative">
                         <Input
                           placeholder="Min"
-                          value={filters.prix.min}
-                          onChange={(e) => handleFilterChange('prix', 'min', e.target.value)}
+                          type="number"
+                          value={filters.price.min}
+                          onChange={(e) => handleFilterChange('price', 'min', e.target.value)}
                           className="pr-12"
                         />
                         <div className="absolute right-2 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground px-2 py-1 rounded text-xs">
-                          {filters.prix.currency}
+                          DA
                         </div>
                       </div>
                       <div className="flex-1 relative">
                         <Input
                           placeholder="Max"
-                          value={filters.prix.max}
-                          onChange={(e) => handleFilterChange('prix', 'max', e.target.value)}
+                          type="number"
+                          value={filters.price.max}
+                          onChange={(e) => handleFilterChange('price', 'max', e.target.value)}
                           className="pr-12"
                         />
                         <div className="absolute right-2 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground px-2 py-1 rounded text-xs">
-                          {filters.prix.currency}
+                          DA
                         </div>
                       </div>
                     </div>
+                  </div>
+
+                  {/* Localité */}
+                  <div className="space-y-3">
+                    <h3 className="text-base font-medium">Localité</h3>
+                    <Select 
+                      value={filters.locality_id} 
+                      onValueChange={(value) => handleFilterChange('locality_id', undefined, value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sélectionner une localité" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">Toutes les localités</SelectItem>
+                        {!localitiesLoading && localities.map((locality) => (
+                          <SelectItem key={locality.id} value={locality.id.toString()}>
+                            {locality.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* État */}
+                  <div className="space-y-3">
+                    <h3 className="text-base font-medium">État</h3>
+                    <Select 
+                      value={filters.condition} 
+                      onValueChange={(value) => handleFilterChange('condition', undefined, value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sélectionner l'état" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">Tous les états</SelectItem>
+                        <SelectItem value="neuf">Neuf</SelectItem>
+                        <SelectItem value="excellent">Excellent</SelectItem>
+                        <SelectItem value="bon">Bon état</SelectItem>
+                        <SelectItem value="moyen">État moyen</SelectItem>
+                        <SelectItem value="renover">À rénover</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </TabsContent>
 
@@ -344,6 +394,7 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                       <div className="flex-1 relative">
                         <Input
                           placeholder="Min"
+                          type="number"
                           value={filters.surface.min}
                           onChange={(e) => handleFilterChange('surface', 'min', e.target.value)}
                           className="pr-12"
@@ -355,6 +406,7 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                       <div className="flex-1 relative">
                         <Input
                           placeholder="Max"
+                          type="number"
                           value={filters.surface.max}
                           onChange={(e) => handleFilterChange('surface', 'max', e.target.value)}
                           className="pr-12"
