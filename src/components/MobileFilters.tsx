@@ -10,6 +10,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useLocalities } from '@/hooks/useLocalities';
 import { FilterState } from '@/components/PropertyFilters';
 
+const ALL = 'all';
+
 interface MobileFiltersProps {
   onFiltersChange?: (filters: FilterState) => void;
 }
@@ -117,14 +119,14 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                   <div className="space-y-3">
                     <h3 className="text-base font-medium">Statut</h3>
                     <Select 
-                      value={filters.typeOffre} 
-                      onValueChange={(value) => handleFilterChange('typeOffre', value)}
+                      value={filters.typeOffre || ALL}
+                      onValueChange={(value) => handleFilterChange('typeOffre', value === ALL ? "" : value)}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Sélectionner le statut" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Tous les statuts</SelectItem>
+                        <SelectItem value={ALL}>Tous les statuts</SelectItem>
                         <SelectItem value="À Vendre">À Vendre</SelectItem>
                         <SelectItem value="Vendu">Vendu</SelectItem>
                         <SelectItem value="À louer">À louer</SelectItem>
@@ -136,14 +138,14 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                   <div className="space-y-3">
                     <h3 className="text-base font-medium">Type</h3>
                     <Select 
-                      value={filters.type} 
-                      onValueChange={(value) => handleFilterChange('type', value)}
+                      value={filters.type || ALL}
+                      onValueChange={(value) => handleFilterChange('type', value === ALL ? "" : value)}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Sélectionner le type" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Tous les types</SelectItem>
+                        <SelectItem value={ALL}>Tous les types</SelectItem>
                         <SelectItem value="appartement">Appartement</SelectItem>
                         <SelectItem value="maison">Maison</SelectItem>
                         <SelectItem value="villa">Villa</SelectItem>
@@ -191,14 +193,14 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                   <div className="space-y-3">
                     <h3 className="text-base font-medium">Localité</h3>
                     <Select 
-                      value={filters.localite} 
-                      onValueChange={(value) => handleFilterChange('localite', value)}
+                      value={filters.localite || ALL}
+                      onValueChange={(value) => handleFilterChange('localite', value === ALL ? "" : value)}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Sélectionner une localité" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Toutes les localités</SelectItem>
+                        <SelectItem value={ALL}>Toutes les localités</SelectItem>
                         {!localitiesLoading && localities.map((locality) => (
                           <SelectItem key={locality.id} value={locality.name}>
                             {locality.name}
@@ -212,14 +214,14 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                   <div className="space-y-3">
                     <h3 className="text-base font-medium">État</h3>
                     <Select 
-                      value={filters.etat} 
-                      onValueChange={(value) => handleFilterChange('etat', value)}
+                      value={filters.etat || ALL}
+                      onValueChange={(value) => handleFilterChange('etat', value === ALL ? "" : value)}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Sélectionner l'état" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Tous les états</SelectItem>
+                        <SelectItem value={ALL}>Tous les états</SelectItem>
                         <SelectItem value="Neuf">Neuf</SelectItem>
                         <SelectItem value="Rénové">Rénové</SelectItem>
                         <SelectItem value="Bon état">Bon état</SelectItem>
@@ -238,14 +240,14 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                     <div className="space-y-3">
                       <Label className="text-sm">Nombre de chambres</Label>
                       <Select 
-                        value={filters.chambres} 
-                        onValueChange={(value) => handleFilterChange('chambres', value)}
+                        value={filters.chambres || ALL}
+                        onValueChange={(value) => handleFilterChange('chambres', value === ALL ? "" : value)}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Toutes" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">Toutes</SelectItem>
+                          <SelectItem value={ALL}>Toutes</SelectItem>
                           <SelectItem value="1">1</SelectItem>
                           <SelectItem value="2">2</SelectItem>
                           <SelectItem value="3">3</SelectItem>
@@ -258,14 +260,14 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                     <div className="space-y-3">
                       <Label className="text-sm">Nombre de salles de bain</Label>
                       <Select 
-                        value={filters.sallesBain} 
-                        onValueChange={(value) => handleFilterChange('sallesBain', value)}
+                        value={filters.sallesBain || ALL}
+                        onValueChange={(value) => handleFilterChange('sallesBain', value === ALL ? "" : value)}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Toutes" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">Toutes</SelectItem>
+                          <SelectItem value={ALL}>Toutes</SelectItem>
                           <SelectItem value="1">1</SelectItem>
                           <SelectItem value="2">2</SelectItem>
                           <SelectItem value="3">3</SelectItem>
@@ -277,14 +279,14 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                     <div className="space-y-3">
                       <Label className="text-sm">Étages</Label>
                       <Select 
-                        value={filters.etages} 
-                        onValueChange={(value) => handleFilterChange('etages', value)}
+                        value={filters.etages || ALL}
+                        onValueChange={(value) => handleFilterChange('etages', value === ALL ? "" : value)}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Tous" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">Tous</SelectItem>
+                          <SelectItem value={ALL}>Tous</SelectItem>
                           <SelectItem value="1">1</SelectItem>
                           <SelectItem value="2">2</SelectItem>
                           <SelectItem value="3">3</SelectItem>
@@ -427,14 +429,14 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                   <div className="space-y-3">
                     <h3 className="text-base font-medium">Vue</h3>
                     <Select 
-                      value={filters.vue} 
-                      onValueChange={(value) => handleFilterChange('vue', value)}
+                      value={filters.vue || ALL}
+                      onValueChange={(value) => handleFilterChange('vue', value === ALL ? "" : value)}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Sélectionner la vue" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Toutes les vues</SelectItem>
+                        <SelectItem value={ALL}>Toutes les vues</SelectItem>
                         <SelectItem value="mer">Vue sur la mer</SelectItem>
                         <SelectItem value="montagne">Vue montagne</SelectItem>
                         <SelectItem value="ville">Vue sur la ville</SelectItem>
