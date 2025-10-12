@@ -71,7 +71,7 @@ const Home: React.FC = () => {
           delay: 0.3
         }}>
             <AuditButton 
-              text="Évaluation Gratuite"
+              text="Nos biens"
               showArrow={true}
               onClick={() => navigate('/vendre')}
             />
