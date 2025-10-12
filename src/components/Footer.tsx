@@ -6,7 +6,6 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Facebook, Instagram, Linkedin, Youtube, Twitter, Phone, Mail, MapPin, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-
 const Footer = () => {
   const [formData, setFormData] = useState({
     firstName: "",
@@ -16,12 +15,15 @@ const Footer = () => {
     acceptTerms: false
   });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.acceptTerms) {
@@ -32,115 +34,58 @@ const Footer = () => {
       });
       return;
     }
-
     toast({
       title: "Catalogue envoyé !",
-      description: "Le catalogue a été envoyé à votre adresse e-mail.",
+      description: "Le catalogue a été envoyé à votre adresse e-mail."
     });
-    
     setIsDialogOpen(false);
     setFormData({
       firstName: "",
-      lastName: "", 
+      lastName: "",
       email: "",
       phone: "",
       acceptTerms: false
     });
   };
-
-  const navigationLinks = [
-    { href: "/", label: "Accueil" },
-    { href: "/services", label: "Services" },
-    { href: "/nos-biens", label: "Nos Biens" },
-    { href: "/a-propos", label: "À propos" },
-    { href: "/contact", label: "Contact" }
-  ];
-
-  const socialLinks = [
-    { icon: Facebook, label: "Facebook", href: "#" },
-    { icon: Instagram, label: "Instagram", href: "#" },
-    { icon: Linkedin, label: "LinkedIn", href: "#" },
-    { icon: Youtube, label: "YouTube", href: "#" }
-  ];
-
-  return (
-    <footer className="relative bg-gradient-to-br from-luxury-dark-900 to-luxury-dark-800 text-accent overflow-hidden">
+  const navigationLinks = [{
+    href: "/",
+    label: "Accueil"
+  }, {
+    href: "/services",
+    label: "Services"
+  }, {
+    href: "/nos-biens",
+    label: "Nos Biens"
+  }, {
+    href: "/a-propos",
+    label: "À propos"
+  }, {
+    href: "/contact",
+    label: "Contact"
+  }];
+  const socialLinks = [{
+    icon: Facebook,
+    label: "Facebook",
+    href: "#"
+  }, {
+    icon: Instagram,
+    label: "Instagram",
+    href: "#"
+  }, {
+    icon: Linkedin,
+    label: "LinkedIn",
+    href: "#"
+  }, {
+    icon: Youtube,
+    label: "YouTube",
+    href: "#"
+  }];
+  return <footer className="relative bg-gradient-to-br from-luxury-dark-900 to-luxury-dark-800 text-accent overflow-hidden">
       {/* Decorative element */}
       <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-radial from-accent/10 via-accent/5 to-transparent rounded-full transform translate-x-1/3 -translate-y-1/3"></div>
       
       <div className="relative container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-16">
-          {/* Navigation */}
-          <nav className="flex flex-col gap-6">
-            {navigationLinks.map((link, index) => (
-              <a
-                key={index}
-                href={link.href}
-                className="text-xl font-light text-accent hover:text-background transition-all duration-300 relative group"
-              >
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-4 -translate-x-6 group-hover:-translate-x-0"></span>
-                <span className="group-hover:ml-6 transition-all duration-300">{link.label}</span>
-              </a>
-            ))}
-          </nav>
-          
-          {/* Contact Information */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8 bg-accent/5 backdrop-blur-sm rounded-lg border border-accent/20">
-            <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-background uppercase tracking-widest mb-4">Contact</h3>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <Phone className="w-4 h-4 text-accent" />
-                  <span className="text-sm">+212 5 22 XX XX XX</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Mail className="w-4 h-4 text-accent" />
-                  <a href="mailto:contact@iman-promotion.ma" className="text-sm hover:text-background transition-colors">
-                    contact@iman-promotion.ma
-                  </a>
-                </div>
-                <div className="flex items-center gap-3">
-                  <MapPin className="w-4 h-4 text-accent" />
-                  <span className="text-sm">Casablanca, Maroc</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-background uppercase tracking-widest mb-4">Horaires</h3>
-              <div className="space-y-2">
-                <p className="text-sm">Lun - Ven: 9h00 - 18h30</p>
-                <p className="text-sm">Samedi: 10h00 - 17h00</p>
-                <p className="text-sm">Dimanche: Sur rendez-vous</p>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-background uppercase tracking-widest mb-4">Services</h3>
-              <div className="space-y-2">
-                <p className="text-sm">Promotion immobilière</p>
-                <p className="text-sm">Estimation gratuite</p>
-                <p className="text-sm">Conseil personnalisé</p>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-background uppercase tracking-widest mb-4">Suivez-nous</h3>
-              <div className="flex gap-4">
-                {socialLinks.map((social, index) => (
-                  <a
-                    key={index}
-                    href={social.href}
-                    aria-label={social.label}
-                    className="w-10 h-10 border border-accent rounded-full flex items-center justify-center text-accent hover:bg-accent hover:text-luxury-dark-900 transition-all duration-300 hover:-translate-y-1"
-                  >
-                    <social.icon className="w-5 h-5" />
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+        
         
         {/* Brand Section */}
         <div className="text-center py-12 border-t border-accent/20">
@@ -167,52 +112,26 @@ const Footer = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="firstName">Prénom</Label>
-                      <Input
-                        id="firstName"
-                        value={formData.firstName}
-                        onChange={(e) => handleInputChange("firstName", e.target.value)}
-                        required
-                      />
+                      <Input id="firstName" value={formData.firstName} onChange={e => handleInputChange("firstName", e.target.value)} required />
                     </div>
                     <div>
                       <Label htmlFor="lastName">Nom</Label>
-                      <Input
-                        id="lastName"
-                        value={formData.lastName}
-                        onChange={(e) => handleInputChange("lastName", e.target.value)}
-                        required
-                      />
+                      <Input id="lastName" value={formData.lastName} onChange={e => handleInputChange("lastName", e.target.value)} required />
                     </div>
                   </div>
                   
                   <div>
                     <Label htmlFor="email">Adresse e-mail</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange("email", e.target.value)}
-                      required
-                    />
+                    <Input id="email" type="email" value={formData.email} onChange={e => handleInputChange("email", e.target.value)} required />
                   </div>
                   
                   <div>
                     <Label htmlFor="phone">Numéro de téléphone</Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) => handleInputChange("phone", e.target.value)}
-                      required
-                    />
+                    <Input id="phone" type="tel" value={formData.phone} onChange={e => handleInputChange("phone", e.target.value)} required />
                   </div>
                   
                   <div className="flex items-start space-x-2">
-                    <Checkbox
-                      id="terms"
-                      checked={formData.acceptTerms}
-                      onCheckedChange={(checked) => handleInputChange("acceptTerms", checked)}
-                    />
+                    <Checkbox id="terms" checked={formData.acceptTerms} onCheckedChange={checked => handleInputChange("acceptTerms", checked)} />
                     <Label htmlFor="terms" className="text-sm leading-5">
                       J'atteste accepter que IMAN Promotion Immobilière assure la protection de ma vie privée en utilisant mes données personnelles uniquement pour gérer mon profil et mes demandes.
                     </Label>
@@ -236,8 +155,6 @@ const Footer = () => {
           </p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
