@@ -10,7 +10,7 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const leftNavItems = [
-    { path: "/", label: "aymen promotion", hasDropdown: false },
+    { path: "/", label: "IMAN IMMO", hasDropdown: false },
   ];
 
   const centerNavItems = [
@@ -108,9 +108,9 @@ const Header = () => {
             ) : (
               <Link to="/" className="flex items-center lg:hidden">
                 <div className="bg-primary text-primary-foreground px-3 py-1 rounded">
-                  <span className="text-lg font-bold site-title">aymen</span>
+                  <span className="text-lg font-bold site-title">IMAN</span>
                 </div>
-                <span className="ml-2 text-sm text-muted-foreground font-heading">Promotion</span>
+                <span className="ml-2 text-sm text-muted-foreground font-heading">IMMO</span>
               </Link>
             )}
 
@@ -133,9 +133,9 @@ const Header = () => {
             <div className="flex items-center justify-between p-4 border-b border-slate-700">
               <Link to="/" className="flex items-center" onClick={toggleMobileMenu}>
                 <div className="bg-primary text-primary-foreground px-3 py-1 rounded">
-                  <span className="text-lg font-bold site-title">aymen</span>
+                  <span className="text-lg font-bold site-title">IMAN</span>
                 </div>
-                <span className="ml-2 text-sm text-slate-300 font-heading">Promotion</span>
+                <span className="ml-2 text-sm text-slate-300 font-heading">IMMO</span>
               </Link>
               <button
                 onClick={toggleMobileMenu}
