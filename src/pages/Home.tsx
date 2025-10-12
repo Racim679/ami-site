@@ -76,25 +76,6 @@ const Home: React.FC = () => {
               onClick={() => navigate('/vendre')}
             />
           </motion.div>
-
-          <motion.div className="flex flex-col sm:flex-row gap-4 justify-center" initial={{
-          opacity: 0,
-          y: 30
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.8,
-          delay: 0.4
-        }}>
-            <AnimatedButton className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-lg text-lg font-semibold transition-colors" onClick={() => navigate('/nos-biens')}>
-              Découvrir nos biens
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </AnimatedButton>
-            <AnimatedButton className="border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary px-8 py-3 rounded-lg text-lg font-semibold transition-colors" onClick={() => navigate('/contact')}>
-              Nous contacter
-            </AnimatedButton>
-          </motion.div>
         </div>
       </AnimatedSection>
 
