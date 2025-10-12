@@ -44,7 +44,7 @@ const Home: React.FC = () => {
           y: 0
         }} transition={{
           duration: 0.8
-        }}>IMAN Promotion</motion.h1>
+        }}>IMAN IMMO</motion.h1>
 
           <motion.p className="text-xl md:text-2xl mb-8 text-primary-foreground/90" initial={{
           opacity: 0,
