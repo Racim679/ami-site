@@ -99,7 +99,7 @@ IMMO</h1>
           <div className="mt-8 max-w-md mx-auto">
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="luxury" size="lg" className="w-full">
+                <Button variant="default" size="lg" className="w-full">
                   Télécharger le catalogue
                 </Button>
               </DialogTrigger>
