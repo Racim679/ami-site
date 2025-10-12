@@ -119,7 +119,7 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
   };
 
   return (
-    <div className={`bg-gradient-to-br from-primary to-primary-dark p-6 rounded-2xl shadow-luxury ${className}`}>
+    <div className={`bg-primary p-6 rounded-2xl shadow-luxury ${className}`}>
       {/* Filtres de base */}
       <div className="grid grid-cols-1 md:grid-cols-7 gap-4 items-end">
         {/* Typologie */}
