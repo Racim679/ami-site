@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { AnimatedSection, AnimatedCard, AnimatedButton } from "@/components/AnimatedComponents";
+import AuditButton from "@/components/ui/audit-button";
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const features = [{
@@ -58,6 +59,23 @@ const Home: React.FC = () => {
         }}>
             Découvrez nos projets immobiliers exceptionnels à Alger
           </motion.p>
+
+          <motion.div className="mb-6" initial={{
+          opacity: 0,
+          y: 30
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.8,
+          delay: 0.3
+        }}>
+            <AuditButton 
+              text="Évaluation Gratuite"
+              showArrow={true}
+              onClick={() => navigate('/vendre')}
+            />
+          </motion.div>
 
           <motion.div className="flex flex-col sm:flex-row gap-4 justify-center" initial={{
           opacity: 0,

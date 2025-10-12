@@ -122,7 +122,15 @@ export const AnimatedButton: React.FC<{
   children,
   className = "",
   onClick
-}) => {};
+}) => <motion.button onClick={onClick} className={className} whileHover={{
+  scale: 1.05
+}} whileTap={{
+  scale: 0.95
+}} transition={{
+  duration: 0.2
+}}>
+    {children}
+  </motion.button>;
 export const AnimatedImage: React.FC<{
   src: string;
   alt: string;
