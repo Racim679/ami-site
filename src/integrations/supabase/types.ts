@@ -77,6 +77,30 @@ export type Database = {
         }
         Relationships: []
       }
+      get_list_of_tables_and_columns: {
+        Row: {
+          columns_with_types_and_fks: string
+          created_at: string | null
+          id: string
+          table_name: string
+          updated_at: string | null
+        }
+        Insert: {
+          columns_with_types_and_fks: string
+          created_at?: string | null
+          id?: string
+          table_name: string
+          updated_at?: string | null
+        }
+        Update: {
+          columns_with_types_and_fks?: string
+          created_at?: string | null
+          id?: string
+          table_name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       localities: {
         Row: {
           city_id: number | null
@@ -105,6 +129,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      n8n_chat_histories: {
+        Row: {
+          id: number
+          message: Json
+          session_id: string
+        }
+        Insert: {
+          id?: number
+          message: Json
+          session_id: string
+        }
+        Update: {
+          id?: number
+          message?: Json
+          session_id?: string
+        }
+        Relationships: []
       }
       properties: {
         Row: {
