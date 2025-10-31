@@ -2,6 +2,7 @@ import { Section, SectionHeader, SectionTitle, SectionSubtitle } from "@/compone
 import { EnhancedCard, EnhancedCardContent, EnhancedCardHeader, EnhancedCardTitle, EnhancedCardDescription } from "@/components/ui/enhanced-card";
 import { Button } from "@/components/ui/button";
 import { Shield, Award, Users, Clock, Home, Star } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const WhyChooseUs = () => {
   const features = [
@@ -94,13 +95,17 @@ const WhyChooseUs = () => {
                 Rejoignez nos centaines de clients satisfaits et découvrez pourquoi nous sommes le choix n°1 pour l'immobilier de prestige en Algérie.
               </p>
               <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-                <Button variant="premium" size="xl" className="group min-w-[280px]">
-                  Découvrir Nos Projets
-                  <Star className="ml-2 h-5 w-5 group-hover:animate-pulse" />
-                </Button>
-                <Button variant="outline" size="xl" className="min-w-[280px]">
-                  Demander une Consultation
-                </Button>
+                <Link to="/contact">
+                  <Button variant="premium" size="xl" className="group min-w-[280px]">
+                    Découvrir Nos Projets
+                    <Star className="ml-2 h-5 w-5 group-hover:animate-pulse" />
+                  </Button>
+                </Link>
+                <Link to="/contact">
+                  <Button variant="outline" size="xl" className="min-w-[280px]">
+                    Demander une Consultation
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

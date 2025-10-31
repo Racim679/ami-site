@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Section, SectionHeader, SectionTitle, SectionSubtitle } from "@/components/ui/section";
+import { Link } from "react-router-dom";
 
 const HeroCarousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -113,13 +114,15 @@ const HeroCarousel = () => {
           </div>
 
           <div className="animate-fade-in-up delay-500">
-            <Button 
-              variant="luxury" 
-              size="xl" 
-              className="text-xl px-12 py-6 hover:scale-105 transition-all duration-300 animate-glow-ring"
-            >
-              {slides[currentSlide].cta}
-            </Button>
+            <Link to="/contact">
+              <Button 
+                variant="luxury" 
+                size="xl" 
+                className="text-xl px-12 py-6 hover:scale-105 transition-all duration-300 animate-glow-ring"
+              >
+                {slides[currentSlide].cta}
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
