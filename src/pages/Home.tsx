@@ -45,7 +45,7 @@ const Home: React.FC = () => {
           y: 0
         }} transition={{
           duration: 0.8
-        }}>IMAN IMMO</motion.h1>
+        }}>AMI IMMO</motion.h1>
 
           <motion.p className="text-xl md:text-2xl mb-8 text-primary-foreground/90" initial={{
           opacity: 0,
@@ -70,11 +70,7 @@ const Home: React.FC = () => {
           duration: 0.8,
           delay: 0.3
         }}>
-            <AuditButton 
-              text="Nos biens"
-              showArrow={true}
-              onClick={() => navigate('/vendre')}
-            />
+            <AuditButton text="Nos biens" showArrow={true} onClick={() => navigate('/vendre')} />
           </motion.div>
         </div>
       </AnimatedSection>
