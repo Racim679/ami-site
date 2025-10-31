@@ -89,8 +89,7 @@ const Footer = () => {
         
         {/* Brand Section */}
         <div className="text-center py-12 border-t border-accent/20">
-          <h1 className="text-4xl md:text-6xl lg:text-8xl font-light tracking-[0.2em] text-accent opacity-80 mb-3 font-gotham">IMAN
-IMMO</h1>
+          <h1 className="text-4xl md:text-6xl lg:text-8xl font-light tracking-[0.2em] text-accent opacity-80 mb-3 font-gotham">AMI IMMO</h1>
           <p className="text-sm tracking-[0.25em] text-background uppercase opacity-60 font-gotham">
             Excellence Immobilière
           </p>
