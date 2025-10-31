@@ -14,6 +14,7 @@ import { useComparison } from "@/components/ComparisonSystem";
 import ScrollToTop from "@/components/ScrollToTop";
 import { AnimatedSection, AnimatedCard } from "@/components/AnimatedComponents";
 import { supabase } from "@/integrations/supabase/client";
+import { formatPrice } from "@/lib/utils";
 
 interface Property {
   id: string;
@@ -231,14 +232,6 @@ const NosBiens = () => {
     }
   };
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('fr-DZ', {
-      style: 'currency',
-      currency: 'DZD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount);
-  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -508,7 +501,7 @@ const NosBiens = () => {
                       </div>
                        {property.price && property.price > 0 && (
                          <div className="absolute bottom-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
-                           {formatCurrency(property.price)}
+                           {formatPrice(property.price)}
                          </div>
                        )}
                     </div>
