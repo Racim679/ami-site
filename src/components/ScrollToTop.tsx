@@ -33,7 +33,7 @@ const ScrollToTop = () => {
     <Button
       onClick={scrollToTop}
       size="icon"
-      className="fixed bottom-6 right-6 z-50 h-12 w-12 bg-green-600 hover:bg-green-700 text-white shadow-lg"
+      className="fixed bottom-20 right-6 z-50 h-12 w-12 bg-green-600 hover:bg-green-700 text-white shadow-lg"
     >
       <ArrowUp className="h-6 w-6" />
     </Button>
