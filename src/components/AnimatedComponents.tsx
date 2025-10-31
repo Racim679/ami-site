@@ -71,21 +71,7 @@ export const AnimatedSection: React.FC<{
   children,
   className = "",
   delay = 0
-}) => <motion.div initial={{
-  opacity: 0,
-  y: 50
-}} whileInView={{
-  opacity: 1,
-  y: 0
-}} viewport={{
-  once: true,
-  margin: "-100px"
-}} transition={{
-  duration: 0.6,
-  delay
-}} className={className}>
-    {children}
-  </motion.div>;
+}) => {};
 export const AnimatedCard: React.FC<{
   children: React.ReactNode;
   className?: string;
