@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, Phone, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/ami-immobilier-logo.png";
 
 const ModernHeader = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -69,9 +70,9 @@ const ModernHeader = () => {
             <div className="flex-1 lg:flex-none text-center lg:text-left">
               <Link
                 to="/"
-                className="inline-block text-3xl lg:text-4xl font-black font-heading gradient-text hover:scale-105 transition-transform duration-300"
+                className="inline-block hover:scale-105 transition-transform duration-300"
               >
-                PROMOTEUR
+                <img src={logo} alt="AMI Immobilier" className="h-16 lg:h-20 w-auto" />
               </Link>
             </div>
 
