@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { MobileFilters } from "./MobileFilters";
+import logo from "@/assets/ami-immobilier-logo.png";
 
 
 const Header = () => {
@@ -40,22 +41,9 @@ const Header = () => {
           <div className="flex items-center justify-between h-16">
             {/* Navigation gauche - Desktop seulement */}
             <nav className="hidden lg:flex items-center">
-              {leftNavItems.map((item) => (
-                <div key={item.path} className="relative group">
-                  <Link
-                    to={item.path}
-                    className={cn(
-                      "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary font-heading",
-                      location.pathname === item.path
-                        ? "text-primary"
-                        : "text-muted-foreground"
-                    )}
-                  >
-                    {item.label}
-                    {item.hasDropdown && <ChevronDown className="w-4 h-4" />}
-                  </Link>
-                </div>
-              ))}
+              <Link to="/" className="hover:opacity-80 transition-opacity">
+                <img src={logo} alt="AMI Immobilier" className="h-12 w-auto" />
+              </Link>
             </nav>
 
             {/* Navigation centrale - Desktop seulement */}
@@ -107,10 +95,7 @@ const Header = () => {
               </div>
             ) : (
               <Link to="/" className="flex items-center lg:hidden">
-                <div className="bg-primary text-primary-foreground px-3 py-1 rounded">
-                  <span className="text-lg font-bold site-title">IMAN</span>
-                </div>
-                <span className="ml-2 text-sm text-muted-foreground font-heading">IMMO</span>
+                <img src={logo} alt="AMI Immobilier" className="h-10 w-auto" />
               </Link>
             )}
 
@@ -132,10 +117,7 @@ const Header = () => {
             {/* Header du menu mobile */}
             <div className="flex items-center justify-between p-4 border-b border-slate-700">
               <Link to="/" className="flex items-center" onClick={toggleMobileMenu}>
-                <div className="bg-primary text-primary-foreground px-3 py-1 rounded">
-                  <span className="text-lg font-bold site-title">IMAN</span>
-                </div>
-                <span className="ml-2 text-sm text-slate-300 font-heading">IMMO</span>
+                <img src={logo} alt="AMI Immobilier" className="h-10 w-auto" />
               </Link>
               <button
                 onClick={toggleMobileMenu}
