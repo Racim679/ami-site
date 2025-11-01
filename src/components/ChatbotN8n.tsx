@@ -61,7 +61,7 @@ const ChatbotN8n = () => {
     setIsLoading(true);
 
     try {
-      console.log('Envoi du message vers n8n:', {
+      console.log('📤 Envoi du message vers n8n:', {
         message: userMessage.text,
         timestamp: userMessage.timestamp.toISOString(),
       });
@@ -77,31 +77,43 @@ const ChatbotN8n = () => {
         }),
       });
 
-      console.log('Réponse n8n status:', response.status);
-      console.log('Réponse n8n headers:', response.headers);
+      console.log('📥 Réponse n8n status:', response.status);
+      console.log('📥 Réponse n8n headers:', Object.fromEntries(response.headers.entries()));
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.log('Erreur réponse n8n:', errorText);
-        throw new Error(`Erreur de réseau: ${response.status} - ${errorText}`);
+        console.error('❌ Erreur réponse n8n:', errorText);
+        throw new Error(`Erreur de réseau: ${response.status}`);
       }
 
-      const data = await response.json();
-      console.log('Données reçues de n8n:', data);
+      const contentType = response.headers.get('content-type');
+      console.log('📥 Content-Type:', contentType);
+
+      let data;
+      const responseText = await response.text();
+      console.log('📥 Réponse brute:', responseText);
+
+      try {
+        data = JSON.parse(responseText);
+        console.log('📥 Données JSON parsées:', data);
+      } catch (e) {
+        console.error('❌ Erreur parsing JSON:', e);
+        throw new Error('Réponse invalide du serveur');
+      }
 
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: data.response || data.message || 'Désolé, je n\'ai pas pu traiter votre demande.',
+        text: data.response || data.message || data.output || responseText || 'Désolé, je n\'ai pas pu traiter votre demande.',
         sender: 'bot',
         timestamp: new Date(),
       };
 
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
-      console.error('Erreur lors de l\'envoi du message:', error);
+      console.error('❌ Erreur complète:', error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: 'Désolé, une erreur s\'est produite. Veuillez réessayer.',
+        text: 'Erreur de connexion au serveur.',
         sender: 'bot',
         timestamp: new Date(),
       };
