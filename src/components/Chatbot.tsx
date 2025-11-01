@@ -57,10 +57,7 @@ const Chatbot = () => {
     setIsLoading(true);
 
     try {
-      console.log('📤 Envoi du message vers n8n:', {
-        message: userMessage.text,
-        timestamp: userMessage.timestamp.toISOString(),
-      });
+      console.log('📤 Envoi du message vers n8n');
 
       const response = await fetch('https://n8n.srv933307.hstgr.cloud/webhook/c6342350-0f1b-4f96-8c89-00d49d76c8ef', {
         method: 'POST',
@@ -68,38 +65,38 @@ const Chatbot = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: userMessage.text,
-          timestamp: userMessage.timestamp.toISOString(),
+          chatInput: userMessage.text,
+          sessionId: 'web-session-' + Date.now(),
         }),
       });
 
-      console.log('📥 Réponse n8n status:', response.status);
-      console.log('📥 Réponse n8n headers:', Object.fromEntries(response.headers.entries()));
+      console.log('📥 Réponse status:', response.status);
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('❌ Erreur réponse n8n:', errorText);
-        throw new Error(`Erreur de réseau: ${response.status}`);
+        console.error('❌ Erreur:', errorText);
+        throw new Error(`Erreur ${response.status}`);
       }
 
-      const contentType = response.headers.get('content-type');
-      console.log('📥 Content-Type:', contentType);
-
-      let data;
       const responseText = await response.text();
       console.log('📥 Réponse brute:', responseText);
 
+      let botText = responseText;
+      
+      // Essayer de parser comme JSON
       try {
-        data = JSON.parse(responseText);
-        console.log('📥 Données JSON parsées:', data);
+        const data = JSON.parse(responseText);
+        console.log('📥 JSON parsé:', data);
+        
+        // Chercher la réponse dans différents formats possibles
+        botText = data.output || data.response || data.message || data.text || responseText;
       } catch (e) {
-        console.error('❌ Erreur parsing JSON:', e);
-        throw new Error('Réponse invalide du serveur');
+        console.log('ℹ️ Pas du JSON, utilisation directe du texte');
       }
 
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: data.response || data.message || data.output || responseText || 'Désolé, je n\'ai pas pu traiter votre demande.',
+        text: botText,
         sender: 'bot',
         timestamp: new Date(),
       };
