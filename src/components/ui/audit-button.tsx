@@ -29,17 +29,17 @@ export default function AuditButton({
   width = 380,
   height = 60,
   fontSize = 16,
-  fontFamily = "Inter, Arial, sans-serif",
-  textColor = "#c5b078",
+  fontFamily = "var(--font-heading)",
+  textColor = "hsl(var(--accent-foreground))",
   blurAmount = 8,
-  borderRadius = 30,
+  borderRadius = 8,
   shineDuration = 3,
   shineOpacity = 0.3,
-  glowColor = "#c5b078",
+  glowColor = "hsl(var(--accent))",
   glowIntensity = 0.8,
-  strokeWidth = 2,
-  strokeColor = "#c5b078",
-  strokeColorHover = "#a08960",
+  strokeWidth = 0,
+  strokeColor = "hsl(var(--accent))",
+  strokeColorHover = "hsl(var(--secondary))",
   enableFontScaling = false,
   link,
   onClick,
@@ -67,8 +67,8 @@ export default function AuditButton({
     width: typeof width === 'string' ? width : `${width}px`,
     height: `${height}px`,
     background: isHovered 
-      ? "rgba(197, 176, 120, 0.03)" 
-      : "rgba(255, 255, 255, 0.7)",
+      ? "hsl(var(--secondary))" 
+      : "hsl(var(--accent))",
     backdropFilter: `blur(${blurAmount}px)`,
     WebkitBackdropFilter: `blur(${blurAmount}px)`,
     border: `${strokeWidth}px solid ${isHovered ? strokeColorHover : strokeColor}`,
@@ -76,11 +76,11 @@ export default function AuditButton({
     fontSize: `${fontSize}px`,
     fontFamily: fontFamily,
     fontWeight: isHovered ? 700 : 600,
-    color: isHovered ? "#a08960" : textColor,
+    color: isHovered ? "hsl(var(--secondary-foreground))" : textColor,
     cursor: "pointer",
     overflow: "hidden",
     textShadow: isHovered
-      ? "0 2px 4px rgba(197, 176, 120, 0.3)"
+      ? "0 2px 4px rgba(79, 195, 179, 0.3)"
       : "none",
     letterSpacing: isHovered ? "0.5px" : "0.3px",
     display: "inline-flex",
@@ -91,13 +91,13 @@ export default function AuditButton({
     outline: "none",
     zIndex: 1,
     boxShadow: isHovered
-      ? `0 8px 25px rgba(197, 176, 120, 0.25), 
+      ? `0 8px 25px rgba(79, 195, 179, 0.25), 
          0 4px 12px rgba(0, 0, 0, 0.08),
-         inset 0 1px 0 rgba(255, 255, 255, 0.5)`
-      : `0 4px 15px rgba(0, 0, 0, 0.05), 
-         inset 0 1px 0 rgba(255, 255, 255, 0.9)`,
+         inset 0 1px 0 rgba(255, 255, 255, 0.3)`
+      : `0 4px 15px rgba(210, 185, 139, 0.2), 
+         inset 0 1px 0 rgba(255, 255, 255, 0.5)`,
     transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-    transform: isPressed ? "scale(0.98)" : isHovered ? "scale(1.02)" : "scale(1)",
+    transform: isPressed ? "scale(0.98)" : isHovered ? "scale(1.05)" : "scale(1)",
     willChange: "transform, box-shadow",
     ...style,
   };
@@ -111,9 +111,9 @@ export default function AuditButton({
     background: `linear-gradient(
       90deg,
       transparent,
-      rgba(197, 176, 120, ${shineOpacity * 0.4}),
+      rgba(255, 255, 255, ${shineOpacity * 0.4}),
       rgba(255, 255, 255, ${shineOpacity}),
-      rgba(197, 176, 120, ${shineOpacity * 0.4}),
+      rgba(255, 255, 255, ${shineOpacity * 0.4}),
       transparent
     )`,
     transform: "skewX(-15deg)",
@@ -129,8 +129,8 @@ export default function AuditButton({
     right: 0,
     bottom: 0,
     background: isHovered
-      ? "linear-gradient(135deg, rgba(197, 176, 120, 0.05) 0%, rgba(197, 176, 120, 0.1) 100%)"
-      : "linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%)",
+      ? "linear-gradient(135deg, rgba(79, 195, 179, 0.1) 0%, rgba(79, 195, 179, 0.05) 100%)"
+      : "linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%)",
     opacity: isHovered ? 1 : 0.6,
     borderRadius: `${borderRadius}px`,
     pointerEvents: "none",
