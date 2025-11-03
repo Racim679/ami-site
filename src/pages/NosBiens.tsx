@@ -364,13 +364,6 @@ const NosBiens = () => {
   return <div className="min-h-screen bg-background">
       <Header />
 
-      {/* Hero Section */}
-      <AnimatedSection className="bg-primary text-primary-foreground py-16">
-        <div className="container mx-auto px-4 text-center">
-          
-          
-        </div>
-      </AnimatedSection>
 
       {/* Filtres */}
       <AnimatedSection className="block md:hidden py-8 bg-muted/30">
