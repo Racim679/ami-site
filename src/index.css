@@ -71,40 +71,40 @@ All colors MUST be HSL.
     --font-body: 'Freight Text';
     
     /* Background & Core Colors */
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    --background: 0 0% 100%;        /* #FFFFFF - Blanc pur */
+    --foreground: 0 0% 20%;         /* #333333 - Gris foncé texte */
     
-    /* Brand Colors - Luxury Real Estate Palette with #beaf87 */
-    --primary: 45 35% 64%;        /* #beaf87 - Luxury green-gold */
-    --primary-light: 45 45% 72%;  /* Lighter green-gold */
-    --primary-dark: 45 25% 56%;   /* Deeper green-gold */
+    /* AMI Immobilier Brand Colors */
+    --primary: 199 62% 25%;         /* #174E66 - Bleu profond (principal) */
+    --primary-light: 199 62% 35%;   /* Version plus claire du bleu */
+    --primary-dark: 199 62% 20%;    /* Version plus foncée du bleu */
     --primary-foreground: 0 0% 100%;
     
-    --secondary: 210 40% 25%;     /* Deep navy blue for elegance */
-    --secondary-light: 210 35% 35%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 171 56% 54%;       /* #4FC3B3 - Vert menthe doux (accents) */
+    --secondary-light: 171 51% 85%; /* #C8EFE9 - Vert menthe clair pour badges */
+    --secondary-foreground: 199 62% 25%; /* Bleu pour texte sur vert menthe */
     
-    --accent: 42 40% 68%;         /* Champagne gold complement */
-    --accent-light: 42 50% 76%;
-    --accent-foreground: 210 40% 15%;
+    --accent: 39 46% 68%;           /* #D2B98B - Beige doré / sable clair */
+    --accent-light: 45 43% 71%;     /* #D6C39B - Beige plus clair */
+    --accent-foreground: 0 0% 100%; /* Texte blanc sur beige doré */
     
     /* Surface Colors */
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --card-hover: 24 100% 97%;
+    --card: 0 0% 100%;              /* Blanc pour les cartes */
+    --card-foreground: 0 0% 20%;    /* Gris foncé pour texte */
+    --card-hover: 0 0% 97%;         /* #F7F7F7 - Gris clair au survol */
     
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
+    --popover-foreground: 0 0% 20%;
     
     /* Neutral System */
-    --muted: 210 40% 98%;
-    --muted-foreground: 215 13.8% 34.1%;
-    --muted-dark: 215 25% 85%;
+    --muted: 0 0% 97%;              /* #F7F7F7 - Gris clair pour fonds */
+    --muted-foreground: 0 0% 40%;   /* Gris moyen pour texte */
+    --muted-dark: 0 0% 90%;         /* Gris un peu plus foncé */
     
     /* Interactive Elements */
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 24 84% 48%;
+    --border: 0 0% 90%;             /* Bordures grises claires */
+    --input: 0 0% 97%;              /* Fond inputs gris clair */
+    --ring: 171 56% 54%;            /* Vert menthe pour focus ring */
     
     /* Status Colors */
     --destructive: 0 84.2% 60.2%;
@@ -114,22 +114,22 @@ All colors MUST be HSL.
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
     
-    /* Luxury Gradients with #beaf87 */
+    /* AMI Immobilier Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-light)) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--secondary-light)) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(var(--primary-dark)) 0%, hsl(var(--primary)) 50%, hsl(var(--accent)) 100%);
-    --gradient-luxury: linear-gradient(145deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--accent)) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(var(--accent-light)) 0%, hsl(var(--accent)) 100%); /* Beige dégradé doux */
+    --gradient-luxury: linear-gradient(145deg, hsl(var(--accent)) 0%, hsl(var(--accent-light)) 100%);
     --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--muted)) 100%);
     --gradient-subtle: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--muted)) 100%);
     
-    /* Luxury Shadows */
+    /* Premium Shadows */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    --shadow-luxury: 0 25px 50px -12px rgba(190, 175, 135, 0.3);
-    --shadow-gold: 0 8px 32px rgba(190, 175, 135, 0.4);
-    --shadow-elegant: 0 10px 30px -10px rgba(190, 175, 135, 0.25);
+    --shadow-luxury: 0 25px 50px -12px rgba(210, 185, 139, 0.3); /* Beige doré */
+    --shadow-gold: 0 8px 32px rgba(210, 185, 139, 0.4); /* Beige doré */
+    --shadow-elegant: 0 10px 30px -10px rgba(210, 185, 139, 0.25); /* Beige doré */
     
     /* Component-specific */
     --sidebar-background: 0 0% 100%;
@@ -141,29 +141,29 @@ All colors MUST be HSL.
     --sidebar-border: 214.3 31.8% 91.4%;
     --sidebar-ring: 24 84% 48%;
     
-    --chatbot-primary: 45 35% 64%;
+    --chatbot-primary: 199 62% 25%;        /* Bleu profond */
     --chatbot-primary-foreground: 0 0% 100%;
-    --chatbot-hover: 45 45% 72%;
+    --chatbot-hover: 171 56% 54%;          /* Vert menthe au survol */
     
-    --radius: 12px;
+    --radius: 8px; /* Coins légèrement arrondis */
   }
   
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
+    --background: 0 0% 10%;         /* Fond sombre */
+    --foreground: 0 0% 95%;         /* Texte clair */
     
-    --primary: 45 45% 72%;
-    --primary-light: 45 55% 80%;
-    --primary-dark: 45 35% 64%;
-    --primary-foreground: 240 10% 3.9%;
+    --primary: 199 62% 45%;         /* Bleu plus clair en dark mode */
+    --primary-light: 199 62% 55%;
+    --primary-dark: 199 62% 35%;
+    --primary-foreground: 0 0% 100%;
     
-    --secondary: 210 50% 30%;
-    --secondary-light: 210 45% 40%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 171 56% 64%;       /* Vert menthe plus clair */
+    --secondary-light: 171 51% 85%;
+    --secondary-foreground: 0 0% 10%;
     
-    --accent: 42 50% 76%;
-    --accent-light: 42 60% 84%;
-    --accent-foreground: 240 10% 3.9%;
+    --accent: 39 46% 75%;           /* Beige plus clair */
+    --accent-light: 45 43% 80%;
+    --accent-foreground: 0 0% 10%;
     
     --card: 240 10% 8%;
     --card-foreground: 0 0% 98%;
@@ -202,9 +202,9 @@ All colors MUST be HSL.
     --sidebar-border: 240 10% 20%;
     --sidebar-ring: 35 88% 65%;
     
-    --chatbot-primary: 45 45% 72%;
-    --chatbot-primary-foreground: 240 10% 3.9%;
-    --chatbot-hover: 45 55% 80%;
+    --chatbot-primary: 199 62% 45%;
+    --chatbot-primary-foreground: 0 0% 100%;
+    --chatbot-hover: 171 56% 64%;
   }
 }
 
