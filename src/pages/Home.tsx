@@ -89,9 +89,7 @@ const Home: React.FC = () => {
         }} transition={{
           duration: 0.6
         }}>
-            <h2 className="text-4xl font-bold text-foreground mb-4">
-              Pourquoi choisir Aymen Promotion ?
-            </h2>
+            <h2 className="text-4xl font-bold text-foreground mb-4">Pourquoi choisir AMI Immobilier ?</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Une expertise reconnue et un accompagnement personnalisé pour tous vos projets immobiliers.
             </p>
