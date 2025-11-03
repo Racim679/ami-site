@@ -3,7 +3,6 @@ import { useSearchParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Heart, BarChart3, Bed, Bath, Square } from "lucide-react";
@@ -15,7 +14,6 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { AnimatedSection, AnimatedCard } from "@/components/AnimatedComponents";
 import { supabase } from "@/integrations/supabase/client";
 import { formatPrice } from "@/lib/utils";
-
 interface Property {
   id: string;
   title: string;
@@ -25,7 +23,9 @@ interface Property {
   surface?: number;
   price?: number;
   image_url?: string;
-  localities?: { name: string } | null;
+  localities?: {
+    name: string;
+  } | null;
   typology?: string;
   property_details?: {
     bedrooms?: number;
@@ -77,7 +77,6 @@ interface Property {
     plages?: boolean;
   }[] | null;
 }
-
 const NosBiens = () => {
   const [searchParams] = useSearchParams();
   const [filters, setFilters] = useState<FilterState>({
@@ -101,16 +100,24 @@ const NosBiens = () => {
   const [visibleResidences, setVisibleResidences] = useState(9);
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
-  const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
-  const { addToComparison, isInComparison } = useComparison();
+  const {
+    addToFavorites,
+    removeFromFavorites,
+    isFavorite
+  } = useFavorites();
+  const {
+    addToComparison,
+    isInComparison
+  } = useComparison();
 
   // Récupérer les propriétés depuis Supabase
   useEffect(() => {
     const fetchProperties = async () => {
       try {
-        const { data, error } = await supabase
-          .from('properties')
-          .select(`
+        const {
+          data,
+          error
+        } = await supabase.from('properties').select(`
             id,
             title,
             status,
@@ -170,20 +177,17 @@ const NosBiens = () => {
               parcs,
               plages
             )
-          `)
-          .order('created_at', { ascending: false });
-
+          `).order('created_at', {
+          ascending: false
+        });
         if (error) {
           console.error('Erreur lors de la récupération des propriétés:', error);
         } else {
           // Transform data to match our interface
           const transformedData = data?.map(property => ({
             ...property,
-            localities: Array.isArray(property.localities) && property.localities.length > 0 
-              ? property.localities[0] 
-              : null
+            localities: Array.isArray(property.localities) && property.localities.length > 0 ? property.localities[0] : null
           })) || [];
-          
           setProperties(transformedData);
         }
       } catch (error) {
@@ -192,7 +196,6 @@ const NosBiens = () => {
         setLoading(false);
       }
     };
-
     fetchProperties();
   }, []);
 
@@ -218,7 +221,6 @@ const NosBiens = () => {
     };
     setFilters(urlFilters);
   }, [searchParams]);
-
   const getStatusLabel = (status: string) => {
     switch (status) {
       case 'À Vendre':
@@ -231,8 +233,6 @@ const NosBiens = () => {
         return status;
     }
   };
-
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case "À Vendre":
@@ -245,36 +245,34 @@ const NosBiens = () => {
         return "bg-gray-100 text-gray-800";
     }
   };
-
   const filteredProperties = properties.filter(property => {
     // Filtres principaux avec comparaisons insensibles à la casse
     if (filters.typeOffre && property.status?.toLowerCase() !== filters.typeOffre.toLowerCase()) return false;
     if (filters.type && property.typology?.toLowerCase() !== filters.type.toLowerCase()) return false;
     if (filters.localite && property.localities?.name?.toLowerCase() !== filters.localite.toLowerCase()) return false;
-    
+
     // Filtres de prix
     if (filters.minPrice && property.price && property.price < parseInt(filters.minPrice)) return false;
     if (filters.maxPrice && property.price && property.price > parseInt(filters.maxPrice)) return false;
-    
+
     // Filtres de surface
     if (filters.minSurface && property.surface && property.surface < parseInt(filters.minSurface)) return false;
     if (filters.maxSurface && property.surface && property.surface > parseInt(filters.maxSurface)) return false;
-    
+
     // Filtre état (condition depuis property_details)
     if (filters.etat && property.property_details && property.property_details.length > 0) {
       const condition = property.property_details[0]?.condition;
       if (condition?.toLowerCase() !== filters.etat.toLowerCase()) return false;
     }
-    
+
     // Filtres property_details (chambres, salles de bain, étages)
     if (property.property_details && property.property_details.length > 0) {
       const details = property.property_details[0];
-      
       if (filters.chambres && details.bedrooms !== parseInt(filters.chambres)) return false;
       if (filters.sallesBain && details.bathrooms !== parseInt(filters.sallesBain)) return false;
       if (filters.etages && details.floors !== parseInt(filters.etages)) return false;
     }
-    
+
     // Filtres de vue
     if (filters.vue && property.property_details && property.property_details.length > 0) {
       const details = property.property_details[0];
@@ -288,7 +286,7 @@ const NosBiens = () => {
       };
       if (!vueMapping[filters.vue as keyof typeof vueMapping]) return false;
     }
-    
+
     // Filtres commodités
     if (filters.commodites.length > 0 && property.property_amenities_structured && property.property_amenities_structured.length > 0) {
       const amenities = property.property_amenities_structured[0];
@@ -302,12 +300,11 @@ const NosBiens = () => {
         'Grenier': amenities.grenier,
         'Buanderie': amenities.buanderie
       };
-      
       for (const commodite of filters.commodites) {
         if (!commoditesMapping[commodite as keyof typeof commoditesMapping]) return false;
       }
     }
-    
+
     // Filtres sécurité
     if (filters.securite.length > 0 && property.property_security_structured && property.property_security_structured.length > 0) {
       const security = property.property_security_structured[0];
@@ -321,12 +318,11 @@ const NosBiens = () => {
         'Alarme': security.alarme,
         'Portail électrique': security.portail_electrique
       };
-      
       for (const securiteItem of filters.securite) {
         if (!securiteMapping[securiteItem as keyof typeof securiteMapping]) return false;
       }
     }
-    
+
     // Filtres proximité
     if (filters.proximite.length > 0 && property.property_nearby_structured && property.property_nearby_structured.length > 0) {
       const nearby = property.property_nearby_structured[0];
@@ -344,24 +340,18 @@ const NosBiens = () => {
         'Parcs': nearby.parcs,
         'Plages': nearby.plages
       };
-      
       for (const proximiteItem of filters.proximite) {
         if (!proximiteMapping[proximiteItem as keyof typeof proximiteMapping]) return false;
       }
     }
-    
     return true;
   });
-
   const displayedProperties = filteredProperties.slice(0, visibleResidences);
-
   const loadMore = () => {
     setVisibleResidences(prev => prev + 6);
   };
-
   if (loading) {
-    return (
-      <div className="min-h-screen bg-background">
+    return <div className="min-h-screen bg-background">
         <Header />
         <div className="flex items-center justify-center h-96">
           <div className="text-center">
@@ -369,33 +359,16 @@ const NosBiens = () => {
             <p>Chargement des propriétés...</p>
           </div>
         </div>
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       <Header />
 
       {/* Hero Section */}
       <AnimatedSection className="bg-primary text-primary-foreground py-16">
         <div className="container mx-auto px-4 text-center">
-          <motion.h1
-            className="text-4xl md:text-6xl font-bold mb-4"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            Nos Biens Immobiliers
-          </motion.h1>
-          <motion.p
-            className="text-xl text-primary-foreground/90 max-w-2xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            Découvrez notre sélection de propriétés exceptionnelles à Alger et dans toute l'Algérie
-          </motion.p>
+          
+          
         </div>
       </AnimatedSection>
 
@@ -416,94 +389,75 @@ const NosBiens = () => {
       {/* Liste des biens */}
       <AnimatedSection className="py-16">
         <div className="container mx-auto px-4">
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-            variants={{
-              hidden: { opacity: 0 },
-              show: {
-                opacity: 1,
-                transition: {
-                  staggerChildren: 0.1
-                }
-              }
-            }}
-            initial="hidden"
-            animate="show"
-          >
-            {displayedProperties.map((property, index) => (
-              <motion.div
-                key={property.id}
-                variants={{
-                  hidden: { opacity: 0, y: 30 },
-                  show: { opacity: 1, y: 0 }
-                }}
-                transition={{ duration: 0.5 }}
-              >
+          <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" variants={{
+          hidden: {
+            opacity: 0
+          },
+          show: {
+            opacity: 1,
+            transition: {
+              staggerChildren: 0.1
+            }
+          }
+        }} initial="hidden" animate="show">
+            {displayedProperties.map((property, index) => <motion.div key={property.id} variants={{
+            hidden: {
+              opacity: 0,
+              y: 30
+            },
+            show: {
+              opacity: 1,
+              y: 0
+            }
+          }} transition={{
+            duration: 0.5
+          }}>
                 <AnimatedCard className="group overflow-hidden hover:shadow-xl transition-all duration-300 bg-card border border-border">
                   <Link to={`/bien/${property.id}`} className="block">
                     <div className="relative overflow-hidden">
-                      <img
-                        src={property.image_url || "/placeholder.svg"}
-                        alt={property.title}
-                        className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
+                      <img src={property.image_url || "/placeholder.svg"} alt={property.title} className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300" />
                       <div className="absolute top-4 left-4">
                         <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(property.status)}`}>
                           {getStatusLabel(property.status)}
                         </span>
                       </div>
                       <div className="absolute top-4 right-4 flex gap-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            isFavorite(property.id)
-                              ? removeFromFavorites(property.id)
-                               : addToFavorites({
-                                   id: property.id,
-                                   title: property.title,
-                                   price: property.price || 0,
-                                   surface: property.surface || 0,
-                                   location: property.localities?.name || "",
-                                   image: property.image_url || "/placeholder.svg",
-                                   type: property.typology || ""
-                                 });
-                          }}
-                          className="w-8 h-8 p-0 rounded-full bg-white/80 hover:bg-white"
-                        >
+                        <Button variant="ghost" size="sm" onClick={e => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      isFavorite(property.id) ? removeFromFavorites(property.id) : addToFavorites({
+                        id: property.id,
+                        title: property.title,
+                        price: property.price || 0,
+                        surface: property.surface || 0,
+                        location: property.localities?.name || "",
+                        image: property.image_url || "/placeholder.svg",
+                        type: property.typology || ""
+                      });
+                    }} className="w-8 h-8 p-0 rounded-full bg-white/80 hover:bg-white">
                           <Heart className={`w-4 h-4 ${isFavorite(property.id) ? "fill-red-500 text-red-500" : "text-gray-600"}`} />
                         </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                             addToComparison({
-                               id: property.id,
-                               title: property.title,
-                               price: property.price || 0,
-                               surface: property.surface || 0,
-                               location: property.localities?.name || "",
-                               image: property.image_url || "/placeholder.svg",
-                               type: property.typology || "",
-                               status: getStatusLabel(property.status),
-                               etat: "N/A"
-                             });
-                          }}
-                          disabled={isInComparison(property.id)}
-                          className="w-8 h-8 p-0 rounded-full bg-white/80 hover:bg-white"
-                        >
+                        <Button variant="ghost" size="sm" onClick={e => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      addToComparison({
+                        id: property.id,
+                        title: property.title,
+                        price: property.price || 0,
+                        surface: property.surface || 0,
+                        location: property.localities?.name || "",
+                        image: property.image_url || "/placeholder.svg",
+                        type: property.typology || "",
+                        status: getStatusLabel(property.status),
+                        etat: "N/A"
+                      });
+                    }} disabled={isInComparison(property.id)} className="w-8 h-8 p-0 rounded-full bg-white/80 hover:bg-white">
                           <BarChart3 className={`w-4 h-4 ${isInComparison(property.id) ? "text-primary" : "text-gray-600"}`} />
                         </Button>
                       </div>
-                       {property.price && property.price > 0 && (
-                         <div className="absolute bottom-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
+                       {property.price && property.price > 0 && <div className="absolute bottom-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
                            {formatPrice(property.price)}
-                         </div>
-                       )}
+                         </div>}
                     </div>
 
                     <CardContent className="p-6">
@@ -512,28 +466,20 @@ const NosBiens = () => {
                       </h3>
                       
                       {/* Property Details Row */}
-                      {property.property_details && property.property_details.length > 0 && (
-                        <div className="flex items-center gap-4 mb-3 text-sm text-muted-foreground">
-                          {property.property_details[0].bedrooms !== null && (
-                            <div className="flex items-center gap-1">
+                      {property.property_details && property.property_details.length > 0 && <div className="flex items-center gap-4 mb-3 text-sm text-muted-foreground">
+                          {property.property_details[0].bedrooms !== null && <div className="flex items-center gap-1">
                               <Bed className="h-4 w-4" />
                               <span>{property.property_details[0].bedrooms}</span>
-                            </div>
-                          )}
-                          {property.property_details[0].bathrooms !== null && (
-                            <div className="flex items-center gap-1">
+                            </div>}
+                          {property.property_details[0].bathrooms !== null && <div className="flex items-center gap-1">
                               <Bath className="h-4 w-4" />
                               <span>{property.property_details[0].bathrooms}</span>
-                            </div>
-                          )}
-                          {property.surface && (
-                            <div className="flex items-center gap-1">
+                            </div>}
+                          {property.surface && <div className="flex items-center gap-1">
                               <Square className="h-4 w-4" />
                               <span>{property.surface} m²</span>
-                            </div>
-                          )}
-                        </div>
-                      )}
+                            </div>}
+                        </div>}
 
                       {/* Location */}
                       <div className="flex items-center text-muted-foreground mb-4">
@@ -552,23 +498,23 @@ const NosBiens = () => {
                     </CardContent>
                   </Link>
                 </AnimatedCard>
-              </motion.div>
-            ))}
+              </motion.div>)}
           </motion.div>
 
           {/* Bouton "Voir plus" */}
-          {visibleResidences < filteredProperties.length && (
-            <motion.div
-              className="text-center mt-12"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
+          {visibleResidences < filteredProperties.length && <motion.div className="text-center mt-12" initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.5
+        }}>
               <Button onClick={loadMore} size="lg" className="bg-primary hover:bg-primary/90">
                 Voir plus de biens
               </Button>
-            </motion.div>
-          )}
+            </motion.div>}
         </div>
       </AnimatedSection>
 
@@ -577,8 +523,6 @@ const NosBiens = () => {
 
       {/* Scroll to Top */}
       <ScrollToTop />
-    </div>
-  );
+    </div>;
 };
-
 export default NosBiens;
