@@ -59,7 +59,7 @@ const Chatbot = () => {
     try {
       console.log('📤 Envoi du message vers n8n');
 
-      const response = await fetch('https://n8n.srv933307.hstgr.cloud/webhook/c6342350-0f1b-4f96-8c89-00d49d76c8ef', {
+      const response = await fetch('https://n8n.srv933307.hstgr.cloud/webhook-test/c6342350-0f1b-4f96-8c89-00d49d76c8ef', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
