@@ -56,7 +56,7 @@ const App = () => (
           title="Racim Promotion"
           initialMessage1="Bonjour, je suis votre assistante immobilière ! 👋"
           initialMessage2="Vous recherchez un bien ? Souhaitez vendre un bien ? Ou simplement des questions sur nos services ? N'hésitez pas à nous dire ce dont vous avez besoin pour que nous puissions vous assister."
-          webhookUrl="https://n8n.srv933307.hstgr.cloud/webhook/a04bb5d7-4bc1-4a87-8ae2-4e3e34c681b5/chat"
+          webhookUrl="https://n8n.srv933307.hstgr.cloud/webhook-test/c6342350-0f1b-4f96-8c89-00d49d76c8ef"
         />
         <ComparisonSystem />
         <PWARegistration />

@@ -35,27 +35,42 @@ export const ChatbotWidget = ({
     setInput('');
     setIsTyping(true);
 
+    console.log('🟢 ChatbotWidget: Envoi du message...', userMessage);
+    console.log('🟢 ChatbotWidget: Webhook URL:', webhookUrl);
+
     try {
-      const response = await fetch(`${webhookUrl}?action=sendMessage`, {
+      const requestUrl = `${webhookUrl}?action=sendMessage`;
+      const requestBody = {
+        chatInput: userMessage,
+        sessionId: 'web-session-' + Date.now(),
+      };
+      
+      console.log('🟢 ChatbotWidget: URL complète:', requestUrl);
+      console.log('🟢 ChatbotWidget: Body:', JSON.stringify(requestBody));
+
+      const response = await fetch(requestUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          chatInput: userMessage,
-          sessionId: 'web-session-' + Date.now(),
-        }),
+        body: JSON.stringify(requestBody),
       });
       
+      console.log('🟢 ChatbotWidget: Response status:', response.status);
+      console.log('🟢 ChatbotWidget: Response ok:', response.ok);
+
       const data = await response.json();
+      console.log('🟢 ChatbotWidget: Response data:', data);
       
       // Simuler un délai de réponse pour l'effet de frappe
       setTimeout(() => {
         const botReply = data?.output || data?.response || data?.text || "Désolé, je n'ai pas compris.";
+        console.log('🟢 ChatbotWidget: Bot reply:', botReply);
         setMessages((prev) => [...prev, { from: 'bot', text: botReply }]);
         setIsTyping(false);
       }, 800);
     } catch (err) {
+      console.error('🔴 ChatbotWidget: Erreur complète:', err);
       setTimeout(() => {
         setMessages((prev) => [
           ...prev,
