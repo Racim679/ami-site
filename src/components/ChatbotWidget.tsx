@@ -39,16 +39,14 @@ export const ChatbotWidget = ({
     console.log('🟢 ChatbotWidget: Webhook URL:', webhookUrl);
 
     try {
-      const requestUrl = `${webhookUrl}?action=sendMessage`;
       const requestBody = {
         chatInput: userMessage,
         sessionId: 'web-session-' + Date.now(),
       };
       
-      console.log('🟢 ChatbotWidget: URL complète:', requestUrl);
       console.log('🟢 ChatbotWidget: Body:', JSON.stringify(requestBody));
 
-      const response = await fetch(requestUrl, {
+      const response = await fetch(webhookUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
