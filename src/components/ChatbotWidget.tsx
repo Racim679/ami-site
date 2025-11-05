@@ -8,6 +8,23 @@ interface ChatbotWidgetProps {
   webhookUrl: string;
 }
 
+// Fonction pour obtenir ou créer un ID utilisateur persistant
+const getUserId = (): string => {
+  const STORAGE_KEY = 'chatbot_user_id';
+  let userId = localStorage.getItem(STORAGE_KEY);
+  
+  if (!userId) {
+    // Générer un UUID simple
+    userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem(STORAGE_KEY, userId);
+    console.log('🆔 Nouvel utilisateur créé:', userId);
+  } else {
+    console.log('🆔 Utilisateur existant:', userId);
+  }
+  
+  return userId;
+};
+
 export const ChatbotWidget = ({
   title,
   initialMessage1,
@@ -39,9 +56,10 @@ export const ChatbotWidget = ({
     console.log('🟢 ChatbotWidget: Webhook URL:', webhookUrl);
 
     try {
+      const userId = getUserId();
       const requestBody = {
         chatInput: userMessage,
-        sessionId: 'web-session-' + Date.now(),
+        sessionId: userId, // Utilise l'ID persistant au lieu d'un timestamp
       };
       
       console.log('🟢 ChatbotWidget: Body:', JSON.stringify(requestBody));
