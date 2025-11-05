@@ -59,13 +59,43 @@ export const ChatbotWidget = ({
 
       const data = await response.json();
       console.log('🟢 ChatbotWidget: Response complète:', data);
+      console.log('🟢 ChatbotWidget: Response JSON string:', JSON.stringify(data, null, 2));
       console.log('🟢 ChatbotWidget: Type de data:', typeof data);
       console.log('🟢 ChatbotWidget: Keys de data:', Object.keys(data));
-      console.log('🟢 ChatbotWidget: Output extrait:', data.output);
+      console.log('🟢 ChatbotWidget: data.output:', data.output);
+      console.log('🟢 ChatbotWidget: data.message:', data.message);
+      console.log('🟢 ChatbotWidget: data.response:', data.response);
+      console.log('🟢 ChatbotWidget: data.text:', data.text);
+      console.log('🟢 ChatbotWidget: Est-ce que data est une string?', typeof data === 'string');
       
-      // Afficher la réponse immédiatement sans délai
-      const botReply = data.output || "Désolé, je n'ai pas reçu de réponse.";
+      // Essayer différents formats de réponse n8n
+      let botReply = '';
+      
+      if (typeof data === 'string') {
+        // Si la réponse est directement une chaîne
+        botReply = data;
+      } else if (data.output) {
+        botReply = data.output;
+      } else if (data.message) {
+        botReply = data.message;
+      } else if (data.response) {
+        botReply = data.response;
+      } else if (data.text) {
+        botReply = data.text;
+      } else if (Array.isArray(data) && data.length > 0) {
+        // Si n8n renvoie un tableau, prendre le premier élément
+        botReply = data[0].output || data[0].message || data[0].response || JSON.stringify(data[0]);
+      } else {
+        // En dernier recours, afficher tout l'objet
+        botReply = JSON.stringify(data);
+      }
+      
       console.log('🟢 ChatbotWidget: Bot reply final:', botReply);
+      
+      if (!botReply || botReply.trim() === '' || botReply === '{}' || botReply === '[]') {
+        botReply = "Désolé, je n'ai pas reçu de réponse valide.";
+      }
+      
       setMessages((prev) => [...prev, { from: 'bot', text: botReply }]);
       setIsTyping(false);
     } catch (err) {
