@@ -58,12 +58,13 @@ export const ChatbotWidget = ({
       console.log('🟢 ChatbotWidget: Response ok:', response.ok);
 
       const data = await response.json();
-      console.log('🟢 ChatbotWidget: Response data:', data);
+      console.log('🟢 ChatbotWidget: Response complète:', data);
+      console.log('🟢 ChatbotWidget: Output extrait:', data.output);
       
       // Simuler un délai de réponse pour l'effet de frappe
       setTimeout(() => {
-        const botReply = data?.output || data?.response || data?.text || "Désolé, je n'ai pas compris.";
-        console.log('🟢 ChatbotWidget: Bot reply:', botReply);
+        const botReply = data.output || "Désolé, je n'ai pas reçu de réponse.";
+        console.log('🟢 ChatbotWidget: Bot reply final:', botReply);
         setMessages((prev) => [...prev, { from: 'bot', text: botReply }]);
         setIsTyping(false);
       }, 800);
