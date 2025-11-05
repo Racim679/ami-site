@@ -59,24 +59,22 @@ export const ChatbotWidget = ({
 
       const data = await response.json();
       console.log('🟢 ChatbotWidget: Response complète:', data);
+      console.log('🟢 ChatbotWidget: Type de data:', typeof data);
+      console.log('🟢 ChatbotWidget: Keys de data:', Object.keys(data));
       console.log('🟢 ChatbotWidget: Output extrait:', data.output);
       
-      // Simuler un délai de réponse pour l'effet de frappe
-      setTimeout(() => {
-        const botReply = data.output || "Désolé, je n'ai pas reçu de réponse.";
-        console.log('🟢 ChatbotWidget: Bot reply final:', botReply);
-        setMessages((prev) => [...prev, { from: 'bot', text: botReply }]);
-        setIsTyping(false);
-      }, 800);
+      // Afficher la réponse immédiatement sans délai
+      const botReply = data.output || "Désolé, je n'ai pas reçu de réponse.";
+      console.log('🟢 ChatbotWidget: Bot reply final:', botReply);
+      setMessages((prev) => [...prev, { from: 'bot', text: botReply }]);
+      setIsTyping(false);
     } catch (err) {
       console.error('🔴 ChatbotWidget: Erreur complète:', err);
-      setTimeout(() => {
-        setMessages((prev) => [
-          ...prev,
-          { from: 'bot', text: "Erreur de connexion au serveur." },
-        ]);
-        setIsTyping(false);
-      }, 800);
+      setMessages((prev) => [
+        ...prev,
+        { from: 'bot', text: "Erreur de connexion au serveur." },
+      ]);
+      setIsTyping(false);
     }
   };
 
