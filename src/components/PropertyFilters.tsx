@@ -39,6 +39,7 @@ export interface FilterState {
 
 const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => {
   const navigate = useNavigate();
+  const { localities, loading: localitiesLoading } = useLocalities();
   const [filters, setFilters] = useState<FilterState>({
     typeOffre: "",
     type: "",
@@ -169,20 +170,18 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
           <label className="text-white text-sm font-medium block">Localité</label>
           <Select value={filters.localite} onValueChange={(value) => handleFilterChange("localite", value)}>
             <SelectTrigger className="bg-white border-0 h-12 text-slate-800">
-              <SelectValue placeholder="Sélectionner la localité" />
+              <SelectValue placeholder={localitiesLoading ? "Chargement..." : "Sélectionner la localité"} />
             </SelectTrigger>
             <SelectContent className="bg-white z-50">
-              <SelectItem value="hydra">Hydra</SelectItem>
-              <SelectItem value="kouba">Kouba</SelectItem>
-              <SelectItem value="birkhadem">Birkhadem</SelectItem>
-              <SelectItem value="dar el beida">Dar El Beida</SelectItem>
-              <SelectItem value="said hamdine">Said Hamdine</SelectItem>
-              <SelectItem value="dely ibrahim">Dely Ibrahim</SelectItem>
-              <SelectItem value="el biar">El Biar</SelectItem>
-              <SelectItem value="ain benian">Ain Benian</SelectItem>
-              <SelectItem value="cheraga">Cheraga</SelectItem>
-              <SelectItem value="ben aknoun">Ben Aknoun</SelectItem>
-              <SelectItem value="bouzareah">Bouzareah</SelectItem>
+              {localitiesLoading ? (
+                <SelectItem value="" disabled>Chargement...</SelectItem>
+              ) : (
+                localities.map((locality) => (
+                  <SelectItem key={locality.id} value={locality.name}>
+                    {locality.name}
+                  </SelectItem>
+                ))
+              )}
             </SelectContent>
           </Select>
         </div>

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { MapPin } from "lucide-react";
+import { MapPin, Search } from "lucide-react";
 import Header from "@/components/Header";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import heroImage from "@/assets/hero-localites.jpg";
 import babElOuedImage from "@/assets/bab-el-oued.jpg";
@@ -28,6 +29,8 @@ interface City {
 const Localites = () => {
   const [citiesWithLocalities, setCitiesWithLocalities] = useState<City[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [propertyCounts, setPropertyCounts] = useState<Record<string, number>>({});
 
   // Map locality names to their corresponding images
   const localityImages: Record<string, string> = {
@@ -65,6 +68,17 @@ const Localites = () => {
         }));
 
         setCitiesWithLocalities(citiesWithLocalitiesData);
+
+        // Fetch property counts for each locality
+        const counts: Record<string, number> = {};
+        for (const locality of localities) {
+          const { count } = await supabase
+            .from('properties')
+            .select('*', { count: 'exact', head: true })
+            .eq('locality_id', locality.id);
+          counts[locality.id] = count || 0;
+        }
+        setPropertyCounts(counts);
       } catch (error) {
         if (import.meta.env.DEV) {
           console.error("Error fetching data:", error);
@@ -93,7 +107,7 @@ const Localites = () => {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative h-[80vh] overflow-hidden">
+      <section className="relative h-[50vh] md:h-[60vh] overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${heroImage})` }}
@@ -113,14 +127,36 @@ const Localites = () => {
 
       {/* Localities Section */}
       <main className="container mx-auto px-4 py-16">
-        {citiesWithLocalities.map((city) => (
+        {/* Barre de recherche */}
+        <div className="mb-8">
+          <div className="relative max-w-md mx-auto">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Rechercher une localité..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+        </div>
+
+        {citiesWithLocalities.map((city) => {
+          // Filtrer les localités selon la recherche
+          const filteredLocalities = city.localities.filter((locality) =>
+            locality.name.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+
+          if (filteredLocalities.length === 0) return null;
+
+          return (
           <section key={city.id} className="mb-16">
             <h2 className="text-3xl font-bold mb-8 text-foreground text-center">
               {city.name}
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {city.localities.map((locality) => (
+              {filteredLocalities.map((locality) => (
                 <Link key={locality.id} to={`/localite/${locality.id}`}>
                   <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer">
                     <div className="relative h-64 overflow-hidden">
@@ -142,6 +178,11 @@ const Localites = () => {
                             {locality.description}
                           </p>
                         )}
+                        {propertyCounts[locality.id] !== undefined && (
+                          <p className="text-white font-semibold text-sm mt-1">
+                            {propertyCounts[locality.id]} {propertyCounts[locality.id] === 1 ? 'bien disponible' : 'biens disponibles'}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </Card>
@@ -149,7 +190,8 @@ const Localites = () => {
               ))}
             </div>
           </section>
-        ))}
+          );
+        })}
       </main>
     </div>
   );

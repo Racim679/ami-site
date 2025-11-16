@@ -7,6 +7,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Heart, BarChart3, Bed, Bath, Square } from "lucide-react";
 import PropertyFilters, { FilterState } from "@/components/PropertyFilters";
 import { MobileFilters } from "@/components/MobileFilters";
+import { ActiveFilters } from "@/components/ActiveFilters";
+import { SortSelector, SortOption } from "@/components/SortSelector";
+import { EmptyState } from "@/components/EmptyState";
 import { useFavorites } from "@/components/FavoritesSystem";
 import { useComparison } from "@/components/ComparisonSystem";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -99,6 +102,7 @@ const NosBiens = () => {
   const [visibleResidences, setVisibleResidences] = useState(9);
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sortOption, setSortOption] = useState<SortOption>("date-desc");
   const {
     addToFavorites,
     removeFromFavorites,
@@ -182,6 +186,8 @@ const NosBiens = () => {
         if (error) {
           console.error('Erreur lors de la récupération des propriétés:', error);
         } else {
+          console.log('Données brutes reçues de Supabase:', data);
+          console.log('Nombre de propriétés:', data?.length || 0);
           // Transform data to match our interface
           const transformedData = data?.map(property => {
             // Handle localities - can be array, object, or null
@@ -198,6 +204,8 @@ const NosBiens = () => {
               localities: locality
             };
           }) || [];
+          console.log('Propriétés transformées:', transformedData);
+          console.log('Nombre de propriétés transformées:', transformedData.length);
           setProperties(transformedData);
         }
       } catch (error) {
@@ -276,7 +284,9 @@ const NosBiens = () => {
     }
 
     // Filtres property_details (chambres, salles de bain, étages)
-    if (property.property_details && property.property_details.length > 0) {
+    // Si un filtre est défini, la propriété doit avoir property_details
+    if (filters.chambres || filters.sallesBain || filters.etages) {
+      if (!property.property_details || property.property_details.length === 0) return false;
       const details = property.property_details[0];
       if (filters.chambres && details.bedrooms !== parseInt(filters.chambres)) return false;
       if (filters.sallesBain && details.bathrooms !== parseInt(filters.sallesBain)) return false;
@@ -356,9 +366,74 @@ const NosBiens = () => {
     }
     return true;
   });
-  const displayedProperties = filteredProperties.slice(0, visibleResidences);
+  
+  console.log('Propriétés totales:', properties.length);
+  console.log('Filtres actifs:', filters);
+  console.log('Propriétés filtrées:', filteredProperties.length);
+  
+  // Appliquer le tri
+  const sortedProperties = [...filteredProperties].sort((a, b) => {
+    switch (sortOption) {
+      case "price-asc":
+        return (a.price || 0) - (b.price || 0);
+      case "price-desc":
+        return (b.price || 0) - (a.price || 0);
+      case "surface-asc":
+        return (a.surface || 0) - (b.surface || 0);
+      case "surface-desc":
+        return (b.surface || 0) - (a.surface || 0);
+      case "date-asc":
+        // Tri par date croissante (plus ancien en premier)
+        // On utilise created_at si disponible, sinon on garde l'ordre
+        return 0; // Pour l'instant, on garde l'ordre de la requête
+      case "date-desc":
+      default:
+        // Tri par date décroissante (plus récent en premier) - déjà fait par la requête
+        return 0;
+    }
+  });
+  
+  console.log('Propriétés à afficher:', sortedProperties.slice(0, visibleResidences).length);
+  const displayedProperties = sortedProperties.slice(0, visibleResidences);
   const loadMore = () => {
     setVisibleResidences(prev => prev + 6);
+  };
+
+  const handleRemoveFilter = (key: keyof FilterState, value?: string) => {
+    const newFilters = { ...filters };
+    
+    if (key === 'commodites' || key === 'securite' || key === 'documents' || key === 'proximite') {
+      // Pour les filtres array, retirer la valeur spécifique
+      const currentArray = newFilters[key] as string[];
+      newFilters[key] = currentArray.filter(item => item !== value) as any;
+    } else {
+      // Pour les filtres simples, les réinitialiser
+      newFilters[key] = "" as any;
+    }
+    
+    setFilters(newFilters);
+  };
+
+  const handleResetAllFilters = () => {
+    const resetFilters: FilterState = {
+      typeOffre: "",
+      type: "",
+      etat: "",
+      localite: "",
+      minPrice: "",
+      maxPrice: "",
+      minSurface: "",
+      maxSurface: "",
+      chambres: "",
+      sallesBain: "",
+      etages: "",
+      commodites: [],
+      securite: [],
+      documents: [],
+      proximite: [],
+      vue: ""
+    };
+    setFilters(resetFilters);
   };
   if (loading) {
     return <div className="min-h-screen bg-background">
@@ -386,6 +461,28 @@ const NosBiens = () => {
       {/* Liste des biens */}
       <AnimatedSection className="py-16">
         <div className="container mx-auto px-4">
+          {/* Compteur de résultats, tri et tags de filtres actifs */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-2 flex-wrap gap-4">
+              <p className="text-sm text-muted-foreground">
+                {filteredProperties.length === 0 
+                  ? "Aucun bien trouvé" 
+                  : `${filteredProperties.length} ${filteredProperties.length === 1 ? 'bien trouvé' : 'biens trouvés'}`}
+              </p>
+              {filteredProperties.length > 0 && (
+                <SortSelector 
+                  value={sortOption} 
+                  onValueChange={setSortOption}
+                />
+              )}
+            </div>
+            <ActiveFilters 
+              filters={filters} 
+              onRemoveFilter={handleRemoveFilter}
+              onResetAll={handleResetAllFilters}
+            />
+          </div>
+          
           <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" variants={{
           hidden: {
             opacity: 0
@@ -397,7 +494,23 @@ const NosBiens = () => {
             }
           }
         }} initial="hidden" animate="show">
-            {displayedProperties.map((property, index) => <motion.div key={property.id} variants={{
+            {displayedProperties.length === 0 ? (
+              <div className="col-span-full">
+                {filteredProperties.length === 0 && properties.length > 0 ? (
+                  <EmptyState
+                    title="Aucun bien trouvé avec les filtres sélectionnés"
+                    description="Essayez de modifier vos critères de recherche ou réinitialisez les filtres pour voir tous les biens disponibles."
+                    onReset={handleResetAllFilters}
+                  />
+                ) : filteredProperties.length === 0 && properties.length === 0 ? (
+                  <EmptyState
+                    title="Aucun bien disponible"
+                    description="Il n'y a actuellement aucun bien disponible dans notre base de données."
+                  />
+                ) : null}
+              </div>
+            ) : (
+              displayedProperties.map((property, index) => <motion.div key={property.id} variants={{
             hidden: {
               opacity: 0,
               y: 30
@@ -495,7 +608,8 @@ const NosBiens = () => {
                     </CardContent>
                   </Link>
                 </AnimatedCard>
-              </motion.div>)}
+              </motion.div>)
+            )}
           </motion.div>
 
           {/* Bouton "Voir plus" */}
