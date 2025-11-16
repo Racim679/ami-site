@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useLocalities } from "@/hooks/useLocalities";
 
 interface PropertyFiltersProps {
   onSearch?: (filters: FilterState) => void;
