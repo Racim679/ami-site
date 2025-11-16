@@ -175,7 +175,7 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
             </SelectTrigger>
             <SelectContent className="bg-white z-50">
               {localitiesLoading ? (
-                <SelectItem value="" disabled>Chargement...</SelectItem>
+                <SelectItem value="loading" disabled>Chargement...</SelectItem>
               ) : (
                 localities.map((locality) => (
                   <SelectItem key={locality.id} value={locality.name}>
