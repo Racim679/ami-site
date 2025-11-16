@@ -94,7 +94,17 @@ export const AnimatedCard: React.FC<{
   children,
   className = "",
   delay = 0
-}) => {};
+}) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.5, delay }}
+    className={className}
+  >
+    {children}
+  </motion.div>
+);
 export const AnimatedButton: React.FC<{
   children: React.ReactNode;
   className?: string;
