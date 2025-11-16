@@ -127,7 +127,7 @@ const NosBiens = () => {
             price,
             image_url,
             typology,
-            localities!inner(name),
+            localities(name),
             property_details (
               bedrooms,
               bathrooms,
@@ -184,10 +184,21 @@ const NosBiens = () => {
           console.error('Erreur lors de la récupération des propriétés:', error);
         } else {
           // Transform data to match our interface
-          const transformedData = data?.map(property => ({
-            ...property,
-            localities: Array.isArray(property.localities) && property.localities.length > 0 ? property.localities[0] : null
-          })) || [];
+          const transformedData = data?.map(property => {
+            // Handle localities - can be array, object, or null
+            let locality = null;
+            if (property.localities) {
+              if (Array.isArray(property.localities) && property.localities.length > 0) {
+                locality = property.localities[0];
+              } else if (typeof property.localities === 'object' && property.localities.name) {
+                locality = property.localities;
+              }
+            }
+            return {
+              ...property,
+              localities: locality
+            };
+          }) || [];
           setProperties(transformedData);
         }
       } catch (error) {

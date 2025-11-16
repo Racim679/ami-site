@@ -10,14 +10,16 @@ const Header = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Navigation desktop - seulement les 5 liens demandés
-  const desktopNavItems = [
+  // Navigation desktop - liens centrés
+  const centerNavItems = [
     { path: "/", label: "Accueil", hasDropdown: false },
     { path: "/nos-biens", label: "Nos biens", hasDropdown: false },
-    { path: "/favoris", label: "Favoris", hasDropdown: false },
     { path: "/comparaison", label: "Comparaison", hasDropdown: false },
-    { path: "/contact", label: "Contact", hasDropdown: false },
+    { path: "/favoris", label: "Favoris", hasDropdown: false },
   ];
+
+  // Contact à droite
+  const rightNavItem = { path: "/contact", label: "Contact", hasDropdown: false };
 
   // Navigation mobile - tous les liens (pour le menu hamburger)
   const leftNavItems = [
@@ -48,15 +50,15 @@ const Header = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             {/* Logo - Desktop */}
-            <div className="hidden lg:flex items-center">
+            <div className="hidden lg:flex items-center flex-shrink-0">
               <Link to="/" className="hover:opacity-80 transition-opacity">
                 <img src={logo} alt="AMI Immobilier" className="h-12 w-auto" />
               </Link>
             </div>
 
-            {/* Navigation classique - Desktop seulement (5 liens) */}
-            <nav className="hidden lg:flex items-center space-x-6">
-              {desktopNavItems.map((item) => (
+            {/* Navigation centrée - Desktop seulement (4 liens au centre) */}
+            <nav className="hidden lg:flex items-center justify-center flex-1 space-x-6">
+              {centerNavItems.map((item) => (
                 <Link
                   key={item.path}
                   to={item.path}
@@ -71,6 +73,21 @@ const Header = () => {
                 </Link>
               ))}
             </nav>
+
+            {/* Contact à droite - Desktop */}
+            <div className="hidden lg:flex items-center flex-shrink-0">
+              <Link
+                to={rightNavItem.path}
+                className={cn(
+                  "text-sm font-medium transition-colors hover:text-primary font-heading",
+                  location.pathname === rightNavItem.path
+                    ? "text-primary"
+                    : "text-muted-foreground"
+                )}
+              >
+                {rightNavItem.label}
+              </Link>
+            </div>
 
             {/* Logo mobile ou Filtres (visible seulement sur mobile) */}
             {location.pathname === '/nos-biens' ? (
