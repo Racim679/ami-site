@@ -1,0 +1,27 @@
+# Configuration Netlify pour garantir l'accessibilité publique
+
+[build]
+  publish = "dist"
+  command = "npm run build"
+
+# Redirections pour SPA
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers pour la page de politique de confidentialité
+[[headers]]
+  for = "/politique-confidentialite"
+  [headers.values]
+    X-Robots-Tag = "index, follow"
+    Cache-Control = "public, max-age=3600"
+
+# Headers généraux
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+

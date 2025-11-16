@@ -1,0 +1,14 @@
+# Headers pour garantir l'accessibilité publique de la page de politique de confidentialité
+# Utilisé par Netlify et autres plateformes compatibles
+
+# Page de politique de confidentialité - Accessible publiquement
+/politique-confidentialite
+  X-Robots-Tag: index, follow
+  Cache-Control: public, max-age=3600
+
+# Toutes les pages publiques
+/*
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
