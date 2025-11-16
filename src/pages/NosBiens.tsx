@@ -10,6 +10,7 @@ import { MobileFilters } from "@/components/MobileFilters";
 import { ActiveFilters } from "@/components/ActiveFilters";
 import { SortSelector, SortOption } from "@/components/SortSelector";
 import { EmptyState } from "@/components/EmptyState";
+import { TypologyCarousel } from "@/components/TypologyCarousel";
 import { useFavorites } from "@/components/FavoritesSystem";
 import { useComparison } from "@/components/ComparisonSystem";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -84,7 +85,6 @@ const NosBiens = () => {
   const [filters, setFilters] = useState<FilterState>({
     typeOffre: "",
     type: "",
-    etat: "",
     localite: "",
     minPrice: "",
     maxPrice: "",
@@ -222,7 +222,6 @@ const NosBiens = () => {
     const urlFilters: FilterState = {
       typeOffre: searchParams.get("typeOffre") || "",
       type: searchParams.get("type") || "",
-      etat: searchParams.get("etat") || "",
       localite: searchParams.get("localite") || "",
       minPrice: searchParams.get("minPrice") || "",
       maxPrice: searchParams.get("maxPrice") || "",
@@ -276,12 +275,6 @@ const NosBiens = () => {
     // Filtres de surface
     if (filters.minSurface && property.surface && property.surface < parseInt(filters.minSurface)) return false;
     if (filters.maxSurface && property.surface && property.surface > parseInt(filters.maxSurface)) return false;
-
-    // Filtre état (condition depuis property_details)
-    if (filters.etat && property.property_details && property.property_details.length > 0) {
-      const condition = property.property_details[0]?.condition;
-      if (condition?.toLowerCase() !== filters.etat.toLowerCase()) return false;
-    }
 
     // Filtres property_details (chambres, salles de bain, étages)
     // Si un filtre est défini, la propriété doit avoir property_details
@@ -418,7 +411,6 @@ const NosBiens = () => {
     const resetFilters: FilterState = {
       typeOffre: "",
       type: "",
-      etat: "",
       localite: "",
       minPrice: "",
       maxPrice: "",
@@ -449,6 +441,18 @@ const NosBiens = () => {
   return <div className="min-h-screen bg-background">
       <Header />
 
+
+      {/* Carousel des typologies */}
+      <AnimatedSection className="py-8 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <TypologyCarousel 
+            onSelectTypology={(typology) => {
+              setFilters(prev => ({ ...prev, type: typology }));
+            }}
+            selectedTypology={filters.type}
+          />
+        </div>
+      </AnimatedSection>
 
       {/* Filtres - Desktop seulement (mobile géré par Header) */}
       <AnimatedSection className="hidden md:block py-8 bg-muted/30">
@@ -558,8 +562,7 @@ const NosBiens = () => {
                         location: property.localities?.name || "",
                         image: property.image_url || "/placeholder.svg",
                         type: property.typology || "",
-                        status: getStatusLabel(property.status),
-                        etat: "N/A"
+                        status: getStatusLabel(property.status)
                       });
                     }} disabled={isInComparison(property.id)} className="w-8 h-8 p-0 rounded-full bg-white/80 hover:bg-white">
                           <BarChart3 className={`w-4 h-4 ${isInComparison(property.id) ? "text-primary" : "text-gray-600"}`} />

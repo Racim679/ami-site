@@ -19,7 +19,6 @@ interface MobileFiltersProps {
 const initialFilters: FilterState = {
   typeOffre: "",
   type: "",
-  etat: "",
   localite: "",
   minPrice: "",
   maxPrice: "",
@@ -178,27 +177,6 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                             {locality.name}
                           </SelectItem>
                         ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {/* État */}
-                  <div className="space-y-3">
-                    <h3 className="text-base font-medium">État</h3>
-                    <Select 
-                      value={filters.etat || ALL}
-                      onValueChange={(value) => handleFilterChange('etat', value === ALL ? "" : value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Sélectionner l'état" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value={ALL}>Tous les états</SelectItem>
-                        <SelectItem value="Neuf">Neuf</SelectItem>
-                        <SelectItem value="Rénové">Rénové</SelectItem>
-                        <SelectItem value="Bon état">Bon état</SelectItem>
-                        <SelectItem value="À rénover">À rénover</SelectItem>
-                        <SelectItem value="À démolir">À démolir</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

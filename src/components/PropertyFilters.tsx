@@ -15,7 +15,6 @@ interface PropertyFiltersProps {
 export interface FilterState {
   typeOffre: string;
   type: string;
-  etat: string;
   localite: string;
   minPrice: string;
   maxPrice: string;
@@ -43,7 +42,6 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
   const [filters, setFilters] = useState<FilterState>({
     typeOffre: "",
     type: "",
-    etat: "",
     localite: "",
     minPrice: "",
     maxPrice: "",
@@ -100,7 +98,6 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
     const resetState: FilterState = {
       typeOffre: "",
       type: "",
-      etat: "",
       localite: "",
       minPrice: "",
       maxPrice: "",
@@ -182,23 +179,6 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
                   </SelectItem>
                 ))
               )}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* État */}
-        <div className="space-y-2">
-          <label className="text-white text-sm font-medium block">État</label>
-          <Select value={filters.etat} onValueChange={(value) => handleFilterChange("etat", value)}>
-            <SelectTrigger className="bg-white border-0 h-12 text-slate-800">
-              <SelectValue placeholder="Sélectionner l'état" />
-            </SelectTrigger>
-            <SelectContent className="bg-white z-50">
-              <SelectItem value="Neuf">Neuf</SelectItem>
-              <SelectItem value="Rénové">Rénové</SelectItem>
-              <SelectItem value="Bon état">Bon état</SelectItem>
-              <SelectItem value="À rénover">À rénover</SelectItem>
-              <SelectItem value="À démolir">À démolir</SelectItem>
             </SelectContent>
           </Select>
         </div>
