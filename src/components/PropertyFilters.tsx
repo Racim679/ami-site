@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useLocalities } from "@/hooks/useLocalities";
 
 interface PropertyFiltersProps {
   onSearch?: (filters: FilterState) => void;
@@ -171,7 +172,7 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
             </SelectTrigger>
             <SelectContent className="bg-white z-50">
               {localitiesLoading ? (
-                <SelectItem value="" disabled>Chargement...</SelectItem>
+                <SelectItem value="loading" disabled>Chargement...</SelectItem>
               ) : (
                 localities.map((locality) => (
                   <SelectItem key={locality.id} value={locality.name}>

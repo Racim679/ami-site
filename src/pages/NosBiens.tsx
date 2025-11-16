@@ -195,7 +195,7 @@ const NosBiens = () => {
             if (property.localities) {
               if (Array.isArray(property.localities) && property.localities.length > 0) {
                 locality = property.localities[0];
-              } else if (typeof property.localities === 'object' && property.localities.name) {
+              } else if (typeof property.localities === 'object' && !Array.isArray(property.localities) && 'name' in property.localities) {
                 locality = property.localities;
               }
             }

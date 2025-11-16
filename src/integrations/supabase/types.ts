@@ -77,6 +77,27 @@ export type Database = {
         }
         Relationships: []
       }
+      gemini_audio_transcription: {
+        Row: {
+          audio_file: string | null
+          drivelink: string
+          speaker_id: number
+          text: string
+        }
+        Insert: {
+          audio_file?: string | null
+          drivelink: string
+          speaker_id?: number
+          text: string
+        }
+        Update: {
+          audio_file?: string | null
+          drivelink?: string
+          speaker_id?: number
+          text?: string
+        }
+        Relationships: []
+      }
       get_list_of_tables_and_columns: {
         Row: {
           columns_with_types_and_fks: string
@@ -98,6 +119,51 @@ export type Database = {
           id?: string
           table_name?: string
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      instagram_reels: {
+        Row: {
+          audio_transcribed: Json | null
+          created_at: string | null
+          description: string | null
+          drived: boolean | null
+          formatted_description: Json | null
+          id: string
+          lien_audio_drive: string | null
+          lien_video_drive: string | null
+          url_audio: string | null
+          url_instagram: string
+          url_video: string | null
+          video_analyzed: Json | null
+        }
+        Insert: {
+          audio_transcribed?: Json | null
+          created_at?: string | null
+          description?: string | null
+          drived?: boolean | null
+          formatted_description?: Json | null
+          id?: string
+          lien_audio_drive?: string | null
+          lien_video_drive?: string | null
+          url_audio?: string | null
+          url_instagram: string
+          url_video?: string | null
+          video_analyzed?: Json | null
+        }
+        Update: {
+          audio_transcribed?: Json | null
+          created_at?: string | null
+          description?: string | null
+          drived?: boolean | null
+          formatted_description?: Json | null
+          id?: string
+          lien_audio_drive?: string | null
+          lien_video_drive?: string | null
+          url_audio?: string | null
+          url_instagram?: string
+          url_video?: string | null
+          video_analyzed?: Json | null
         }
         Relationships: []
       }
@@ -130,7 +196,88 @@ export type Database = {
           },
         ]
       }
+      message_queue: {
+        Row: {
+          created_at: string | null
+          id: number
+          message: string
+          message_id: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          message: string
+          message_id: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          message?: string
+          message_id?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      message_tracking: {
+        Row: {
+          conversation_id: string
+          created_at: string | null
+          id: number
+          last_message_id: string
+          last_message_text: string | null
+          last_message_timestamp: string
+          platform: string
+          replied: boolean | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          conversation_id: string
+          created_at?: string | null
+          id?: number
+          last_message_id: string
+          last_message_text?: string | null
+          last_message_timestamp: string
+          platform: string
+          replied?: boolean | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          conversation_id?: string
+          created_at?: string | null
+          id?: number
+          last_message_id?: string
+          last_message_text?: string | null
+          last_message_timestamp?: string
+          platform?: string
+          replied?: boolean | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       n8n_chat_histories: {
+        Row: {
+          id: number
+          message: Json
+          session_id: string
+        }
+        Insert: {
+          id?: number
+          message: Json
+          session_id: string
+        }
+        Update: {
+          id?: number
+          message?: Json
+          session_id?: string
+        }
+        Relationships: []
+      }
+      n8n_insta_histories_elwakil: {
         Row: {
           id: number
           message: Json
