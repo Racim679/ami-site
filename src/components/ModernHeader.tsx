@@ -16,7 +16,6 @@ const ModernHeader = () => {
       { name: "Accueil", path: "/" },
     ],
     right: [
-      { name: "Services", path: "/services" },
       { name: "À Propos", path: "/a-propos" },
       { name: "Contact", path: "/contact" },
     ],

@@ -70,7 +70,7 @@ const Home: React.FC = () => {
           duration: 0.8,
           delay: 0.3
         }}>
-            <AuditButton text="Nos biens" showArrow={true} onClick={() => navigate('/vendre')} />
+            <AuditButton text="Nos biens" showArrow={true} onClick={() => navigate('/nos-biens')} />
           </motion.div>
         </div>
       </AnimatedSection>

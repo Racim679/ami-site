@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, SlidersHorizontal } from 'lucide-react';
+import { SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
@@ -81,18 +81,9 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
       
       <SheetContent side="bottom" className="h-[85vh] p-0">
         <div className="flex flex-col h-full">
-          {/* Header */}
+          {/* Header - La croix de fermeture est gérée automatiquement par SheetContent */}
           <SheetHeader className="px-6 py-4 border-b">
-            <div className="flex items-center justify-between">
-              <SheetTitle className="text-xl font-semibold">Filtres</SheetTitle>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsOpen(false)}
-              >
-                <X className="h-5 w-5" />
-              </Button>
-            </div>
+            <SheetTitle className="text-xl font-semibold">Filtres</SheetTitle>
           </SheetHeader>
 
           {/* Tabs */}
@@ -115,26 +106,7 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
 
               <div className="flex-1 overflow-y-auto px-6">
                 <TabsContent value="principaux" className="space-y-6 mt-0">
-                  {/* Statut */}
-                  <div className="space-y-3">
-                    <h3 className="text-base font-medium">Statut</h3>
-                    <Select 
-                      value={filters.typeOffre || ALL}
-                      onValueChange={(value) => handleFilterChange('typeOffre', value === ALL ? "" : value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Sélectionner le statut" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value={ALL}>Tous les statuts</SelectItem>
-                        <SelectItem value="À Vendre">À Vendre</SelectItem>
-                        <SelectItem value="Vendu">Vendu</SelectItem>
-                        <SelectItem value="À louer">À louer</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {/* Type */}
+                  {/* Type - Premier filtre (le plus important) */}
                   <div className="space-y-3">
                     <h3 className="text-base font-medium">Type</h3>
                     <Select 
@@ -227,6 +199,25 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                         <SelectItem value="Bon état">Bon état</SelectItem>
                         <SelectItem value="À rénover">À rénover</SelectItem>
                         <SelectItem value="À démolir">À démolir</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Statut - Dernier filtre (secondaire) */}
+                  <div className="space-y-3">
+                    <h3 className="text-base font-medium">Statut</h3>
+                    <Select 
+                      value={filters.typeOffre || ALL}
+                      onValueChange={(value) => handleFilterChange('typeOffre', value === ALL ? "" : value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sélectionner le statut" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={ALL}>Tous les statuts</SelectItem>
+                        <SelectItem value="À Vendre">À Vendre</SelectItem>
+                        <SelectItem value="Vendu">Vendu</SelectItem>
+                        <SelectItem value="À louer">À louer</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -446,15 +437,6 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                       </SelectContent>
                     </Select>
                   </div>
-
-                  {/* Réinitialiser */}
-                  <Button 
-                    variant="outline" 
-                    className="w-full"
-                    onClick={resetFilters}
-                  >
-                    Réinitialiser
-                  </Button>
                 </TabsContent>
               </div>
             </Tabs>

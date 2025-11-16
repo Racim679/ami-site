@@ -54,6 +54,46 @@ const PolitiqueConfidentialite = () => {
       document.head.appendChild(meta);
     }
 
+    // Meta og:url pour l'URL canonique (améliore l'apparence sur Facebook)
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    const currentUrl = window.location.origin + window.location.pathname;
+    if (ogUrl) {
+      ogUrl.setAttribute('content', currentUrl);
+    } else {
+      const meta = document.createElement('meta');
+      meta.setAttribute('property', 'og:url');
+      meta.content = currentUrl;
+      document.head.appendChild(meta);
+    }
+
+    // Meta og:image pour l'aperçu (optionnel mais recommandé)
+    const ogImage = document.querySelector('meta[property="og:image"]');
+    if (ogImage) {
+      // Si une image existe déjà, on la garde
+      // Sinon, on utilise l'image par défaut du site
+    } else {
+      // Vous pouvez ajouter une image spécifique pour la politique de confidentialité
+      // L'image doit être accessible publiquement (dans le dossier public ou via URL absolue)
+      // Format recommandé : 1200x630px pour un meilleur rendu sur Facebook
+      const meta = document.createElement('meta');
+      meta.setAttribute('property', 'og:image');
+      // Utilisez l'image par défaut du site ou une image spécifique
+      meta.content = window.location.origin + '/favicon.ico'; // Image par défaut, remplacez par votre logo si disponible
+      document.head.appendChild(meta);
+    }
+
+    // Meta fb:app_id (optionnel - à remplacer par votre App ID Facebook si disponible)
+    // Décommentez et remplacez 'YOUR_FB_APP_ID' par votre App ID si vous en avez un
+    /*
+    const fbAppId = document.querySelector('meta[property="fb:app_id"]');
+    if (!fbAppId) {
+      const meta = document.createElement('meta');
+      meta.setAttribute('property', 'fb:app_id');
+      meta.content = 'YOUR_FB_APP_ID'; // Remplacez par votre App ID Facebook
+      document.head.appendChild(meta);
+    }
+    */
+
     // Meta robots pour s'assurer que la page est indexable
     let metaRobots = document.querySelector('meta[name="robots"]');
     if (!metaRobots) {

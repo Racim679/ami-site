@@ -65,7 +65,7 @@ const Contact = () => {
                   id="name"
                   {...register("name", { required: "Ce champ est requis" })}
                   placeholder="Nom et prénom"
-                  className="w-full bg-white text-black border-gray-300 placeholder:text-gray-400 focus:border-[#C49C7A] focus:ring-2 focus:ring-[#C49C7A]/20 transition-all duration-200"
+                  className="w-full bg-white text-black border-gray-300 placeholder:text-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
                 />
                 {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
               </div>
@@ -80,7 +80,7 @@ const Contact = () => {
                   type="email"
                   {...register("email", { required: "Ce champ est requis" })}
                   placeholder="Adresse email"
-                  className="w-full bg-white text-black border-gray-300 placeholder:text-gray-400 focus:border-[#C49C7A] focus:ring-2 focus:ring-[#C49C7A]/20 transition-all duration-200"
+                  className="w-full bg-white text-black border-gray-300 placeholder:text-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
                 />
                 {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
               </div>
@@ -95,7 +95,7 @@ const Contact = () => {
                   type="tel"
                   {...register("phone", { required: "Ce champ est requis" })}
                   placeholder="+213"
-                  className="w-full bg-white text-black border-gray-300 placeholder:text-gray-400 focus:border-[#C49C7A] focus:ring-2 focus:ring-[#C49C7A]/20 transition-all duration-200"
+                  className="w-full bg-white text-black border-gray-300 placeholder:text-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
                 />
                 {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
               </div>
@@ -109,7 +109,7 @@ const Contact = () => {
                   id="subject"
                   {...register("subject", { required: "Ce champ est requis" })}
                   placeholder="Objet"
-                  className="w-full bg-white text-black border-gray-300 placeholder:text-gray-400 focus:border-[#C49C7A] focus:ring-2 focus:ring-[#C49C7A]/20 transition-all duration-200"
+                  className="w-full bg-white text-black border-gray-300 placeholder:text-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
                 />
                 {errors.subject && <p className="text-red-500 text-sm mt-1">{errors.subject.message}</p>}
               </div>
@@ -124,7 +124,7 @@ const Contact = () => {
                   {...register("message", { required: "Ce champ est requis" })}
                   placeholder="Votre message..."
                   rows={5}
-                  className="w-full bg-white text-black border-gray-300 placeholder:text-gray-400 focus:border-[#C49C7A] focus:ring-2 focus:ring-[#C49C7A]/20 transition-all duration-200 resize-none"
+                  className="w-full bg-white text-black border-gray-300 placeholder:text-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 resize-none"
                 />
                 {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>}
               </div>
@@ -135,7 +135,7 @@ const Contact = () => {
                   Type de demande <span className="text-red-500">*</span>
                 </Label>
                 <Select onValueChange={(value) => setValue("requestType", value)}>
-                  <SelectTrigger className="w-full bg-white text-black border-gray-300 focus:border-[#C49C7A] focus:ring-2 focus:ring-[#C49C7A]/20 transition-all duration-200">
+                  <SelectTrigger className="w-full bg-white text-black border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200">
                     <SelectValue placeholder="-- Choisir un type --" />
                   </SelectTrigger>
                   <SelectContent className="bg-white border border-gray-300">
@@ -163,7 +163,7 @@ const Contact = () => {
                   />
                   <label
                     htmlFor="file-upload"
-                    className="inline-flex items-center px-4 py-2 bg-[#C49C7A] text-white rounded-md cursor-pointer hover:bg-[#B8916E] transition-colors duration-200"
+                    className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-md cursor-pointer hover:bg-primary/90 transition-colors duration-200"
                   >
                     Choisir un fichier
                   </label>
@@ -180,7 +180,7 @@ const Contact = () => {
                   type="checkbox"
                   id="acceptTerms"
                   {...register("acceptTerms", { required: "Vous devez accepter les conditions" })}
-                  className="mt-1 accent-[#C49C7A]"
+                  className="mt-1 accent-primary"
                 />
                 <Label htmlFor="acceptTerms" className="text-sm text-black leading-relaxed">
                   En soumettant ce formulaire, j'accepte les{" "}
@@ -199,15 +199,15 @@ const Contact = () => {
                   className="flex flex-row space-x-6"
                 >
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="email" id="contact-email" className="border-[#C49C7A] text-[#C49C7A]" />
+                    <RadioGroupItem value="email" id="contact-email" className="border-primary text-primary" />
                     <Label htmlFor="contact-email" className="text-black">Email</Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="telephone" id="contact-phone" className="border-[#C49C7A] text-[#C49C7A]" />
+                    <RadioGroupItem value="telephone" id="contact-phone" className="border-primary text-primary" />
                     <Label htmlFor="contact-phone" className="text-black">Téléphone</Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="whatsapp" id="contact-whatsapp" className="border-[#C49C7A] text-[#C49C7A]" />
+                    <RadioGroupItem value="whatsapp" id="contact-whatsapp" className="border-primary text-primary" />
                     <Label htmlFor="contact-whatsapp" className="text-black">WhatsApp</Label>
                   </div>
                 </RadioGroup>
@@ -216,7 +216,7 @@ const Contact = () => {
               {/* Bouton d'envoi */}
               <Button
                 type="submit"
-                className="w-full bg-[#C49C7A] hover:bg-[#B8916E] text-white py-3 text-lg font-medium transition-colors duration-200"
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3 text-lg font-medium transition-colors duration-200"
               >
                 Prendre Contact
               </Button>
@@ -229,13 +229,13 @@ const Contact = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Téléphone */}
             <div className="bg-white p-6 rounded-lg shadow-lg text-center border">
-              <div className="w-16 h-16 bg-[#C49C7A] rounded-full flex items-center justify-center mx-auto mb-4">
-                <Phone className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <Phone className="w-8 h-8 text-primary-foreground" />
               </div>
               <h3 className="text-lg font-semibold text-black mb-2">Téléphone</h3>
               <a
                 href="tel:+213560582959"
-                className="text-[#C49C7A] hover:text-[#B8916E] font-medium transition-colors duration-200"
+                className="text-primary hover:text-primary/80 font-medium transition-colors duration-200"
               >
                 +213 560 58 29 59
               </a>
@@ -243,13 +243,13 @@ const Contact = () => {
 
             {/* Email */}
             <div className="bg-white p-6 rounded-lg shadow-lg text-center border">
-              <div className="w-16 h-16 bg-[#C49C7A] rounded-full flex items-center justify-center mx-auto mb-4">
-                <Mail className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <Mail className="w-8 h-8 text-primary-foreground" />
               </div>
               <h3 className="text-lg font-semibold text-black mb-2">Email</h3>
               <a
                 href="mailto:contact@aymenpromotion.com"
-                className="text-[#C49C7A] hover:text-[#B8916E] font-medium transition-colors duration-200"
+                className="text-primary hover:text-primary/80 font-medium transition-colors duration-200"
               >
                 contact@aymenpromotion.com
               </a>
@@ -257,11 +257,11 @@ const Contact = () => {
 
             {/* Adresse */}
             <div className="bg-white p-6 rounded-lg shadow-lg text-center border">
-              <div className="w-16 h-16 bg-[#C49C7A] rounded-full flex items-center justify-center mx-auto mb-4">
-                <MapPin className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <MapPin className="w-8 h-8 text-primary-foreground" />
               </div>
               <h3 className="text-lg font-semibold text-black mb-2">Adresse</h3>
-              <p className="text-[#C49C7A] font-medium">
+              <p className="text-primary font-medium">
                 îlot N 52 section 05, Bir Mourad Raîs – Alger 16000
               </p>
             </div>
@@ -284,13 +284,6 @@ const Contact = () => {
           </div>
         </div>
 
-        {/* Espace FAQ (placeholder) */}
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white p-8 rounded-lg shadow-lg border">
-            <h2 className="text-2xl font-bold text-black mb-4">Foire aux questions</h2>
-            <p className="text-gray-600">Section FAQ à venir prochainement...</p>
-          </div>
-        </div>
       </main>
       
       {/* Footer */}

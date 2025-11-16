@@ -10,13 +10,22 @@ const Header = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Navigation desktop - seulement les 5 liens demandés
+  const desktopNavItems = [
+    { path: "/", label: "Accueil", hasDropdown: false },
+    { path: "/nos-biens", label: "Nos biens", hasDropdown: false },
+    { path: "/favoris", label: "Favoris", hasDropdown: false },
+    { path: "/comparaison", label: "Comparaison", hasDropdown: false },
+    { path: "/contact", label: "Contact", hasDropdown: false },
+  ];
+
+  // Navigation mobile - tous les liens (pour le menu hamburger)
   const leftNavItems = [
     { path: "/", label: "IMAN IMMO", hasDropdown: false },
   ];
 
   const centerNavItems = [
     { path: "/nos-biens", label: "Nos biens", hasDropdown: false },
-    { path: "/services", label: "Services", hasDropdown: true },
     { path: "/vendre", label: "Vendre", hasDropdown: false },
     { path: "/localites", label: "Localités", hasDropdown: false },
   ];
@@ -38,52 +47,29 @@ const Header = () => {
       <header className="bg-background border-b border-border relative z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            {/* Navigation gauche - Desktop seulement */}
-            <nav className="hidden lg:flex items-center">
+            {/* Logo - Desktop */}
+            <div className="hidden lg:flex items-center">
               <Link to="/" className="hover:opacity-80 transition-opacity">
                 <img src={logo} alt="AMI Immobilier" className="h-12 w-auto" />
               </Link>
-            </nav>
+            </div>
 
-            {/* Navigation centrale - Desktop seulement */}
-            <nav className="hidden lg:flex items-center space-x-8">
-              {centerNavItems.map((item) => (
-                <div key={item.path} className="relative group">
-                  <Link
-                    to={item.path}
-                    className={cn(
-                      "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary font-heading",
-                      location.pathname === item.path
-                        ? "text-primary"
-                        : "text-muted-foreground"
-                    )}
-                  >
-                    {item.label}
-                    {item.hasDropdown && <ChevronDown className="w-4 h-4" />}
-                  </Link>
-                </div>
+            {/* Navigation classique - Desktop seulement (5 liens) */}
+            <nav className="hidden lg:flex items-center space-x-6">
+              {desktopNavItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={cn(
+                    "text-sm font-medium transition-colors hover:text-primary font-heading",
+                    location.pathname === item.path
+                      ? "text-primary"
+                      : "text-muted-foreground"
+                  )}
+                >
+                  {item.label}
+                </Link>
               ))}
-            </nav>
-
-            {/* Navigation droite - Desktop seulement */}
-            <nav className="hidden lg:flex items-center space-x-4">
-              {rightNavItems.map((item) => (
-                <div key={item.path} className="relative group">
-                  <Link
-                    to={item.path}
-                    className={cn(
-                      "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary font-heading",
-                      location.pathname === item.path
-                        ? "text-primary"
-                        : "text-muted-foreground"
-                    )}
-                  >
-                    {item.label}
-                    {item.hasDropdown && <ChevronDown className="w-4 h-4" />}
-                  </Link>
-                </div>
-              ))}
-
             </nav>
 
             {/* Logo mobile ou Filtres (visible seulement sur mobile) */}
