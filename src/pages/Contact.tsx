@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Phone, Mail, MapPin } from "lucide-react";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -285,9 +284,6 @@ const Contact = () => {
         </div>
 
       </main>
-      
-      {/* Footer */}
-      <Footer />
     </div>
   );
 };

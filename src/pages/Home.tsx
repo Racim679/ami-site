@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { ArrowRight, Home as HomeIcon, Shield, Users, Award } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { AnimatedSection, AnimatedCard, AnimatedButton } from "@/components/AnimatedComponents";
 import AuditButton from "@/components/ui/audit-button";
@@ -191,10 +190,6 @@ const Home: React.FC = () => {
         </div>
       </AnimatedSection>
 
-      
-      {/* Footer */}
-      <Footer />
-      
       {/* Scroll to Top Button */}
       <ScrollToTop />
     </div>;

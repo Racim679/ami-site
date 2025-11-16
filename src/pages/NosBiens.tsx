@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Heart, BarChart3, Bed, Bath, Square } from "lucide-react";
@@ -515,9 +514,6 @@ const NosBiens = () => {
             </motion.div>}
         </div>
       </AnimatedSection>
-
-      {/* Footer */}
-      <Footer />
 
       {/* Scroll to Top */}
       <ScrollToTop />
