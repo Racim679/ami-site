@@ -26,7 +26,7 @@ const Header = () => {
     { path: "/", label: "IMAN IMMO", hasDropdown: false },
   ];
 
-  const centerNavItems = [
+  const mobileCenterNavItems = [
     { path: "/nos-biens", label: "Nos biens", hasDropdown: false },
     { path: "/vendre", label: "Vendre", hasDropdown: false },
     { path: "/localites", label: "Localités", hasDropdown: false },
@@ -38,7 +38,7 @@ const Header = () => {
     { path: "/contact", label: "Contact", hasDropdown: true },
   ];
 
-  const allNavItems = [...leftNavItems, ...centerNavItems, ...rightNavItems];
+  const allNavItems = [...leftNavItems, ...mobileCenterNavItems, ...rightNavItems];
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
