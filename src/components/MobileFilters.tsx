@@ -149,7 +149,7 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
 
                   {/* Prix */}
                   <div className="space-y-3">
-                    <h3 className="text-base font-medium">Prix</h3>
+                    <h3 className="text-base font-medium">Prix (Millions)</h3>
                     <div className="flex space-x-2">
                       <div className="flex-1 relative">
                         <Input
@@ -178,7 +178,6 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                         </div>
                       </div>
                     </div>
-                    <p className="text-xs text-muted-foreground">M = 10 000 DZD</p>
                   </div>
 
                   {/* Localité */}

@@ -35,8 +35,8 @@ const Home: React.FC = () => {
         backgroundImage: "url('/placeholder.svg')"
       }}></div>
 
-        <div className="relative z-20 text-center text-primary-foreground px-4 max-w-4xl mx-auto">
-          <motion.h1 className="text-5xl md:text-7xl font-bold mb-6" initial={{
+        <div className="relative z-20 text-center text-primary-foreground px-4 sm:px-6 md:px-8 w-full max-w-4xl mx-auto">
+          <motion.h1 className="text-3xl min-[375px]:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight" initial={{
           opacity: 0,
           y: 50
         }} animate={{
@@ -46,7 +46,7 @@ const Home: React.FC = () => {
           duration: 0.8
         }}>AMI IMMO</motion.h1>
 
-          <motion.p className="text-xl md:text-2xl mb-8 text-primary-foreground/90" initial={{
+          <motion.p className="text-sm min-[375px]:text-base sm:text-lg md:text-xl lg:text-2xl mb-6 sm:mb-8 text-primary-foreground/90 px-2 sm:px-4 leading-relaxed" initial={{
           opacity: 0,
           y: 30
         }} animate={{
@@ -59,7 +59,7 @@ const Home: React.FC = () => {
             Découvrez nos projets immobiliers exceptionnels à Alger
           </motion.p>
 
-          <motion.div className="mb-6" initial={{
+          <motion.div className="mb-6 w-full flex justify-center px-4 sm:px-0" initial={{
           opacity: 0,
           y: 30
         }} animate={{
@@ -69,7 +69,17 @@ const Home: React.FC = () => {
           duration: 0.8,
           delay: 0.3
         }}>
-            <AuditButton text="Nos biens" showArrow={true} onClick={() => navigate('/nos-biens')} />
+            <div className="w-full sm:w-auto max-w-xs sm:max-w-none">
+              <AuditButton 
+                text="Nos biens" 
+                showArrow={true} 
+                onClick={() => navigate('/nos-biens')}
+                width="100%"
+                height={50}
+                fontSize={14}
+                className="w-full sm:w-auto sm:!w-[380px]"
+              />
+            </div>
           </motion.div>
         </div>
       </AnimatedSection>
@@ -77,7 +87,7 @@ const Home: React.FC = () => {
       {/* Features Section */}
       <AnimatedSection className="py-20 bg-background">
         <div className="container mx-auto px-4">
-          <motion.div className="text-center mb-16" initial={{
+          <motion.div className="text-center mb-12 sm:mb-16 px-4" initial={{
           opacity: 0,
           y: 30
         }} whileInView={{
@@ -88,8 +98,8 @@ const Home: React.FC = () => {
         }} transition={{
           duration: 0.6
         }}>
-            <h2 className="text-4xl font-bold text-foreground mb-4">Pourquoi choisir AMI Immobilier ?</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 sm:mb-4 leading-tight">Pourquoi choisir AMI Immobilier ?</h2>
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
               Une expertise reconnue et un accompagnement personnalisé pour tous vos projets immobiliers.
             </p>
           </motion.div>
@@ -139,7 +149,7 @@ const Home: React.FC = () => {
       {/* CTA Section */}
       <AnimatedSection className="py-20 bg-muted/30">
         <div className="container mx-auto px-4 text-center">
-          <motion.h2 className="text-4xl font-bold text-foreground mb-4" initial={{
+          <motion.h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 sm:mb-4 px-4 leading-tight" initial={{
           opacity: 0,
           y: 30
         }} whileInView={{
@@ -153,7 +163,7 @@ const Home: React.FC = () => {
             Prêt à réaliser votre projet immobilier ?
           </motion.h2>
 
-          <motion.p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto" initial={{
+          <motion.p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto px-4 leading-relaxed" initial={{
           opacity: 0,
           y: 30
         }} whileInView={{
@@ -168,7 +178,7 @@ const Home: React.FC = () => {
             Contactez notre équipe d'experts pour un accompagnement personnalisé.
           </motion.p>
 
-          <motion.div className="flex flex-col sm:flex-row gap-4 justify-center" initial={{
+          <motion.div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center px-4" initial={{
           opacity: 0,
           y: 30
         }} whileInView={{
@@ -180,10 +190,10 @@ const Home: React.FC = () => {
           duration: 0.6,
           delay: 0.4
         }}>
-            <AnimatedButton className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-lg text-lg font-semibold transition-colors" onClick={() => navigate('/vendre')}>
+            <AnimatedButton className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base md:text-lg font-semibold transition-colors w-full sm:w-auto" onClick={() => navigate('/vendre')}>
               Prendre rendez-vous
             </AnimatedButton>
-            <AnimatedButton className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-3 rounded-lg text-lg font-semibold transition-colors" onClick={() => navigate('/nos-biens')}>
+            <AnimatedButton className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base md:text-lg font-semibold transition-colors w-full sm:w-auto" onClick={() => navigate('/nos-biens')}>
               Voir nos biens
             </AnimatedButton>
           </motion.div>

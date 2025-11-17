@@ -64,7 +64,8 @@ export default function AuditButton({
 
   const buttonStyle: CSSProperties = {
     position: "relative",
-    width: typeof width === 'string' ? width : `${width}px`,
+    width: typeof width === 'string' ? (width === '100%' ? '100%' : width) : `${width}px`,
+    maxWidth: typeof width === 'string' && width !== '100%' ? width : '100%',
     height: `${height}px`,
     background: isHovered 
       ? "rgba(197, 176, 120, 0.03)" 
@@ -86,7 +87,7 @@ export default function AuditButton({
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    padding: "0 30px",
+    padding: typeof width === 'string' && width === '100%' ? "0 20px" : "0 30px",
     userSelect: "none",
     outline: "none",
     zIndex: 1,

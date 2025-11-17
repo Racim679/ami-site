@@ -9,6 +9,7 @@ import { useFavorites } from "@/components/FavoritesSystem";
 import { useComparison } from "@/components/ComparisonSystem";
 import ScrollToTop from "@/components/ScrollToTop";
 import { AnimatedSection, AnimatedCard } from "@/components/AnimatedComponents";
+import { formatPrice } from "@/lib/utils";
 
 const Favoris = () => {
   const navigate = useNavigate();
@@ -72,15 +73,6 @@ const Favoris = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentFavorites = favorites.slice(startIndex, endIndex);
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('fr-FR', {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount);
-  };
 
   if (favorites.length === 0) {
     return (
@@ -233,7 +225,7 @@ const Favoris = () => {
                     </div>
                     {favorite.price > 0 && (
                       <div className="absolute bottom-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
-                        {formatCurrency(favorite.price)}
+                        {formatPrice(favorite.price)}
                       </div>
                     )}
                   </div>
