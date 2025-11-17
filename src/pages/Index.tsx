@@ -1,6 +1,7 @@
 import ModernHeader from "@/components/ModernHeader";
 import HeroCarousel from "@/components/HeroCarousel";
 import BiensSection from "@/components/BiensSection";
+import ExclusivePropertiesSection from "@/components/ExclusivePropertiesSection";
 import ApartmentExplorer from "@/components/ApartmentExplorer";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import ProjectsSection from "@/components/ProjectsSection";
@@ -18,6 +19,9 @@ const Index = () => {
         
         {/* Nos Biens Section */}
         <BiensSection />
+        
+        {/* Section des biens exclusifs */}
+        <ExclusivePropertiesSection />
         
         {/* Explorer nos appartements luxueux */}
         <ApartmentExplorer />

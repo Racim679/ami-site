@@ -119,121 +119,126 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
 
   return (
     <div className={`bg-primary p-6 rounded-2xl shadow-luxury ${className}`}>
-      {/* Filtres de base */}
-      <div className="grid grid-cols-1 md:grid-cols-7 gap-4 items-end">
-        {/* Typologie */}
-        <div className="space-y-2">
-          <label className="text-white text-sm font-medium block">Typologie</label>
-          <Select value={filters.type} onValueChange={(value) => handleFilterChange("type", value)}>
-            <SelectTrigger className="bg-white border-0 h-12 text-slate-800">
-              <SelectValue placeholder="Sélectionner la typologie" />
-            </SelectTrigger>
-            <SelectContent className="max-h-60 bg-white z-50">
-              <SelectItem value="appartement">Appartement</SelectItem>
-              <SelectItem value="maison">Maison</SelectItem>
-              <SelectItem value="villa">Villa</SelectItem>
-              <SelectItem value="studio">Studio</SelectItem>
-              <SelectItem value="loft">Loft</SelectItem>
-              <SelectItem value="terrain">Terrain</SelectItem>
-              <SelectItem value="immeuble duplex">Immeuble duplex</SelectItem>
-              <SelectItem value="propriété de campagne">Propriété de campagne</SelectItem>
-              <SelectItem value="triplex">Triplex</SelectItem>
-              <SelectItem value="locaux commerciaux">Locaux commerciaux</SelectItem>
-              <SelectItem value="ranch">Ranch</SelectItem>
-              <SelectItem value="appartement commercial">Appartement commercial</SelectItem>
-              <SelectItem value="immeuble commercial">Immeuble commercial</SelectItem>
-              <SelectItem value="hôtel">Hôtel</SelectItem>
-              <SelectItem value="complexe touristique">Complexe touristique</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
+        {/* Filtres de base */}
+        <div className="grid grid-cols-1 md:grid-cols-7 gap-4 items-end">
+          {/* Typologie */}
+          <div className="space-y-2">
+            <label className="text-white text-sm font-medium block">Typologie</label>
+            <Select value={filters.type} onValueChange={(value) => handleFilterChange("type", value)}>
+              <SelectTrigger className="bg-white border-0 h-12 text-slate-800">
+                <SelectValue placeholder="Sélectionner la typologie" />
+              </SelectTrigger>
+              <SelectContent className="max-h-60 bg-white z-50">
+                <SelectItem value="appartement">Appartement</SelectItem>
+                <SelectItem value="maison">Maison</SelectItem>
+                <SelectItem value="villa">Villa</SelectItem>
+                <SelectItem value="studio">Studio</SelectItem>
+                <SelectItem value="loft">Loft</SelectItem>
+                <SelectItem value="terrain">Terrain</SelectItem>
+                <SelectItem value="immeuble duplex">Immeuble duplex</SelectItem>
+                <SelectItem value="propriété de campagne">Propriété de campagne</SelectItem>
+                <SelectItem value="triplex">Triplex</SelectItem>
+                <SelectItem value="locaux commerciaux">Locaux commerciaux</SelectItem>
+                <SelectItem value="ranch">Ranch</SelectItem>
+                <SelectItem value="appartement commercial">Appartement commercial</SelectItem>
+                <SelectItem value="immeuble commercial">Immeuble commercial</SelectItem>
+                <SelectItem value="hôtel">Hôtel</SelectItem>
+                <SelectItem value="complexe touristique">Complexe touristique</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-        {/* Statut */}
-        <div className="space-y-2">
-          <label className="text-white text-sm font-medium block">Statut</label>
-          <Select value={filters.typeOffre} onValueChange={(value) => handleFilterChange("typeOffre", value)}>
-            <SelectTrigger className="bg-white border-0 h-12 text-slate-800">
-              <SelectValue placeholder="Sélectionner le statut" />
-            </SelectTrigger>
-            <SelectContent className="bg-white z-50">
-              <SelectItem value="À Vendre">À Vendre</SelectItem>
-              <SelectItem value="Vendu">Vendu</SelectItem>
-              <SelectItem value="À louer">À louer</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+          {/* Statut */}
+          <div className="space-y-2">
+            <label className="text-white text-sm font-medium block">Statut</label>
+            <Select value={filters.typeOffre} onValueChange={(value) => handleFilterChange("typeOffre", value)}>
+              <SelectTrigger className="bg-white border-0 h-12 text-slate-800">
+                <SelectValue placeholder="Sélectionner le statut" />
+              </SelectTrigger>
+              <SelectContent className="bg-white z-50">
+                <SelectItem value="À Vendre">À Vendre</SelectItem>
+                <SelectItem value="Vendu">Vendu</SelectItem>
+                <SelectItem value="À louer">À louer</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-        {/* Localité */}
-        <div className="space-y-2">
-          <label className="text-white text-sm font-medium block">Localité</label>
-          <Select value={filters.localite} onValueChange={(value) => handleFilterChange("localite", value)}>
-            <SelectTrigger className="bg-white border-0 h-12 text-slate-800">
-              <SelectValue placeholder={localitiesLoading ? "Chargement..." : "Sélectionner la localité"} />
-            </SelectTrigger>
-            <SelectContent className="bg-white z-50">
-              {localitiesLoading ? (
-                <SelectItem value="loading" disabled>Chargement...</SelectItem>
-              ) : (
-                localities.map((locality) => (
-                  <SelectItem key={locality.id} value={locality.name}>
-                    {locality.name}
-                  </SelectItem>
-                ))
-              )}
-            </SelectContent>
-          </Select>
-        </div>
+          {/* Localité */}
+          <div className="space-y-2">
+            <label className="text-white text-sm font-medium block">Localité</label>
+            <Select value={filters.localite} onValueChange={(value) => handleFilterChange("localite", value)}>
+              <SelectTrigger className="bg-white border-0 h-12 text-slate-800">
+                <SelectValue placeholder={localitiesLoading ? "Chargement..." : "Sélectionner la localité"} />
+              </SelectTrigger>
+              <SelectContent className="bg-white z-50">
+                {localitiesLoading ? (
+                  <SelectItem value="loading" disabled>Chargement...</SelectItem>
+                ) : (
+                  localities.map((locality) => (
+                    <SelectItem key={locality.id} value={locality.name}>
+                      {locality.name}
+                    </SelectItem>
+                  ))
+                )}
+              </SelectContent>
+            </Select>
+          </div>
 
-        {/* Prix minimum */}
-        <div className="space-y-2">
-          <label className="text-white text-sm font-medium block">Prix min (Millions)</label>
-          <Input
-            type="number"
-            step="0.1"
-            placeholder="Ex: 5.5"
-            value={filters.minPrice}
-            onChange={(e) => handleFilterChange("minPrice", e.target.value)}
-            className="bg-white border-0 h-12 text-slate-800"
-          />
-        </div>
+          {/* Prix minimum */}
+          <div className="space-y-2">
+            <label className="text-white text-sm font-medium block">Prix min (Millions)</label>
+            <Input
+              type="number"
+              step="0.1"
+              placeholder="Ex: 5.5"
+              value={filters.minPrice}
+              onChange={(e) => handleFilterChange("minPrice", e.target.value)}
+              className="bg-white border-0 h-12 text-slate-800"
+            />
+          </div>
 
-        {/* Prix maximum */}
-        <div className="space-y-2">
-          <label className="text-white text-sm font-medium block">Prix max (Millions)</label>
-          <Input
-            type="number"
-            step="0.1"
-            placeholder="Ex: 50"
-            value={filters.maxPrice}
-            onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
-            className="bg-white border-0 h-12 text-slate-800"
-          />
-        </div>
+          {/* Prix maximum */}
+          <div className="space-y-2">
+            <label className="text-white text-sm font-medium block">Prix max (Millions)</label>
+            <Input
+              type="number"
+              step="0.1"
+              placeholder="Ex: 50"
+              value={filters.maxPrice}
+              onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
+              className="bg-white border-0 h-12 text-slate-800"
+            />
+          </div>
 
-        {/* Bouton Rechercher */}
-        <div className="mt-6">
-          <Button
-            onClick={handleSearch}
-            className="bg-gradient-to-r from-accent to-accent-light hover:from-accent-light hover:to-accent text-white h-12 w-full font-medium shadow-elegant hover:shadow-luxury transition-all duration-300 hover:scale-105"
-          >
-            Rechercher
-          </Button>
-        </div>
-      </div>
+          {/* Bouton Filtres avancés */}
+          <div className="space-y-2">
+            <label className="text-white text-sm font-medium block opacity-0">Filtres avancés</label>
+            <CollapsibleTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20 h-12 flex items-center justify-center gap-2"
+              >
+                <span>Filtres avancés</span>
+                <ChevronDown className={`h-4 w-4 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
+              </Button>
+            </CollapsibleTrigger>
+          </div>
 
-      {/* Filtres avancés */}
-      <div className="mt-6">
-        <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
-          <CollapsibleTrigger asChild>
+          {/* Bouton Rechercher */}
+          <div className="space-y-2">
+            <label className="text-white text-sm font-medium block opacity-0">Rechercher</label>
             <Button
-              variant="outline"
-              className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20 flex items-center justify-between"
+              onClick={handleSearch}
+              className="bg-gradient-to-r from-accent to-accent-light hover:from-accent-light hover:to-accent text-white h-12 w-full font-medium shadow-elegant hover:shadow-luxury transition-all duration-300 hover:scale-105"
             >
-              <span>Filtres avancés</span>
-              <ChevronDown className={`h-4 w-4 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
+              Rechercher
             </Button>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="mt-4 space-y-4">
+          </div>
+        </div>
+
+        {/* Filtres avancés - Contenu */}
+        <CollapsibleContent className="mt-4 space-y-4">
             {/* Boutons de catégories en ligne */}
             <div className="flex flex-wrap gap-3">
               <Button
@@ -478,7 +483,6 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
             </div>
           </CollapsibleContent>
         </Collapsible>
-      </div>
     </div>
   );
 };

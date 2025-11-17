@@ -28,12 +28,11 @@ const Header = () => {
 
   const mobileCenterNavItems = [
     { path: "/nos-biens", label: "Nos biens", hasDropdown: false },
-    { path: "/vendre", label: "Vendre", hasDropdown: false },
+    { path: "/comparaison", label: "Comparer", hasDropdown: false },
     { path: "/localites", label: "Localités", hasDropdown: false },
   ];
 
   const rightNavItems = [
-    { path: "/crm", label: "CRM", hasDropdown: false },
     { path: "/favoris", label: "Favoris", hasDropdown: false },
     { path: "/contact", label: "Contact", hasDropdown: true },
   ];
@@ -113,38 +112,55 @@ const Header = () => {
 
       {/* Menu mobile overlay */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 bg-slate-900 z-50 lg:hidden">
+        <div className="fixed inset-0 bg-[#0f172a] z-50 lg:hidden">
           <div className="flex flex-col h-full">
             {/* Header du menu mobile */}
-            <div className="flex items-center justify-between p-4 border-b border-slate-700">
-              <Link to="/" className="flex items-center" onClick={toggleMobileMenu}>
-                <img src={logo} alt="AMI Immobilier" className="h-10 w-auto" />
+            <div className="flex items-center justify-between px-5 pt-5 pb-3">
+              {/* Logo avec fond bleu clair rectangulaire */}
+              <Link 
+                to="/" 
+                className="flex items-center bg-primary px-4 py-2.5 rounded-md hover:bg-primary/90 transition-all duration-200 shadow-lg" 
+                onClick={toggleMobileMenu}
+              >
+                <img src={logo} alt="AMI Immobilier" className="h-7 w-auto" />
               </Link>
               <button
                 onClick={toggleMobileMenu}
-                className="text-slate-300 hover:text-white"
+                className="text-white hover:text-primary transition-colors duration-200 p-1.5"
+                aria-label="Fermer le menu"
               >
-                <X className="w-6 h-6" />
+                <X className="w-7 h-7" />
               </button>
             </div>
 
+            {/* Titre IMAN IMMO */}
+            <div className="px-5 pb-4">
+              <h2 className="text-primary text-2xl font-bold font-heading tracking-tight">
+                IMAN IMMO
+              </h2>
+            </div>
+
             {/* Navigation mobile */}
-            <nav className="flex-1 p-4">
-              <ul className="space-y-6">
-                {allNavItems.map((item) => (
+            <nav className="flex-1 px-5 pt-2 overflow-y-auto">
+              <ul className="space-y-0.5">
+                {allNavItems
+                  .filter(item => item.path !== "/") // Exclure "IMAN IMMO" de la liste
+                  .map((item) => (
                   <li key={item.path}>
                     <Link
                       to={item.path}
                       onClick={toggleMobileMenu}
                       className={cn(
-                        "flex items-center justify-between text-lg font-medium transition-colors font-heading",
+                        "flex items-center justify-between px-4 py-4 text-lg font-bold transition-all duration-200 font-heading",
                         location.pathname === item.path
                           ? "text-primary"
-                          : "text-white hover:text-primary"
+                          : "text-white hover:text-primary/80"
                       )}
                     >
                       <span>{item.label}</span>
-                      {item.hasDropdown && <ChevronDown className="w-5 h-5" />}
+                      {item.hasDropdown && (
+                        <ChevronDown className="w-5 h-5 text-white/70" />
+                      )}
                     </Link>
                   </li>
                 ))}
