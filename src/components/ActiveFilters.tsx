@@ -46,14 +46,14 @@ export const ActiveFilters = ({ filters, onRemoveFilter, onResetAll }: ActiveFil
   if (filters.minPrice) {
     activeFilters.push({
       key: 'minPrice',
-      label: `Prix min: ${parseInt(filters.minPrice).toLocaleString('fr-FR')} DA`,
+      label: `Prix min: ${parseFloat(filters.minPrice)} M`,
       value: filters.minPrice
     });
   }
   if (filters.maxPrice) {
     activeFilters.push({
       key: 'maxPrice',
-      label: `Prix max: ${parseInt(filters.maxPrice).toLocaleString('fr-FR')} DA`,
+      label: `Prix max: ${parseFloat(filters.maxPrice)} M`,
       value: filters.maxPrice
     });
   }

@@ -9,6 +9,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useLocalities } from '@/hooks/useLocalities';
 import { FilterState } from '@/components/PropertyFilters';
+import { motion } from 'framer-motion';
 
 const ALL = 'all';
 
@@ -69,13 +70,30 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="lg:hidden relative"
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="relative"
         >
-          <SlidersHorizontal className="h-5 w-5" />
-        </Button>
+          <motion.div
+            className="absolute inset-0 bg-teal-400 rounded-lg blur-xl opacity-75"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.5, 0.8, 0.5],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+          <Button 
+            className="lg:hidden relative bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 font-medium shadow-lg transition-all duration-300 z-10"
+          >
+            <SlidersHorizontal className="h-5 w-5" />
+            <span>Filtres</span>
+          </Button>
+        </motion.div>
       </SheetTrigger>
       
       <SheetContent side="bottom" className="h-[85vh] p-0">
@@ -137,27 +155,30 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                         <Input
                           placeholder="Min"
                           type="number"
+                          step="0.1"
                           value={filters.minPrice}
                           onChange={(e) => handleFilterChange('minPrice', e.target.value)}
                           className="pr-12"
                         />
                         <div className="absolute right-2 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground px-2 py-1 rounded text-xs">
-                          DA
+                          M
                         </div>
                       </div>
                       <div className="flex-1 relative">
                         <Input
                           placeholder="Max"
                           type="number"
+                          step="0.1"
                           value={filters.maxPrice}
                           onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
                           className="pr-12"
                         />
                         <div className="absolute right-2 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground px-2 py-1 rounded text-xs">
-                          DA
+                          M
                         </div>
                       </div>
                     </div>
+                    <p className="text-xs text-muted-foreground">M = 10 000 DZD</p>
                   </div>
 
                   {/* Localité */}

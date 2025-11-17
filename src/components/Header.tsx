@@ -93,7 +93,6 @@ const Header = () => {
             {location.pathname === '/nos-biens' ? (
               <div className="flex items-center lg:hidden">
                 <MobileFilters />
-                <span className="ml-2 text-sm text-muted-foreground font-heading">Filtres</span>
               </div>
             ) : (
               <Link to="/" className="flex items-center lg:hidden">

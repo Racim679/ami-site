@@ -186,26 +186,30 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
 
         {/* Prix minimum */}
         <div className="space-y-2">
-          <label className="text-white text-sm font-medium block">Prix min (DZD)</label>
+          <label className="text-white text-sm font-medium block">Prix min (M)</label>
           <Input
             type="number"
-            placeholder="Prix minimum"
+            step="0.1"
+            placeholder="Ex: 5.5"
             value={filters.minPrice}
             onChange={(e) => handleFilterChange("minPrice", e.target.value)}
             className="bg-white border-0 h-12 text-slate-800"
           />
+          <span className="text-white/70 text-xs">M = 10 000 DZD</span>
         </div>
 
         {/* Prix maximum */}
         <div className="space-y-2">
-          <label className="text-white text-sm font-medium block">Prix max (DZD)</label>
+          <label className="text-white text-sm font-medium block">Prix max (M)</label>
           <Input
             type="number"
-            placeholder="Prix maximum"
+            step="0.1"
+            placeholder="Ex: 50"
             value={filters.maxPrice}
             onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
             className="bg-white border-0 h-12 text-slate-800"
           />
+          <span className="text-white/70 text-xs">M = 10 000 DZD</span>
         </div>
 
         {/* Bouton Rechercher */}

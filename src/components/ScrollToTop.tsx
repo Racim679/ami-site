@@ -33,9 +33,9 @@ const ScrollToTop = () => {
     <Button
       onClick={scrollToTop}
       size="icon"
-      className="fixed bottom-32 right-6 z-50 h-12 w-12 bg-green-600 hover:bg-green-700 text-white shadow-lg"
+      className="fixed bottom-20 right-4 md:bottom-32 md:right-6 z-50 h-10 w-10 md:h-12 md:w-12 bg-green-600 hover:bg-green-700 text-white shadow-lg"
     >
-      <ArrowUp className="h-6 w-6" />
+      <ArrowUp className="h-5 w-5 md:h-6 md:w-6" />
     </Button>
   );
 };

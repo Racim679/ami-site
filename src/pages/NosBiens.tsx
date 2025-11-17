@@ -268,9 +268,15 @@ const NosBiens = () => {
     if (filters.type && property.typology?.toLowerCase() !== filters.type.toLowerCase()) return false;
     if (filters.localite && property.localities?.name?.toLowerCase() !== filters.localite.toLowerCase()) return false;
 
-    // Filtres de prix
-    if (filters.minPrice && property.price && property.price < parseInt(filters.minPrice)) return false;
-    if (filters.maxPrice && property.price && property.price > parseInt(filters.maxPrice)) return false;
+    // Filtres de prix (convertir de M en DZD: M = 10 000 DZD)
+    if (filters.minPrice) {
+      const minPriceInDzd = parseFloat(filters.minPrice) * 10000;
+      if (property.price && property.price < minPriceInDzd) return false;
+    }
+    if (filters.maxPrice) {
+      const maxPriceInDzd = parseFloat(filters.maxPrice) * 10000;
+      if (property.price && property.price > maxPriceInDzd) return false;
+    }
 
     // Filtres de surface
     if (filters.minSurface && property.surface && property.surface < parseInt(filters.minSurface)) return false;
@@ -443,7 +449,7 @@ const NosBiens = () => {
 
 
       {/* Carousel des typologies */}
-      <AnimatedSection className="py-8 bg-muted/30">
+      <AnimatedSection className="py-2 md:py-4 bg-muted/30">
         <div className="container mx-auto px-4">
           <TypologyCarousel 
             onSelectTypology={(typology) => {
@@ -455,7 +461,7 @@ const NosBiens = () => {
       </AnimatedSection>
 
       {/* Filtres - Desktop seulement (mobile géré par Header) */}
-      <AnimatedSection className="hidden md:block py-8 bg-muted/30">
+      <AnimatedSection className="hidden md:block py-2 md:py-4 bg-muted/30">
         <div className="container mx-auto px-4">
           <PropertyFilters onSearch={setFilters} />
         </div>
@@ -463,7 +469,7 @@ const NosBiens = () => {
 
 
       {/* Liste des biens */}
-      <AnimatedSection className="py-16">
+      <AnimatedSection className="py-2 md:py-8">
         <div className="container mx-auto px-4">
           {/* Compteur de résultats, tri et tags de filtres actifs */}
           <div className="mb-6">

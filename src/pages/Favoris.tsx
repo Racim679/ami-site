@@ -13,11 +13,54 @@ import { AnimatedSection, AnimatedCard } from "@/components/AnimatedComponents";
 const Favoris = () => {
   const navigate = useNavigate();
   const { favorites, removeFromFavorites } = useFavorites();
-  const { addToComparison, isInComparison } = useComparison();
+  const { addToComparison, isInComparison, comparisonItems } = useComparison();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
   const handleCompare = () => {
+    // Si aucun favori, ne rien faire
+    if (favorites.length === 0) {
+      alert('Aucun favori à comparer. Ajoutez des biens à vos favoris d\'abord.');
+      return;
+    }
+
+    const maxItems = 5;
+    
+    // Lire la comparaison actuelle depuis localStorage pour avoir les données les plus récentes
+    const currentComparison = JSON.parse(localStorage.getItem('comparison') || '[]');
+    
+    // Filtrer les favoris qui ne sont pas déjà dans la comparaison
+    const favoritesToAdd = favorites.filter(fav => 
+      !currentComparison.some((item: any) => item.id === fav.id)
+    );
+    
+    // Si tous les favoris sont déjà dans la comparaison, naviguer directement
+    if (favoritesToAdd.length === 0) {
+      navigate('/comparaison');
+      return;
+    }
+    
+    // Calculer combien on peut ajouter sans dépasser la limite
+    const availableSlots = maxItems - currentComparison.length;
+    const itemsToAdd = favoritesToAdd.slice(0, availableSlots);
+    
+    if (itemsToAdd.length === 0) {
+      // La comparaison est déjà pleine
+      alert(`La comparaison est déjà pleine (${maxItems} biens maximum). Veuillez retirer des biens de la comparaison pour en ajouter d'autres.`);
+      navigate('/comparaison');
+      return;
+    }
+    
+    // Construire la nouvelle liste de comparaison et la sauvegarder directement
+    const newComparison = [...currentComparison, ...itemsToAdd];
+    localStorage.setItem('comparison', JSON.stringify(newComparison));
+    
+    // Afficher un message informatif
+    if (itemsToAdd.length < favoritesToAdd.length) {
+      alert(`${itemsToAdd.length} bien(s) ajouté(s) à la comparaison. ${favoritesToAdd.length - itemsToAdd.length} bien(s) n'a/ont pas pu être ajouté(s) car la limite de ${maxItems} biens est atteinte.`);
+    }
+    
+    // Naviguer vers la page de comparaison
     navigate('/comparaison');
   };
 
@@ -80,12 +123,12 @@ const Favoris = () => {
       <Header />
 
       {/* Hero Section */}
-      <AnimatedSection className="bg-primary text-primary-foreground py-16">
+      <AnimatedSection className="bg-primary text-primary-foreground py-8 md:py-12 lg:py-16">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 md:gap-4">
             <div>
               <motion.h1 
-                className="text-4xl md:text-6xl font-bold mb-4"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold mb-2 md:mb-4"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
@@ -93,7 +136,7 @@ const Favoris = () => {
                 Mes Favoris
               </motion.h1>
               <motion.p 
-                className="text-xl text-primary-foreground/90"
+                className="text-sm sm:text-base md:text-lg lg:text-xl text-primary-foreground/90"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
@@ -102,29 +145,33 @@ const Favoris = () => {
               </motion.p>
             </div>
             
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4">
               <Button
                 variant="outline"
+                size="sm"
                 onClick={handleCompare}
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary text-xs sm:text-sm md:text-base px-3 sm:px-4 md:px-6 h-8 sm:h-9 md:h-10"
               >
-                <BarChart3 className="w-4 h-4 mr-2" />
+                <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                 Comparer
               </Button>
               <Button
                 variant="outline"
+                size="sm"
                 onClick={handleViewOnMap}
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary text-xs sm:text-sm md:text-base px-3 sm:px-4 md:px-6 h-8 sm:h-9 md:h-10"
               >
-                <MapPin className="w-4 h-4 mr-2" />
-                Voir sur la carte
+                <MapPin className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                <span className="hidden md:inline">Voir sur la carte</span>
+                <span className="md:hidden">Carte</span>
               </Button>
               <Button
                 variant="outline"
+                size="sm"
                 onClick={() => navigate('/nos-biens')}
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary text-xs sm:text-sm md:text-base px-3 sm:px-4 md:px-6 h-8 sm:h-9 md:h-10"
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
+                <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                 Retour
               </Button>
             </div>
