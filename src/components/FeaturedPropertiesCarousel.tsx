@@ -205,7 +205,7 @@ const FeaturedPropertiesCarousel = ({
   console.log("FeaturedPropertiesCarousel - Rendering with", filteredProperties.length, "filtered properties");
   return <Section className="pt-2 md:pt-3 pb-4 md:pb-6 lg:pb-8 bg-gradient-to-b from-background to-muted/20">
       <SectionHeader className="mb-3 md:mb-4">
-        <SectionTitle className="text-3xl md:text-4xl font-serif lg:text-6xl">
+        <SectionTitle className="text-3xl md:text-4xl font-serif lg:text-5xl">
           Nos Biens en Vedette
         </SectionTitle>
         <SectionSubtitle className="text-base md:text-lg">
