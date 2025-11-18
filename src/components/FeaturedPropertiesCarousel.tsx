@@ -68,9 +68,7 @@ const FeaturedPropertiesCarousel = () => {
               bathrooms
             )
           `)
-          .eq("status", "available")
-          .not("price", "is", null)
-          .order("created_at", { ascending: false })
+          .neq("status", "Vendu")
           .limit(10);
 
         if (error) {
