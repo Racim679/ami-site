@@ -226,7 +226,7 @@ const FeaturedPropertiesCarousel = ({ externalFilters }: FeaturedPropertiesCarou
   console.log("FeaturedPropertiesCarousel - Rendering with", filteredProperties.length, "filtered properties");
 
   return (
-    <Section className="pt-[18px] md:pt-3 pb-16 bg-gradient-to-b from-background to-muted/20">
+    <Section className="pt-[18px] md:pt-3 pb-16 md:pb-24 lg:pb-32 bg-gradient-to-b from-background to-muted/20">
       <SectionHeader className="mb-6 md:mb-8">
         <SectionTitle className="text-3xl md:text-4xl lg:text-5xl">
           Nos Biens en Vedette

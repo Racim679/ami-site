@@ -30,16 +30,16 @@ export default function AuditButton({
   height = 60,
   fontSize = 16,
   fontFamily = "Inter, Arial, sans-serif",
-  textColor = "#FFFFFF",
+  textColor = "#174E66",
   blurAmount = 8,
   borderRadius = 30,
   shineDuration = 3,
   shineOpacity = 0.3,
-  glowColor = "#c5b078",
+  glowColor = "#174E66",
   glowIntensity = 0.8,
   strokeWidth = 2,
-  strokeColor = "#FFFFFF",
-  strokeColorHover = "#FFFFFF",
+  strokeColor = "#174E66",
+  strokeColorHover = "#174E66",
   enableFontScaling = false,
   link,
   onClick,
@@ -68,7 +68,7 @@ export default function AuditButton({
     maxWidth: typeof width === 'string' && width !== '100%' ? width : '100%',
     height: `${height}px`,
     background: isHovered 
-      ? "rgba(197, 176, 120, 0.03)" 
+      ? "rgba(23, 78, 102, 0.03)" 
       : "rgba(255, 255, 255, 0.7)",
     backdropFilter: `blur(${blurAmount}px)`,
     WebkitBackdropFilter: `blur(${blurAmount}px)`,
@@ -81,7 +81,7 @@ export default function AuditButton({
     cursor: "pointer",
     overflow: "hidden",
     textShadow: isHovered
-      ? "0 2px 4px rgba(197, 176, 120, 0.3)"
+      ? "0 2px 4px rgba(23, 78, 102, 0.3)"
       : "none",
     letterSpacing: isHovered ? "0.5px" : "0.3px",
     display: "inline-flex",
@@ -92,10 +92,10 @@ export default function AuditButton({
     outline: "none",
     zIndex: 1,
     boxShadow: isHovered
-      ? `0 8px 25px rgba(197, 176, 120, 0.25), 
+      ? `0 8px 25px rgba(23, 78, 102, 0.25), 
          0 4px 12px rgba(0, 0, 0, 0.08),
          inset 0 1px 0 rgba(255, 255, 255, 0.5)`
-      : `0 4px 15px rgba(0, 0, 0, 0.05), 
+      : `0 4px 15px rgba(23, 78, 102, 0.1), 
          inset 0 1px 0 rgba(255, 255, 255, 0.9)`,
     transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
     transform: isPressed ? "scale(0.98)" : isHovered ? "scale(1.02)" : "scale(1)",
@@ -112,9 +112,9 @@ export default function AuditButton({
     background: `linear-gradient(
       90deg,
       transparent,
-      rgba(197, 176, 120, ${shineOpacity * 0.4}),
+      rgba(23, 78, 102, ${shineOpacity * 0.4}),
       rgba(255, 255, 255, ${shineOpacity}),
-      rgba(197, 176, 120, ${shineOpacity * 0.4}),
+      rgba(23, 78, 102, ${shineOpacity * 0.4}),
       transparent
     )`,
     transform: "skewX(-15deg)",
@@ -130,7 +130,7 @@ export default function AuditButton({
     right: 0,
     bottom: 0,
     background: isHovered
-      ? "linear-gradient(135deg, rgba(197, 176, 120, 0.05) 0%, rgba(197, 176, 120, 0.1) 100%)"
+      ? "linear-gradient(135deg, rgba(23, 78, 102, 0.05) 0%, rgba(23, 78, 102, 0.1) 100%)"
       : "linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%)",
     opacity: isHovered ? 1 : 0.6,
     borderRadius: `${borderRadius}px`,

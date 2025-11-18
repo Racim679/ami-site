@@ -22,6 +22,7 @@ import { ChatbotWidget } from "./components/ChatbotWidget";
 import { ChatbotProvider } from "./contexts/ChatbotContext";
 import ComparisonSystem from "./components/ComparisonSystem";
 import PWARegistration from "./components/PWARegistration";
+import Footer from "./components/Footer";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +51,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <Footer />
         <ChatbotWidget
           title="Racim Promotion"
           initialMessage1="Bonjour, je suis votre assistante immobilière ! 👋"
