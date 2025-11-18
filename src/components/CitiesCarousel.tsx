@@ -139,7 +139,7 @@ const CitiesCarousel = () => {
           Trouvez des propriétés dans ces villes
         </SectionTitle>
         <SectionSubtitle className="text-base md:text-lg">
-          Découvrez des biens immobiliers dans les principales localités que nous desservons. Choisissez votre ville et commencez votre exploration.
+              Choisissez votre ville et commencez votre exploration.
         </SectionSubtitle>
       </SectionHeader>
 
