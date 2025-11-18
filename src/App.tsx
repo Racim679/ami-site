@@ -33,16 +33,14 @@ const pageVariants = {
     opacity: 0,
     y: 20,
     scale: 0.98,
-    filter: "blur(4px)",
   },
   enter: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: "blur(0px)",
     transition: {
       duration: 0.5,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: [0.25, 0.46, 0.45, 0.94] as const,
       staggerChildren: 0.08,
     },
   },
@@ -50,10 +48,9 @@ const pageVariants = {
     opacity: 0,
     y: -20,
     scale: 0.98,
-    filter: "blur(4px)",
     transition: {
       duration: 0.3,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: [0.25, 0.46, 0.45, 0.94] as const,
     },
   },
 };
@@ -68,7 +65,7 @@ const loaderVariants = {
     originX: 0,
     transition: {
       duration: 0.6,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: [0.25, 0.46, 0.45, 0.94] as const,
     },
   },
   exit: {
@@ -76,7 +73,7 @@ const loaderVariants = {
     originX: 1,
     transition: {
       duration: 0.2,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: [0.25, 0.46, 0.45, 0.94] as const,
     },
   },
 };
@@ -121,17 +118,7 @@ const AppContent = () => {
         </motion.div>
       </AnimatePresence>
 
-      {/* Overlay de transition subtil */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={`overlay-${location.pathname}`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className="fixed inset-0 bg-gradient-to-br from-primary/3 via-secondary/3 to-accent/3 backdrop-blur-[2px] z-40 pointer-events-none"
-        />
-      </AnimatePresence>
+      {/* Overlay de transition subtil - Retiré pour éviter le flou */}
 
       {/* Routes avec animation */}
       <AnimatePresence mode="wait" initial={false}>

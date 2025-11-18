@@ -145,6 +145,10 @@ All colors MUST be HSL.
     --chatbot-primary-foreground: 0 0% 100%;
     --chatbot-hover: 171 56% 54%;          /* Vert menthe au survol */
     
+    /* Overlay & Footer Colors */
+    --overlay-dark: 0 0% 0%;              /* Noir pour overlays sombres */
+    --footer-bg: 199 62% 12%;             /* #0a1a2e - Bleu très foncé pour footer */
+    
     --radius: 8px; /* Coins légèrement arrondis */
   }
   
@@ -205,6 +209,10 @@ All colors MUST be HSL.
     --chatbot-primary: 199 62% 45%;
     --chatbot-primary-foreground: 0 0% 100%;
     --chatbot-hover: 171 56% 64%;
+    
+    /* Overlay & Footer Colors - Dark Mode */
+    --overlay-dark: 0 0% 0%;
+    --footer-bg: 199 62% 15%;
   }
 }
 

@@ -212,7 +212,7 @@ const CitiesCarousel = () => {
                       />
                       
                       {/* Dark Gradient Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-overlay-dark/70 via-overlay-dark/20 to-transparent" />
                       
                       {/* City Info Overlay - Top Left */}
                       <div className="absolute top-4 left-4 md:top-6 md:left-6 text-white z-10">

@@ -49,7 +49,7 @@ const Home: React.FC = () => {
       <Header />
 
       {/* Hero Section */}
-      <AnimatedSection className="relative h-[50vh] md:h-screen flex items-center justify-center overflow-hidden">
+      <AnimatedSection className="relative h-[60vh] md:h-[75vh] lg:h-[80vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary/60 z-10"></div>
         <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
         backgroundImage: "url('/placeholder.svg')"
@@ -174,6 +174,25 @@ const Home: React.FC = () => {
                   </p>
                 </AnimatedCard>
               </motion.div>)}
+          </motion.div>
+
+          {/* CTA Contact */}
+          <motion.div 
+            className="text-center mt-6 md:mt-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <AuditButton 
+              text="Contactez-nous" 
+              showArrow={true} 
+              onClick={() => navigate('/contact')}
+              width="auto"
+              height={50}
+              fontSize={14}
+              className="mx-auto"
+            />
           </motion.div>
         </div>
       </AnimatedSection>

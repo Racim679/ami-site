@@ -44,7 +44,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="relative bg-[#0a1a2e] text-white overflow-hidden">
+    <footer className="relative bg-footer-bg text-white overflow-hidden">
       <div className="relative container mx-auto px-4 py-8 md:py-12">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8">
           {/* Left Section - Copyright and Developer */}

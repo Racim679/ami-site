@@ -72,6 +72,12 @@ export default {
 					primary: 'hsl(var(--chatbot-primary))',
 					'primary-foreground': 'hsl(var(--chatbot-primary-foreground))',
 					hover: 'hsl(var(--chatbot-hover))'
+				},
+				overlay: {
+					dark: 'hsl(var(--overlay-dark))'
+				},
+				footer: {
+					bg: 'hsl(var(--footer-bg))'
 				}
 			},
 			borderRadius: {
@@ -177,5 +183,5 @@ export default {
 			}
 		}
 	},
-	plugins: [import("tailwindcss-animate")],
+	plugins: [require("tailwindcss-animate")],
 } satisfies Config;

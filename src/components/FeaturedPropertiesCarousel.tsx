@@ -308,7 +308,7 @@ const FeaturedPropertiesCarousel = ({ externalFilters }: FeaturedPropertiesCarou
                       )}
                       
                       {/* Dark Gradient Overlay at Bottom */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-overlay-dark/90 via-overlay-dark/50 to-transparent" />
                       
                       {/* Status Badge - Top Left */}
                       <div className="absolute top-3 left-3 z-10">
