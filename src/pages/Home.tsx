@@ -123,7 +123,7 @@ const Home: React.FC = () => {
         }} transition={{
           duration: 0.6
         }}>
-            <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold font-heading mb-3 md:mb-4 text-primary leading-tight tracking-tight">Pourquoi choisir AMI Immobilier ?</h2>
+            <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold font-heading mb-3 md:mb-4 text-primary leading-tight tracking-tight">Pourquoi choisir AMI Immobilier  </h2>
             <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed md:text-lg">
               Une expertise reconnue et un accompagnement personnalisé pour tous vos projets immobiliers.
             </p>
