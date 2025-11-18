@@ -30,9 +30,12 @@ interface Property {
   }[] | null;
 }
 
+type FilterType = "Tous" | "Maisons" | "Villas" | "Appartements";
+
 const FeaturedPropertiesCarousel = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedFilter, setSelectedFilter] = useState<FilterType>("Tous");
   const { storePropertyType } = usePropertyTypeStorage();
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
@@ -109,6 +112,32 @@ const FeaturedPropertiesCarousel = () => {
     }
   };
 
+  // Filter properties by selected filter
+  const filteredProperties = properties.filter((property) => {
+    if (selectedFilter === "Tous") return true;
+    if (selectedFilter === "Maisons")
+      return property.typology?.toLowerCase().includes("maison");
+    if (selectedFilter === "Villas")
+      return property.typology?.toLowerCase().includes("villa");
+    if (selectedFilter === "Appartements") {
+      return (
+        property.typology?.toLowerCase().includes("appartement") ||
+        property.typology?.toLowerCase().includes("f") ||
+        property.typology?.toLowerCase().startsWith("f")
+      );
+    }
+    return true;
+  });
+
+  const filters: FilterType[] = ["Tous", "Villas", "Appartements", "Maisons"];
+
+  // Reset carousel to first slide when filter changes
+  useEffect(() => {
+    if (emblaApi) {
+      emblaApi.scrollTo(0);
+    }
+  }, [selectedFilter, emblaApi]);
+
   if (loading) {
     return (
       <Section className="py-16 bg-background">
@@ -127,7 +156,12 @@ const FeaturedPropertiesCarousel = () => {
     return null;
   }
 
-  console.log("FeaturedPropertiesCarousel - Rendering with", properties.length, "properties");
+  if (filteredProperties.length === 0) {
+    console.log("FeaturedPropertiesCarousel - No filtered properties to display");
+    return null;
+  }
+
+  console.log("FeaturedPropertiesCarousel - Rendering with", filteredProperties.length, "filtered properties");
 
   return (
     <Section className="py-16 bg-gradient-to-b from-background to-muted/20">
@@ -140,9 +174,26 @@ const FeaturedPropertiesCarousel = () => {
         </SectionSubtitle>
       </SectionHeader>
 
+      {/* Filter Buttons */}
+      <div className="flex justify-center gap-4 mb-8 md:mb-12 flex-wrap">
+        {filters.map((filter) => (
+          <button
+            key={filter}
+            onClick={() => setSelectedFilter(filter)}
+            className={
+              selectedFilter === filter
+                ? "px-6 py-2 rounded-lg bg-[#D4A574] text-black font-semibold font-heading transition-all duration-300"
+                : "px-6 py-2 rounded-lg bg-transparent text-foreground font-semibold font-heading hover:bg-muted/50 transition-all duration-300"
+            }
+          >
+            {filter}
+          </button>
+        ))}
+      </div>
+
       <div className="relative">
         {/* Navigation Buttons */}
-        {properties.length > 1 && (
+        {filteredProperties.length > 1 && (
           <>
             <Button
               variant="outline"
@@ -169,7 +220,7 @@ const FeaturedPropertiesCarousel = () => {
         {/* Carousel */}
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex">
-            {properties.map((property) => (
+            {filteredProperties.map((property) => (
               <div 
                 key={property.id} 
                 className="flex-[0_0_85%] md:flex-[0_0_40%] lg:flex-[0_0_33.333%] min-w-0 pl-4 md:pl-6"
@@ -179,7 +230,7 @@ const FeaturedPropertiesCarousel = () => {
                   onClick={() => handlePropertyClick(property)}
                   className="block"
                 >
-                  <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 bg-card border border-border cursor-pointer h-[45vh] max-h-[400px] md:h-[50vh] md:max-h-[500px] lg:h-[55vh] lg:max-h-[600px]">
+                  <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 bg-card border border-border cursor-pointer h-[45vh] max-h-[400px] md:h-[50vh] md:max-h-[500px] lg:h-[70vh]">
                     <div className="relative w-full h-full">
                       {property.image_url ? (
                         <img
@@ -263,9 +314,9 @@ const FeaturedPropertiesCarousel = () => {
         </div>
 
         {/* Carousel Indicators */}
-        {properties.length > 1 && (
+        {filteredProperties.length > 1 && (
           <div className="flex justify-center gap-2 mt-6">
-            {properties.map((_, index) => (
+            {filteredProperties.map((_, index) => (
               <button
                 key={index}
                 className="w-2 h-2 rounded-full bg-muted transition-all hover:bg-primary"
