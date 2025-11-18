@@ -202,7 +202,7 @@ const FeaturedPropertiesCarousel = ({ externalFilters }: FeaturedPropertiesCarou
 
   if (loading) {
     return (
-      <Section className="py-16 bg-background">
+      <Section className="py-4 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
@@ -226,8 +226,8 @@ const FeaturedPropertiesCarousel = ({ externalFilters }: FeaturedPropertiesCarou
   console.log("FeaturedPropertiesCarousel - Rendering with", filteredProperties.length, "filtered properties");
 
   return (
-    <Section className="pt-[18px] md:pt-3 pb-16 md:pb-24 lg:pb-32 bg-gradient-to-b from-background to-muted/20">
-      <SectionHeader className="mb-6 md:mb-8">
+    <Section className="pt-2 md:pt-3 pb-4 md:pb-6 lg:pb-8 bg-gradient-to-b from-background to-muted/20">
+      <SectionHeader className="mb-3 md:mb-4">
         <SectionTitle className="text-3xl md:text-4xl lg:text-5xl">
           Nos Biens en Vedette
         </SectionTitle>
@@ -237,7 +237,7 @@ const FeaturedPropertiesCarousel = ({ externalFilters }: FeaturedPropertiesCarou
       </SectionHeader>
 
       {/* Filter Buttons */}
-      <div className="flex justify-center gap-2 md:gap-4 mb-8 md:mb-12 flex-wrap">
+      <div className="flex justify-center gap-2 md:gap-4 mb-4 md:mb-6 flex-wrap">
         {filters.map((filter) => (
           <button
             key={filter}

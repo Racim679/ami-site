@@ -138,7 +138,7 @@ const CitiesCarousel = () => {
 
   if (loading) {
     return (
-      <Section className="py-16 bg-background">
+      <Section className="py-4 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
@@ -154,8 +154,8 @@ const CitiesCarousel = () => {
   }
 
   return (
-    <Section className="pt-3 pb-16 bg-background">
-      <SectionHeader className="mb-6 md:mb-8">
+    <Section className="pt-2 md:pt-3 pb-4 md:pb-6 lg:pb-8 bg-background">
+      <SectionHeader className="mb-3 md:mb-4">
         <SectionTitle className="text-3xl md:text-4xl lg:text-5xl">
           Trouvez des propriétés dans ces villes
         </SectionTitle>
@@ -236,7 +236,7 @@ const CitiesCarousel = () => {
 
         {/* Carousel Indicators */}
         {cities.length > 1 && (
-          <div className="flex justify-center gap-2 mt-6">
+          <div className="flex justify-center gap-2 mt-4">
             {cities.map((_, index) => (
               <button
                 key={index}
@@ -254,7 +254,7 @@ const CitiesCarousel = () => {
       </div>
 
       {/* CTA Button */}
-      <div className="text-center mt-12">
+      <div className="text-center mt-4">
         <div className="w-full flex justify-center px-4 sm:px-0">
           <div className="w-full sm:w-auto max-w-xs sm:max-w-none">
             <AuditButton 

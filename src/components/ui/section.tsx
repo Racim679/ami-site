@@ -19,7 +19,7 @@ const Section = React.forwardRef<HTMLElement, SectionProps>(
     }
 
     const content = container ? (
-      <div className="container mx-auto px-4 lg:px-8">
+      <div className="container mx-auto px-3 lg:px-4">
         {children}
       </div>
     ) : children
@@ -28,7 +28,7 @@ const Section = React.forwardRef<HTMLElement, SectionProps>(
       <section
         ref={ref}
         className={cn(
-          "py-20 md:py-28 lg:py-32 transition-all duration-300",
+          "py-4 md:py-6 lg:py-8 transition-all duration-300",
           variants[variant],
           className
         )}
@@ -47,7 +47,7 @@ const SectionHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("text-center mb-16 max-w-3xl mx-auto", className)}
+    className={cn("text-center mb-4 md:mb-6 max-w-3xl mx-auto", className)}
     {...props}
   />
 ))
@@ -60,7 +60,7 @@ const SectionTitle = React.forwardRef<
   <h2
     ref={ref}
     className={cn(
-      "text-4xl md:text-5xl lg:text-7xl font-bold font-heading mb-8 text-primary leading-tight tracking-tight",
+      "text-4xl md:text-5xl lg:text-7xl font-bold font-heading mb-3 md:mb-4 text-primary leading-tight tracking-tight",
       className
     )}
     {...props}

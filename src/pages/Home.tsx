@@ -105,7 +105,7 @@ const Home: React.FC = () => {
       </AnimatedSection>
 
       {/* Filtres - Desktop seulement */}
-      <AnimatedSection className="hidden lg:block pt-4 pb-3 bg-muted/30">
+      <AnimatedSection className="hidden lg:block pt-2 pb-2 bg-muted/30">
         <div className="container mx-auto px-4">
           <PropertyFilters onSearch={setFilters} />
         </div>
@@ -118,9 +118,9 @@ const Home: React.FC = () => {
       <CitiesCarousel />
 
       {/* Features Section */}
-      <AnimatedSection className="pb-20 pt-0 bg-background">
+      <AnimatedSection className="pb-4 pt-2 bg-background">
         <div className="container mx-auto px-4">
-          <motion.div className="text-center mb-12 sm:mb-16 px-4" initial={{
+          <motion.div className="text-center mb-4 sm:mb-6 px-4" initial={{
           opacity: 0,
           y: 30
         }} whileInView={{
@@ -137,7 +137,7 @@ const Home: React.FC = () => {
             </p>
           </motion.div>
 
-          <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" variants={{
+          <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6" variants={{
           hidden: {
             opacity: 0
           },
@@ -162,7 +162,7 @@ const Home: React.FC = () => {
           }} transition={{
             duration: 0.5
           }}>
-                <AnimatedCard className="text-center p-6 h-full bg-card border border-border">
+                <AnimatedCard className="text-center p-4 md:p-5 h-full bg-card border border-border">
                   <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                     <feature.icon className="w-8 h-8 text-primary" />
                   </div>

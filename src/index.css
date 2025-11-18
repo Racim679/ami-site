@@ -400,4 +400,55 @@ All colors MUST be HSL.
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
   }
+
+  /* Page transition animations */
+  .page-transition-wrapper {
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Smooth scroll behavior for page transitions */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Optimize animations performance */
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Prevent layout shift during transitions */
+  .page-transition-wrapper > * {
+    will-change: transform, opacity, filter;
+  }
+
+  /* Enhanced blur effect for transitions */
+  @supports (backdrop-filter: blur(10px)) {
+    .backdrop-blur-transition {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+  }
+
+  /* Loading bar animation */
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+
+  .loading-bar-shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+  }
 }

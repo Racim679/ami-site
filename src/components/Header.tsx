@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { ChevronDown, Menu, X, Filter } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { MobileFilters } from "./MobileFilters";
 import PropertySearchBar from "./PropertySearchBar";
@@ -10,6 +10,17 @@ import logo from "@/assets/ami-immobilier-logo.png";
 const Header = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Navigation desktop - liens centrés
+  const centerNavItems = [
+    { path: "/", label: "Accueil", hasDropdown: false },
+    { path: "/nos-biens", label: "Nos biens", hasDropdown: false },
+    { path: "/comparaison", label: "Comparaison", hasDropdown: false },
+    { path: "/favoris", label: "Favoris", hasDropdown: false },
+  ];
+
+  // Contact à droite
+  const rightNavItem = { path: "/contact", label: "Contact", hasDropdown: false };
 
   // Navigation mobile - tous les liens (pour le menu hamburger)
   const leftNavItems = [
@@ -35,15 +46,62 @@ const Header = () => {
 
   return (
     <>
-      <header className="bg-background border-b border-border relative z-50">
-        {/* Barre de recherche - Visible sur toutes les pages */}
-        <div className="bg-primary/95 border-t border-accent/30 py-3">
+      <header className="bg-white border-b border-border relative z-50">
+        {/* Header principal - Desktop seulement */}
+        <div className="hidden lg:block">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-between h-16">
+              {/* Logo - Desktop (à gauche) */}
+              <div className="flex items-center flex-shrink-0">
+                <Link to="/" className="hover:opacity-80 transition-opacity">
+                  <img src={logo} alt="AMI Immobilier" className="h-12 w-auto" />
+                </Link>
+              </div>
+
+              {/* Navigation centrée - Desktop seulement (4 liens au centre) */}
+              <nav className="flex items-center justify-center flex-1 space-x-6">
+                {centerNavItems.map((item) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={cn(
+                      "text-sm font-medium transition-colors hover:text-primary font-heading",
+                      location.pathname === item.path
+                        ? "text-primary"
+                        : "text-muted-foreground"
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </nav>
+
+              {/* Contact à droite - Desktop */}
+              <div className="flex items-center flex-shrink-0">
+                <Link
+                  to={rightNavItem.path}
+                  className={cn(
+                    "text-sm font-medium transition-colors hover:text-primary font-heading",
+                    location.pathname === rightNavItem.path
+                      ? "text-primary"
+                      : "text-muted-foreground"
+                  )}
+                >
+                  {rightNavItem.label}
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Barre de recherche - Mobile et tablette seulement */}
+        <div className="lg:hidden bg-white border-t border-border py-2">
           <div className="container mx-auto px-4">
             <div className="flex items-center gap-3">
               {/* Menu hamburger - Mobile seulement */}
               <button
                 onClick={toggleMobileMenu}
-                className="lg:hidden text-white hover:text-accent transition-colors p-2"
+                className="text-foreground hover:text-primary transition-colors p-2"
                 aria-label="Menu"
               >
                 <Menu className="w-6 h-6" />
@@ -54,7 +112,7 @@ const Header = () => {
 
               {/* Bouton Filtres - Mobile seulement, visible sur /nos-biens */}
               {location.pathname === '/nos-biens' && (
-                <div className="lg:hidden">
+                <div>
                   <MobileFilters />
                 </div>
               )}
