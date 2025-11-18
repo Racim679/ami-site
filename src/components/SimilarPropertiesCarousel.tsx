@@ -3,11 +3,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { MapPin, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { usePropertyTypeStorage } from '@/hooks/usePropertyTypeStorage';
 import { formatPrice } from '@/lib/utils';
+import AuditButton from '@/components/ui/audit-button';
 
 interface Property {
   id: string;
@@ -41,6 +42,7 @@ const SimilarPropertiesCarousel: React.FC<SimilarPropertiesCarouselProps> = ({
   const [similarProperties, setSimilarProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const { storePropertyType } = usePropertyTypeStorage();
+  const navigate = useNavigate();
   
   const [emblaRef] = useEmblaCarousel(
     { loop: true, dragFree: true },
@@ -220,12 +222,19 @@ const SimilarPropertiesCarousel: React.FC<SimilarPropertiesCarouselProps> = ({
         </div>
 
         <div className="text-center mt-8">
-          <Link to="/nos-biens">
-            <Button variant="outline" size="lg">
-              Voir tous nos biens
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </Link>
+          <div className="w-full flex justify-center px-4 sm:px-0">
+            <div className="w-full sm:w-auto max-w-xs sm:max-w-none">
+              <AuditButton 
+                text="Voir tous nos biens" 
+                showArrow={true} 
+                onClick={() => navigate('/nos-biens')}
+                width="100%"
+                height={50}
+                fontSize={14}
+                className="w-full sm:w-auto sm:!w-[380px]"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </section>

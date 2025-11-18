@@ -3,10 +3,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { MapPin, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { formatPrice } from '@/lib/utils';
+import AuditButton from '@/components/ui/audit-button';
 
 interface Property {
   id: string;
@@ -36,6 +37,7 @@ const DynamicTypeCarousel: React.FC<DynamicTypeCarouselProps> = ({
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedType, setSelectedType] = useState<string | null>(null);
+  const navigate = useNavigate();
   
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { 
@@ -280,12 +282,19 @@ const DynamicTypeCarousel: React.FC<DynamicTypeCarouselProps> = ({
 
         {/* View All Button */}
         <div className="text-center mt-12">
-          <Link to="/nos-biens">
-            <Button variant="outline" size="lg" className="btn-elegant">
-              Voir tous nos biens
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </Link>
+          <div className="w-full flex justify-center px-4 sm:px-0">
+            <div className="w-full sm:w-auto max-w-xs sm:max-w-none">
+              <AuditButton 
+                text="Voir tous nos biens" 
+                showArrow={true} 
+                onClick={() => navigate('/nos-biens')}
+                width="100%"
+                height={50}
+                fontSize={14}
+                className="w-full sm:w-auto sm:!w-[380px]"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Property Count */}

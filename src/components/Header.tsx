@@ -1,8 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X, Filter } from "lucide-react";
 import { useState } from "react";
 import { MobileFilters } from "./MobileFilters";
+import PropertySearchBar from "./PropertySearchBar";
 import logo from "@/assets/ami-immobilier-logo.png";
 
 
@@ -46,6 +47,7 @@ const Header = () => {
   return (
     <>
       <header className="bg-background border-b border-border relative z-50">
+        {/* Header principal */}
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             {/* Logo - Desktop */}
@@ -90,7 +92,7 @@ const Header = () => {
 
             {/* Logo mobile ou Filtres (visible seulement sur mobile) */}
             {location.pathname === '/nos-biens' ? (
-              <div className="flex items-center lg:hidden">
+              <div className="flex items-center lg:hidden gap-2">
                 <MobileFilters />
               </div>
             ) : (
@@ -106,6 +108,32 @@ const Header = () => {
             >
               <Menu className="w-6 h-6" />
             </button>
+          </div>
+        </div>
+
+        {/* Barre de recherche - Visible sur toutes les pages */}
+        <div className="bg-primary/95 border-t border-accent/30 py-3">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center gap-3">
+              {/* Menu hamburger - Mobile seulement */}
+              <button
+                onClick={toggleMobileMenu}
+                className="lg:hidden text-white hover:text-accent transition-colors p-2"
+                aria-label="Menu"
+              >
+                <Menu className="w-6 h-6" />
+              </button>
+
+              {/* Barre de recherche */}
+              <PropertySearchBar className="flex-1" />
+
+              {/* Bouton Filtres - Mobile seulement, visible sur /nos-biens */}
+              {location.pathname === '/nos-biens' && (
+                <div className="lg:hidden">
+                  <MobileFilters />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </header>

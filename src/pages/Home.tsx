@@ -7,6 +7,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { AnimatedSection, AnimatedCard, AnimatedButton } from "@/components/AnimatedComponents";
 import AuditButton from "@/components/ui/audit-button";
 import FeaturedPropertiesCarousel from "@/components/FeaturedPropertiesCarousel";
+import CitiesCarousel from "@/components/CitiesCarousel";
 import PropertyFilters, { FilterState } from "@/components/PropertyFilters";
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ const Home: React.FC = () => {
       <Header />
 
       {/* Hero Section */}
-      <AnimatedSection className="relative h-screen flex items-center justify-center overflow-hidden">
+      <AnimatedSection className="relative h-[50vh] md:h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary/60 z-10"></div>
         <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
         backgroundImage: "url('/placeholder.svg')"
@@ -113,6 +114,9 @@ const Home: React.FC = () => {
       {/* Featured Properties Carousel */}
       <FeaturedPropertiesCarousel externalFilters={filters} />
 
+      {/* Cities Carousel */}
+      <CitiesCarousel />
+
       {/* Features Section */}
       <AnimatedSection className="pb-20 pt-0 bg-background">
         <div className="container mx-auto px-4">
@@ -170,61 +174,6 @@ const Home: React.FC = () => {
                   </p>
                 </AnimatedCard>
               </motion.div>)}
-          </motion.div>
-        </div>
-      </AnimatedSection>
-
-
-      {/* CTA Section */}
-      <AnimatedSection className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4 text-center">
-          <motion.h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 sm:mb-4 px-4 leading-tight" initial={{
-          opacity: 0,
-          y: 30
-        }} whileInView={{
-          opacity: 1,
-          y: 0
-        }} viewport={{
-          once: true
-        }} transition={{
-          duration: 0.6
-        }}>
-            Prêt à réaliser votre projet immobilier ?
-          </motion.h2>
-
-          <motion.p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto px-4 leading-relaxed" initial={{
-          opacity: 0,
-          y: 30
-        }} whileInView={{
-          opacity: 1,
-          y: 0
-        }} viewport={{
-          once: true
-        }} transition={{
-          duration: 0.6,
-          delay: 0.2
-        }}>
-            Contactez notre équipe d'experts pour un accompagnement personnalisé.
-          </motion.p>
-
-          <motion.div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center px-4" initial={{
-          opacity: 0,
-          y: 30
-        }} whileInView={{
-          opacity: 1,
-          y: 0
-        }} viewport={{
-          once: true
-        }} transition={{
-          duration: 0.6,
-          delay: 0.4
-        }}>
-            <AnimatedButton className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base md:text-lg font-semibold transition-colors w-full sm:w-auto" onClick={() => navigate('/vendre')}>
-              Prendre rendez-vous
-            </AnimatedButton>
-            <AnimatedButton className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base md:text-lg font-semibold transition-colors w-full sm:w-auto" onClick={() => navigate('/nos-biens')}>
-              Voir nos biens
-            </AnimatedButton>
           </motion.div>
         </div>
       </AnimatedSection>

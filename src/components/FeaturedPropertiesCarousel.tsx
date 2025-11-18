@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { formatPrice } from "@/lib/utils";
 import { MapPin, Bed, Bath, Square, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
@@ -10,6 +10,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { usePropertyTypeStorage } from "@/hooks/usePropertyTypeStorage";
 import { FilterState } from "@/components/PropertyFilters";
+import AuditButton from "@/components/ui/audit-button";
 
 interface Property {
   id: string;
@@ -42,6 +43,7 @@ const FeaturedPropertiesCarousel = ({ externalFilters }: FeaturedPropertiesCarou
   const [loading, setLoading] = useState(true);
   const [selectedFilter, setSelectedFilter] = useState<FilterType>("Tous");
   const { storePropertyType } = usePropertyTypeStorage();
+  const navigate = useNavigate();
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { 
@@ -224,7 +226,7 @@ const FeaturedPropertiesCarousel = ({ externalFilters }: FeaturedPropertiesCarou
   console.log("FeaturedPropertiesCarousel - Rendering with", filteredProperties.length, "filtered properties");
 
   return (
-    <Section className="pt-3 pb-16 bg-gradient-to-b from-background to-muted/20">
+    <Section className="pt-[18px] md:pt-3 pb-16 bg-gradient-to-b from-background to-muted/20">
       <SectionHeader className="mb-6 md:mb-8">
         <SectionTitle className="text-3xl md:text-4xl lg:text-5xl">
           Nos Biens en Vedette
@@ -375,11 +377,11 @@ const FeaturedPropertiesCarousel = ({ externalFilters }: FeaturedPropertiesCarou
 
         {/* Carousel Indicators */}
         {filteredProperties.length > 1 && (
-          <div className="flex justify-center gap-2 mt-6">
+          <div className="flex justify-center gap-2 mt-4">
             {filteredProperties.map((_, index) => (
               <button
                 key={index}
-                className="w-2 h-2 rounded-full bg-muted transition-all hover:bg-primary"
+                className="w-2 h-2 rounded-full bg-muted border border-primary/30 transition-all hover:bg-primary hover:border-primary"
                 aria-label={`Aller à la slide ${index + 1}`}
                 onClick={() => {
                   if (emblaApi) {
@@ -393,13 +395,20 @@ const FeaturedPropertiesCarousel = ({ externalFilters }: FeaturedPropertiesCarou
       </div>
 
       {/* CTA Button */}
-      <div className="text-center mt-12">
-        <Link to="/nos-biens">
-          <Button variant="default" size="lg" className="group">
-            Voir tous nos biens
-            <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-          </Button>
-        </Link>
+      <div className="text-center mt-4">
+        <div className="w-full flex justify-center px-4 sm:px-0">
+          <div className="w-full sm:w-auto max-w-xs sm:max-w-none">
+            <AuditButton 
+              text="Voir tous nos biens" 
+              showArrow={true} 
+              onClick={() => navigate('/nos-biens')}
+              width="100%"
+              height={50}
+              fontSize={14}
+              className="w-full sm:w-auto sm:!w-[380px]"
+            />
+          </div>
+        </div>
       </div>
     </Section>
   );

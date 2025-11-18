@@ -17,6 +17,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { AnimatedSection, AnimatedCard } from "@/components/AnimatedComponents";
 import { supabase } from "@/integrations/supabase/client";
 import { formatPrice } from "@/lib/utils";
+import { usePropertySearch, SearchResult } from "@/hooks/usePropertySearch";
 interface Property {
   id: string;
   title: string;
@@ -112,101 +113,209 @@ const NosBiens = () => {
     addToComparison,
     isInComparison
   } = useComparison();
+  const { searchProperties: performSearch } = usePropertySearch();
 
-  // Récupérer les propriétés depuis Supabase
+  // Fonction pour transformer les résultats de recherche en format Property
+  const transformSearchResults = async (searchResults: SearchResult[]): Promise<Property[]> => {
+    // Récupérer les détails complets pour chaque propriété trouvée
+    const propertyIds = searchResults.map(r => r.id);
+    if (propertyIds.length === 0) return [];
+
+    const { data, error } = await supabase
+      .from('properties')
+      .select(`
+        id,
+        title,
+        status,
+        latitude,
+        longitude,
+        surface,
+        price,
+        image_url,
+        typology,
+        localities(name),
+        property_details (
+          bedrooms,
+          bathrooms,
+          rooms,
+          floors,
+          living_area,
+          condition,
+          has_city_view,
+          vue_mer,
+          vue_montagne,
+          vue_ville,
+          vue_jardin,
+          vue_cour,
+          vue_degagee
+        ),
+        property_amenities_structured (
+          piscine,
+          garage,
+          jardin,
+          terrasse,
+          balcon,
+          cave,
+          grenier,
+          buanderie
+        ),
+        property_security_structured (
+          gardien,
+          ascenseur,
+          acces_handicape,
+          video_surveillance,
+          digicode,
+          interphone,
+          alarme,
+          portail_electrique
+        ),
+        property_nearby_structured (
+          ecoles,
+          pharmacies,
+          mosquees,
+          transports_publics,
+          banques,
+          universites,
+          commerces,
+          restaurants,
+          aeroports,
+          hopitaux,
+          parcs,
+          plages
+        )
+      `)
+      .in('id', propertyIds);
+
+    if (error) {
+      console.error('Erreur lors de la récupération des détails:', error);
+      return [];
+    }
+
+    // Transformer les données
+    const transformedData = data?.map(property => {
+      let locality = null;
+      if (property.localities) {
+        if (Array.isArray(property.localities) && property.localities.length > 0) {
+          locality = property.localities[0];
+        } else if (typeof property.localities === 'object' && !Array.isArray(property.localities) && 'name' in property.localities) {
+          locality = property.localities;
+        }
+      }
+      return {
+        ...property,
+        localities: locality
+      };
+    }) || [];
+
+    // Préserver l'ordre de pertinence de la recherche
+    const orderedResults = searchResults
+      .map(searchResult => transformedData.find(p => p.id === searchResult.id))
+      .filter((p): p is Property => p !== undefined);
+
+    return orderedResults;
+  };
+
+  // Récupérer les propriétés depuis Supabase ou utiliser la recherche intelligente
   useEffect(() => {
     const fetchProperties = async () => {
+      setLoading(true);
       try {
-        const {
-          data,
-          error
-        } = await supabase.from('properties').select(`
-            id,
-            title,
-            status,
-            latitude,
-            longitude,
-            surface,
-            price,
-            image_url,
-            typology,
-            localities(name),
-            property_details (
-              bedrooms,
-              bathrooms,
-              rooms,
-              floors,
-              living_area,
-              condition,
-              has_city_view,
-              vue_mer,
-              vue_montagne,
-              vue_ville,
-              vue_jardin,
-              vue_cour,
-              vue_degagee
-            ),
-            property_amenities_structured (
-              piscine,
-              garage,
-              jardin,
-              terrasse,
-              balcon,
-              cave,
-              grenier,
-              buanderie
-            ),
-            property_security_structured (
-              gardien,
-              ascenseur,
-              acces_handicape,
-              video_surveillance,
-              digicode,
-              interphone,
-              alarme,
-              portail_electrique
-            ),
-            property_nearby_structured (
-              ecoles,
-              pharmacies,
-              mosquees,
-              transports_publics,
-              banques,
-              universites,
-              commerces,
-              restaurants,
-              aeroports,
-              hopitaux,
-              parcs,
-              plages
-            )
-          `).order('created_at', {
-          ascending: false
-        });
-        if (error) {
-          console.error('Erreur lors de la récupération des propriétés:', error);
+        const searchQuery = searchParams.get('q');
+        
+        if (searchQuery && searchQuery.trim().length > 0) {
+          // Utiliser la recherche intelligente
+          const searchResults = await performSearch(searchQuery.trim());
+          const transformedProperties = await transformSearchResults(searchResults);
+          setProperties(transformedProperties);
         } else {
-          console.log('Données brutes reçues de Supabase:', data);
-          console.log('Nombre de propriétés:', data?.length || 0);
-          // Transform data to match our interface
-          const transformedData = data?.map(property => {
-            // Handle localities - can be array, object, or null
-            let locality = null;
-            if (property.localities) {
-              if (Array.isArray(property.localities) && property.localities.length > 0) {
-                locality = property.localities[0];
-              } else if (typeof property.localities === 'object' && !Array.isArray(property.localities) && 'name' in property.localities) {
-                locality = property.localities;
+          // Charger toutes les propriétés normalement
+          const {
+            data,
+            error
+          } = await supabase.from('properties').select(`
+              id,
+              title,
+              status,
+              latitude,
+              longitude,
+              surface,
+              price,
+              image_url,
+              typology,
+              localities(name),
+              property_details (
+                bedrooms,
+                bathrooms,
+                rooms,
+                floors,
+                living_area,
+                condition,
+                has_city_view,
+                vue_mer,
+                vue_montagne,
+                vue_ville,
+                vue_jardin,
+                vue_cour,
+                vue_degagee
+              ),
+              property_amenities_structured (
+                piscine,
+                garage,
+                jardin,
+                terrasse,
+                balcon,
+                cave,
+                grenier,
+                buanderie
+              ),
+              property_security_structured (
+                gardien,
+                ascenseur,
+                acces_handicape,
+                video_surveillance,
+                digicode,
+                interphone,
+                alarme,
+                portail_electrique
+              ),
+              property_nearby_structured (
+                ecoles,
+                pharmacies,
+                mosquees,
+                transports_publics,
+                banques,
+                universites,
+                commerces,
+                restaurants,
+                aeroports,
+                hopitaux,
+                parcs,
+                plages
+              )
+            `).order('created_at', {
+            ascending: false
+          });
+          if (error) {
+            console.error('Erreur lors de la récupération des propriétés:', error);
+          } else {
+            // Transform data to match our interface
+            const transformedData = data?.map(property => {
+              // Handle localities - can be array, object, or null
+              let locality = null;
+              if (property.localities) {
+                if (Array.isArray(property.localities) && property.localities.length > 0) {
+                  locality = property.localities[0];
+                } else if (typeof property.localities === 'object' && !Array.isArray(property.localities) && 'name' in property.localities) {
+                  locality = property.localities;
+                }
               }
-            }
-            return {
-              ...property,
-              localities: locality
-            };
-          }) || [];
-          console.log('Propriétés transformées:', transformedData);
-          console.log('Nombre de propriétés transformées:', transformedData.length);
-          setProperties(transformedData);
+              return {
+                ...property,
+                localities: locality
+              };
+            }) || [];
+            setProperties(transformedData);
+          }
         }
       } catch (error) {
         console.error('Erreur:', error);
@@ -215,7 +324,7 @@ const NosBiens = () => {
       }
     };
     fetchProperties();
-  }, []);
+  }, [searchParams, performSearch]);
 
   // Appliquer les filtres depuis l'URL au chargement
   useEffect(() => {
