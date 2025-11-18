@@ -259,6 +259,51 @@ export type Database = {
         }
         Relationships: []
       }
+      Mesures_en_fonction_de_I: {
+        Row: {
+          "Amplitude en mT": number | null
+          created_at: string
+          id: number
+          Intensité: number | null
+        }
+        Insert: {
+          "Amplitude en mT"?: number | null
+          created_at?: string
+          id?: number
+          Intensité?: number | null
+        }
+        Update: {
+          "Amplitude en mT"?: number | null
+          created_at?: string
+          id?: number
+          Intensité?: number | null
+        }
+        Relationships: []
+      }
+      Mesures_en_fontion_de_z: {
+        Row: {
+          Amplitude_en_mT: number | null
+          created_at: string
+          id: number
+          "x(lecture_sur_le_support)": number | null
+          z: number | null
+        }
+        Insert: {
+          Amplitude_en_mT?: number | null
+          created_at?: string
+          id?: number
+          "x(lecture_sur_le_support)"?: number | null
+          z?: number | null
+        }
+        Update: {
+          Amplitude_en_mT?: number | null
+          created_at?: string
+          id?: number
+          "x(lecture_sur_le_support)"?: number | null
+          z?: number | null
+        }
+        Relationships: []
+      }
       n8n_chat_histories: {
         Row: {
           id: number
