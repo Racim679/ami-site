@@ -55,70 +55,12 @@ const pageVariants = {
   },
 };
 
-const loaderVariants = {
-  initial: {
-    scaleX: 0,
-    originX: 0,
-  },
-  animate: {
-    scaleX: 1,
-    originX: 0,
-    transition: {
-      duration: 0.6,
-      ease: [0.25, 0.46, 0.45, 0.94] as const,
-    },
-  },
-  exit: {
-    scaleX: 0,
-    originX: 1,
-    transition: {
-      duration: 0.2,
-      ease: [0.25, 0.46, 0.45, 0.94] as const,
-    },
-  },
-};
-
 const AppContent = () => {
   const location = useLocation();
 
   return (
     <>
-      {/* Barre de progression animée en haut */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={`loader-${location.pathname}`}
-          className="fixed top-0 left-0 right-0 h-1 z-[60] pointer-events-none overflow-hidden"
-        >
-          <motion.div
-            variants={loaderVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            className="h-full bg-gradient-to-r from-primary via-secondary to-accent relative"
-            style={{
-              boxShadow: "0 0 10px rgba(79, 195, 179, 0.6), 0 0 20px rgba(79, 195, 179, 0.4)",
-            }}
-          >
-            {/* Effet shimmer sur la barre de progression */}
-            <motion.div
-              className="absolute inset-0"
-              style={{
-                background: "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent)",
-                width: "30%",
-              }}
-              initial={{ x: "-100%" }}
-              animate={{ x: "400%" }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-            />
-          </motion.div>
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Overlay de transition subtil - Retiré pour éviter le flou */}
+      {/* Barre de progression retirée */}
 
       {/* Routes avec animation */}
       <AnimatePresence mode="wait" initial={false}>
