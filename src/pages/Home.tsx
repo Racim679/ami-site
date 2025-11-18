@@ -90,15 +90,7 @@ const Home: React.FC = () => {
           delay: 0.3
         }}>
             <div className="w-full sm:w-auto max-w-xs sm:max-w-none">
-              <AuditButton 
-                text="Nos biens" 
-                showArrow={true} 
-                onClick={() => navigate('/nos-biens')}
-                width="100%"
-                height={50}
-                fontSize={14}
-                className="w-full sm:w-auto sm:!w-[380px]"
-              />
+              <AuditButton text="Nos biens" showArrow={true} onClick={() => navigate('/nos-biens')} width="100%" height={50} fontSize={14} className="w-full sm:w-auto sm:!w-[380px]" />
             </div>
           </motion.div>
         </div>
@@ -132,7 +124,7 @@ const Home: React.FC = () => {
           duration: 0.6
         }}>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 sm:mb-4 leading-tight">Pourquoi choisir AMI Immobilier ?</h2>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed md:text-lg">
               Une expertise reconnue et un accompagnement personnalisé pour tous vos projets immobiliers.
             </p>
           </motion.div>
@@ -177,22 +169,19 @@ const Home: React.FC = () => {
           </motion.div>
 
           {/* CTA Contact */}
-          <motion.div 
-            className="text-center mt-6 md:mt-8"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            <AuditButton 
-              text="Contactez-nous" 
-              showArrow={true} 
-              onClick={() => navigate('/contact')}
-              width="auto"
-              height={50}
-              fontSize={14}
-              className="mx-auto"
-            />
+          <motion.div className="text-center mt-6 md:mt-8" initial={{
+          opacity: 0,
+          y: 20
+        }} whileInView={{
+          opacity: 1,
+          y: 0
+        }} viewport={{
+          once: true
+        }} transition={{
+          duration: 0.6,
+          delay: 0.4
+        }}>
+            <AuditButton text="Contactez-nous" showArrow={true} onClick={() => navigate('/contact')} width="auto" height={50} fontSize={14} className="mx-auto" />
           </motion.div>
         </div>
       </AnimatedSection>
