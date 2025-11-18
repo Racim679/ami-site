@@ -9,6 +9,7 @@ import { Section, SectionHeader, SectionTitle, SectionSubtitle } from "@/compone
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { usePropertyTypeStorage } from "@/hooks/usePropertyTypeStorage";
+import { FilterState } from "@/components/PropertyFilters";
 
 interface Property {
   id: string;
@@ -32,7 +33,11 @@ interface Property {
 
 type FilterType = "Tous" | "Maisons" | "Villas" | "Appartements";
 
-const FeaturedPropertiesCarousel = () => {
+interface FeaturedPropertiesCarouselProps {
+  externalFilters?: FilterState;
+}
+
+const FeaturedPropertiesCarousel = ({ externalFilters }: FeaturedPropertiesCarouselProps = {}) => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedFilter, setSelectedFilter] = useState<FilterType>("Tous");
@@ -112,20 +117,75 @@ const FeaturedPropertiesCarousel = () => {
     }
   };
 
-  // Filter properties by selected filter
+  // Filter properties by selected filter and external filters
   const filteredProperties = properties.filter((property) => {
-    if (selectedFilter === "Tous") return true;
-    if (selectedFilter === "Maisons")
-      return property.typology?.toLowerCase().includes("maison");
-    if (selectedFilter === "Villas")
-      return property.typology?.toLowerCase().includes("villa");
-    if (selectedFilter === "Appartements") {
-      return (
+    // Apply category filter (Tous, Villas, Appartements, Maisons)
+    let matchesCategory = true;
+    if (selectedFilter === "Tous") {
+      matchesCategory = true;
+    } else if (selectedFilter === "Maisons") {
+      matchesCategory = property.typology?.toLowerCase().includes("maison") || false;
+    } else if (selectedFilter === "Villas") {
+      matchesCategory = property.typology?.toLowerCase().includes("villa") || false;
+    } else if (selectedFilter === "Appartements") {
+      matchesCategory = (
         property.typology?.toLowerCase().includes("appartement") ||
         property.typology?.toLowerCase().includes("f") ||
         property.typology?.toLowerCase().startsWith("f")
-      );
+      ) || false;
     }
+
+    if (!matchesCategory) return false;
+
+    // Apply external filters if provided
+    if (externalFilters) {
+      // Type d'offre filter
+      if (externalFilters.typeOffre && property.status.toLowerCase() !== externalFilters.typeOffre.toLowerCase()) {
+        return false;
+      }
+
+      // Type filter
+      if (externalFilters.type && property.typology?.toLowerCase() !== externalFilters.type.toLowerCase()) {
+        return false;
+      }
+
+      // Localité filter
+      if (externalFilters.localite) {
+        const locationText = getLocationText(property).toLowerCase();
+        if (!locationText.includes(externalFilters.localite.toLowerCase())) {
+          return false;
+        }
+      }
+
+      // Price filters
+      if (externalFilters.minPrice && property.price) {
+        const minPrice = parseFloat(externalFilters.minPrice) * 10000; // Convert millions to actual price
+        if (property.price < minPrice) return false;
+      }
+      if (externalFilters.maxPrice && property.price) {
+        const maxPrice = parseFloat(externalFilters.maxPrice) * 10000; // Convert millions to actual price
+        if (property.price > maxPrice) return false;
+      }
+
+      // Surface filters
+      if (externalFilters.minSurface && property.surface) {
+        if (property.surface < parseFloat(externalFilters.minSurface)) return false;
+      }
+      if (externalFilters.maxSurface && property.surface) {
+        if (property.surface > parseFloat(externalFilters.maxSurface)) return false;
+      }
+
+      // Chambres filter
+      if (externalFilters.chambres && property.property_details && property.property_details.length > 0) {
+        if (property.property_details[0].bedrooms !== parseInt(externalFilters.chambres)) return false;
+      }
+
+      // Salles de bain filter
+      if (externalFilters.sallesBain && property.property_details && property.property_details.length > 0) {
+        if (property.property_details[0].bathrooms !== parseInt(externalFilters.sallesBain)) return false;
+      }
+    }
+
     return true;
   });
 
@@ -136,7 +196,7 @@ const FeaturedPropertiesCarousel = () => {
     if (emblaApi) {
       emblaApi.scrollTo(0);
     }
-  }, [selectedFilter, emblaApi]);
+  }, [selectedFilter, externalFilters, emblaApi]);
 
   if (loading) {
     return (
@@ -165,7 +225,7 @@ const FeaturedPropertiesCarousel = () => {
 
   return (
     <Section className="py-16 bg-gradient-to-b from-background to-muted/20">
-      <SectionHeader>
+      <SectionHeader className="mb-6 md:mb-8">
         <SectionTitle className="text-3xl md:text-4xl lg:text-5xl">
           Nos Biens en Vedette
         </SectionTitle>
@@ -175,15 +235,15 @@ const FeaturedPropertiesCarousel = () => {
       </SectionHeader>
 
       {/* Filter Buttons */}
-      <div className="flex justify-center gap-4 mb-8 md:mb-12 flex-wrap">
+      <div className="flex justify-center gap-2 md:gap-4 mb-8 md:mb-12 flex-wrap">
         {filters.map((filter) => (
           <button
             key={filter}
             onClick={() => setSelectedFilter(filter)}
             className={
               selectedFilter === filter
-                ? "px-6 py-2 rounded-lg bg-[#D4A574] text-black font-semibold font-heading transition-all duration-300"
-                : "px-6 py-2 rounded-lg bg-transparent text-foreground font-semibold font-heading hover:bg-muted/50 transition-all duration-300"
+                ? "px-2 py-1 md:px-6 md:py-2 rounded-lg bg-primary text-primary-foreground text-xs md:text-base font-semibold font-heading transition-all duration-300"
+                : "px-2 py-1 md:px-6 md:py-2 rounded-lg bg-transparent text-foreground text-xs md:text-base font-semibold font-heading hover:bg-muted/50 transition-all duration-300"
             }
           >
             {filter}

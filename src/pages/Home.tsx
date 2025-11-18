@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Home as HomeIcon, Shield, Users, Award } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -7,8 +7,26 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { AnimatedSection, AnimatedCard, AnimatedButton } from "@/components/AnimatedComponents";
 import AuditButton from "@/components/ui/audit-button";
 import FeaturedPropertiesCarousel from "@/components/FeaturedPropertiesCarousel";
+import PropertyFilters, { FilterState } from "@/components/PropertyFilters";
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const [filters, setFilters] = useState<FilterState>({
+    typeOffre: "",
+    type: "",
+    localite: "",
+    minPrice: "",
+    maxPrice: "",
+    minSurface: "",
+    maxSurface: "",
+    chambres: "",
+    sallesBain: "",
+    etages: "",
+    commodites: [],
+    securite: [],
+    documents: [],
+    proximite: [],
+    vue: ""
+  });
   const features = [{
     icon: HomeIcon,
     title: "Projets Immobiliers",
@@ -85,11 +103,18 @@ const Home: React.FC = () => {
         </div>
       </AnimatedSection>
 
+      {/* Filtres - Desktop seulement */}
+      <AnimatedSection className="hidden lg:block py-4 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <PropertyFilters onSearch={setFilters} />
+        </div>
+      </AnimatedSection>
+
       {/* Featured Properties Carousel */}
-      <FeaturedPropertiesCarousel />
+      <FeaturedPropertiesCarousel externalFilters={filters} />
 
       {/* Features Section */}
-      <AnimatedSection className="py-20 bg-background">
+      <AnimatedSection className="pb-20 pt-0 bg-background">
         <div className="container mx-auto px-4">
           <motion.div className="text-center mb-12 sm:mb-16 px-4" initial={{
           opacity: 0,

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -36,10 +37,34 @@ const initialFilters: FilterState = {
 };
 
 export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('principaux');
   const [filters, setFilters] = useState<FilterState>(initialFilters);
   const { localities, loading: localitiesLoading } = useLocalities();
+
+  // Synchroniser les filtres avec l'URL au chargement et quand l'URL change
+  useEffect(() => {
+    const urlFilters: FilterState = {
+      typeOffre: searchParams.get("typeOffre") || "",
+      type: searchParams.get("type") || "",
+      localite: searchParams.get("localite") || "",
+      minPrice: searchParams.get("minPrice") || "",
+      maxPrice: searchParams.get("maxPrice") || "",
+      minSurface: searchParams.get("minSurface") || "",
+      maxSurface: searchParams.get("maxSurface") || "",
+      chambres: searchParams.get("chambres") || "",
+      sallesBain: searchParams.get("sallesBain") || "",
+      etages: searchParams.get("etages") || "",
+      commodites: searchParams.get("commodites")?.split(",").filter(Boolean) || [],
+      securite: searchParams.get("securite")?.split(",").filter(Boolean) || [],
+      documents: searchParams.get("documents")?.split(",").filter(Boolean) || [],
+      proximite: searchParams.get("proximite")?.split(",").filter(Boolean) || [],
+      vue: searchParams.get("vue") || ""
+    };
+    setFilters(urlFilters);
+  }, [searchParams]);
 
   const handleFilterChange = (key: keyof FilterState, value: string | string[]) => {
     const newFilters = { ...filters, [key]: value };
@@ -59,11 +84,40 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
 
   const resetFilters = () => {
     setFilters(initialFilters);
+    // Naviguer vers /nos-biens sans paramètres
+    navigate('/nos-biens');
+    // Appeler le callback si fourni (pour compatibilité)
     onFiltersChange?.(initialFilters);
+    setIsOpen(false);
   };
 
   const applyFilters = () => {
+    // Créer les paramètres d'URL (comme PropertyFilters)
+    const urlParams = new URLSearchParams();
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) {
+        // Si c'est un tableau, le joindre avec des virgules
+        if (Array.isArray(value)) {
+          if (value.length > 0) {
+            urlParams.set(key, value.join(","));
+          }
+        } else {
+          // Pour les chaînes, vérifier qu'elles ne sont pas vides
+          const stringValue = value as string;
+          if (stringValue.trim() !== "") {
+            urlParams.set(key, stringValue);
+          }
+        }
+      }
+    });
+
+    // Naviguer vers /nos-biens avec les filtres dans l'URL
+    navigate(`/nos-biens?${urlParams.toString()}`);
+    
+    // Appeler le callback si fourni (pour compatibilité)
     onFiltersChange?.(filters);
+    
+    // Fermer le modal
     setIsOpen(false);
   };
 
