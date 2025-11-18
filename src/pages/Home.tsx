@@ -8,26 +8,8 @@ import { AnimatedSection, AnimatedCard, AnimatedButton } from "@/components/Anim
 import AuditButton from "@/components/ui/audit-button";
 import FeaturedPropertiesCarousel from "@/components/FeaturedPropertiesCarousel";
 import CitiesCarousel from "@/components/CitiesCarousel";
-import PropertyFilters, { FilterState } from "@/components/PropertyFilters";
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const [filters, setFilters] = useState<FilterState>({
-    typeOffre: "",
-    type: "",
-    localite: "",
-    minPrice: "",
-    maxPrice: "",
-    minSurface: "",
-    maxSurface: "",
-    chambres: "",
-    sallesBain: "",
-    etages: "",
-    commodites: [],
-    securite: [],
-    documents: [],
-    proximite: [],
-    vue: ""
-  });
   const features = [{
     icon: HomeIcon,
     title: "Projets Immobiliers",
@@ -96,15 +78,8 @@ const Home: React.FC = () => {
         </div>
       </AnimatedSection>
 
-      {/* Filtres - Desktop seulement */}
-      <AnimatedSection className="hidden lg:block pt-2 pb-2 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <PropertyFilters onSearch={setFilters} />
-        </div>
-      </AnimatedSection>
-
       {/* Featured Properties Carousel */}
-      <FeaturedPropertiesCarousel externalFilters={filters} />
+      <FeaturedPropertiesCarousel />
 
       {/* Cities Carousel */}
       <CitiesCarousel />
