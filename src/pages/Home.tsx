@@ -104,7 +104,7 @@ const Home: React.FC = () => {
       </AnimatedSection>
 
       {/* Filtres - Desktop seulement */}
-      <AnimatedSection className="hidden lg:block py-4 bg-muted/30">
+      <AnimatedSection className="hidden lg:block pt-4 pb-3 bg-muted/30">
         <div className="container mx-auto px-4">
           <PropertyFilters onSearch={setFilters} />
         </div>

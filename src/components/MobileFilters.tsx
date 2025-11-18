@@ -130,7 +130,7 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
           className="relative"
         >
           <motion.div
-            className="absolute inset-0 bg-teal-400 rounded-lg blur-xl opacity-75"
+            className="absolute inset-0 bg-blue-400 rounded-lg blur-xl opacity-75"
             animate={{
               scale: [1, 1.2, 1],
               opacity: [0.5, 0.8, 0.5],
@@ -142,7 +142,7 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
             }}
           />
           <Button 
-            className="lg:hidden relative bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 font-medium shadow-lg transition-all duration-300 z-10"
+            className="lg:hidden relative bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 font-medium shadow-lg transition-all duration-300 z-10"
           >
             <SlidersHorizontal className="h-5 w-5" />
             <span>Filtres</span>
