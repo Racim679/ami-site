@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import ScrollToTop from "@/components/ScrollToTop";
 import { AnimatedSection, AnimatedCard, AnimatedButton } from "@/components/AnimatedComponents";
 import AuditButton from "@/components/ui/audit-button";
+import FeaturedPropertiesCarousel from "@/components/FeaturedPropertiesCarousel";
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const features = [{
@@ -83,6 +84,9 @@ const Home: React.FC = () => {
           </motion.div>
         </div>
       </AnimatedSection>
+
+      {/* Featured Properties Carousel */}
+      <FeaturedPropertiesCarousel />
 
       {/* Features Section */}
       <AnimatedSection className="py-20 bg-background">

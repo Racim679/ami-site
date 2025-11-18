@@ -73,10 +73,15 @@ const FeaturedPropertiesCarousel = () => {
           .order("created_at", { ascending: false })
           .limit(10);
 
-        if (error) throw error;
+        if (error) {
+          console.error("Error fetching featured properties:", error);
+          throw error;
+        }
+        console.log("FeaturedPropertiesCarousel - Fetched properties:", data?.length || 0);
         setProperties(data || []);
       } catch (error) {
         console.error("Error fetching featured properties:", error);
+        setProperties([]);
       } finally {
         setLoading(false);
       }
@@ -120,8 +125,11 @@ const FeaturedPropertiesCarousel = () => {
   }
 
   if (properties.length === 0) {
+    console.log("FeaturedPropertiesCarousel - No properties to display");
     return null;
   }
+
+  console.log("FeaturedPropertiesCarousel - Rendering with", properties.length, "properties");
 
   return (
     <Section className="py-16 bg-gradient-to-b from-background to-muted/20">
