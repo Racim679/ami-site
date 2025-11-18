@@ -75,7 +75,7 @@ const SectionSubtitle = React.forwardRef<
   <p
     ref={ref}
     className={cn(
-      "text-xl md:text-2xl lg:text-3xl text-muted-foreground font-body leading-relaxed max-w-4xl mx-auto",
+      "text-base sm:text-lg md:text-xl text-muted-foreground font-body leading-relaxed max-w-4xl mx-auto",
       className
     )}
     {...props}

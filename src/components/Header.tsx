@@ -127,14 +127,19 @@ const Header = () => {
           <div className="flex flex-col h-full">
             {/* Header du menu mobile */}
             <div className="flex items-center justify-between px-5 pt-5 pb-3">
-              {/* Logo */}
+              {/* Espace vide à gauche pour équilibrer */}
+              <div className="w-10"></div>
+              
+              {/* Logo centré */}
               <Link 
                 to="/" 
-                className="flex items-center" 
+                className="flex items-center justify-center flex-1" 
                 onClick={toggleMobileMenu}
               >
-                <img src={logo} alt="AMI Immobilier" className="h-14 w-auto" />
+                <img src={logo} alt="AMI Immobilier" className="h-[168px] w-auto" />
               </Link>
+              
+              {/* Bouton fermer */}
               <button
                 onClick={toggleMobileMenu}
                 className="text-primary hover:text-primary/80 transition-colors duration-200 p-1.5"
@@ -142,13 +147,6 @@ const Header = () => {
               >
                 <X className="w-7 h-7" />
               </button>
-            </div>
-
-            {/* Titre AMI Immo */}
-            <div className="px-5 pb-4">
-              <h2 className="text-primary text-2xl font-bold font-heading tracking-tight">
-                AMI Immo
-              </h2>
             </div>
 
             {/* Navigation mobile */}

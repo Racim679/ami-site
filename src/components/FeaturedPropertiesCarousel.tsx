@@ -331,7 +331,7 @@ const FeaturedPropertiesCarousel = ({ externalFilters }: FeaturedPropertiesCarou
                       {/* Property Info Overlay - Bottom */}
                       <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-white z-10">
                         {/* Title */}
-                        <h3 className="font-bold text-lg md:text-2xl lg:text-3xl mb-2 line-clamp-2 drop-shadow-lg">
+                        <h3 className="font-bold text-base md:text-lg lg:text-3xl mb-2 line-clamp-2 drop-shadow-lg">
                           {property.title}
                         </h3>
                         
