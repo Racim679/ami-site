@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { formatPrice } from "@/lib/utils";
 import { MapPin, Bed, Bath, Square, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Section, SectionHeader, SectionTitle, SectionSubtitle } from "@/components/ui/section";
 import useEmblaCarousel from "embla-carousel-react";
@@ -174,9 +174,13 @@ const FeaturedPropertiesCarousel = () => {
                 key={property.id} 
                 className="flex-[0_0_85%] md:flex-[0_0_40%] lg:flex-[0_0_33.333%] min-w-0 pl-4 md:pl-6"
               >
-                <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 bg-card border border-border h-full flex flex-col">
-                  <div className="relative overflow-hidden">
-                    <div className="aspect-[4/3] bg-muted">
+                <Link
+                  to={`/bien/${property.id}`}
+                  onClick={() => handlePropertyClick(property)}
+                  className="block"
+                >
+                  <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 bg-card border border-border cursor-pointer h-[45vh] max-h-[400px] md:h-[50vh] md:max-h-[500px] lg:h-[55vh] lg:max-h-[600px]">
+                    <div className="relative w-full h-full">
                       {property.image_url ? (
                         <img
                           src={property.image_url}
@@ -189,87 +193,70 @@ const FeaturedPropertiesCarousel = () => {
                           <span>Aucune image</span>
                         </div>
                       )}
-                    </div>
-                    
-                    {/* Status Badge */}
-                    <div className="absolute top-4 left-4">
-                      <span className="inline-block px-3 py-1 bg-primary/90 text-primary-foreground rounded-full text-xs font-semibold backdrop-blur-sm">
-                        {property.status}
-                      </span>
-                    </div>
+                      
+                      {/* Dark Gradient Overlay at Bottom */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+                      
+                      {/* Status Badge - Top Left */}
+                      <div className="absolute top-3 left-3 z-10">
+                        <span className="inline-block px-2 py-1 bg-primary/90 text-primary-foreground rounded-full text-xs font-semibold backdrop-blur-sm">
+                          {property.status}
+                        </span>
+                      </div>
 
-                    {/* Price Badge */}
-                    {property.price && property.price > 0 && (
-                      <div className="absolute top-4 right-4">
-                        <div className="bg-black/80 backdrop-blur-md text-white px-4 py-2 rounded-lg border border-white/20">
-                          <span className="text-lg font-bold font-heading">
-                            {formatPrice(property.price)}
-                          </span>
+                      {/* Price Badge - Top Right */}
+                      {property.price && property.price > 0 && (
+                        <div className="absolute top-3 right-3 z-10">
+                          <div className="bg-black/80 backdrop-blur-md text-white px-3 py-1.5 rounded-lg border border-white/20">
+                            <span className="text-base md:text-lg font-bold font-heading">
+                              {formatPrice(property.price)}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Property Info Overlay - Bottom */}
+                      <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-white z-10">
+                        {/* Title */}
+                        <h3 className="font-bold text-lg md:text-2xl lg:text-3xl mb-2 line-clamp-2 drop-shadow-lg">
+                          {property.title}
+                        </h3>
+                        
+                        {/* Location */}
+                        <div className="flex items-center text-sm md:text-base mb-3 text-white/90">
+                          <MapPin className="w-4 h-4 md:w-5 md:h-5 mr-1.5 flex-shrink-0" />
+                          <span className="line-clamp-1">{getLocationText(property)}</span>
+                        </div>
+
+                        {/* Property Details */}
+                        <div className="flex items-center gap-3 md:gap-4 text-sm md:text-base">
+                          {property.property_details && property.property_details.length > 0 && (
+                            <>
+                              {property.property_details[0].bedrooms !== null && (
+                                <div className="flex items-center gap-1.5 text-white/90">
+                                  <Bed className="w-4 h-4 md:w-5 md:h-5" />
+                                  <span className="font-medium">{property.property_details[0].bedrooms}</span>
+                                </div>
+                              )}
+                              {property.property_details[0].bathrooms !== null && (
+                                <div className="flex items-center gap-1.5 text-white/90">
+                                  <Bath className="w-4 h-4 md:w-5 md:h-5" />
+                                  <span className="font-medium">{property.property_details[0].bathrooms}</span>
+                                </div>
+                              )}
+                            </>
+                          )}
+                          {property.surface && (
+                            <div className="flex items-center gap-1.5 text-white/90">
+                              <Square className="w-4 h-4 md:w-5 md:h-5" />
+                              <span className="font-medium">{property.surface} m²</span>
+                            </div>
+                          )}
                         </div>
                       </div>
-                    )}
-
-                    {/* Gradient Overlay on Hover */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                  </div>
-
-                  <CardContent className="p-5 flex flex-col flex-grow">
-                    <h3 className="font-bold text-lg md:text-xl mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                      {property.title}
-                    </h3>
-                    
-                    {/* Location */}
-                    <div className="flex items-center text-sm text-muted-foreground mb-3">
-                      <MapPin className="w-4 h-4 mr-1 flex-shrink-0 text-primary" />
-                      <span className="line-clamp-1">{getLocationText(property)}</span>
                     </div>
-
-                    {/* Property Details */}
-                    <div className="flex items-center gap-4 mb-4 text-sm">
-                      {property.property_details && property.property_details.length > 0 && (
-                        <>
-                          {property.property_details[0].bedrooms !== null && (
-                            <div className="flex items-center gap-1 text-muted-foreground">
-                              <Bed className="w-4 h-4" />
-                              <span>{property.property_details[0].bedrooms}</span>
-                            </div>
-                          )}
-                          {property.property_details[0].bathrooms !== null && (
-                            <div className="flex items-center gap-1 text-muted-foreground">
-                              <Bath className="w-4 h-4" />
-                              <span>{property.property_details[0].bathrooms}</span>
-                            </div>
-                          )}
-                        </>
-                      )}
-                      {property.surface && (
-                        <div className="flex items-center gap-1 text-muted-foreground">
-                          <Square className="w-4 h-4" />
-                          <span>{property.surface} m²</span>
-                        </div>
-                      )}
-                      {property.typology && (
-                        <span className="ml-auto px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-semibold">
-                          {property.typology}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* CTA Button */}
-                    <div className="mt-auto pt-4">
-                      <Button 
-                        variant="outline" 
-                        className="w-full group/btn"
-                        asChild
-                      >
-                        <Link to={`/bien/${property.id}`} onClick={() => handlePropertyClick(property)}>
-                          Voir les détails
-                          <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover/btn:translate-x-1" />
-                        </Link>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                  </Card>
+                </Link>
               </div>
             ))}
           </div>
