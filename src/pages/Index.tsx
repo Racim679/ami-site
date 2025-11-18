@@ -1,5 +1,6 @@
 import ModernHeader from "@/components/ModernHeader";
 import HeroCarousel from "@/components/HeroCarousel";
+import FeaturedPropertiesCarousel from "@/components/FeaturedPropertiesCarousel";
 import BiensSection from "@/components/BiensSection";
 import ExclusivePropertiesSection from "@/components/ExclusivePropertiesSection";
 import ApartmentExplorer from "@/components/ApartmentExplorer";
@@ -16,6 +17,9 @@ const Index = () => {
       <main>
         {/* Hero Section - Video Carousel */}
         <HeroCarousel />
+        
+        {/* Featured Properties Carousel */}
+        <FeaturedPropertiesCarousel />
         
         {/* Nos Biens Section */}
         <BiensSection />

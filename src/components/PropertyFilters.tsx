@@ -87,7 +87,18 @@ const PropertyFilters = ({ onSearch, className = "" }: PropertyFiltersProps) => 
     const searchParams = new URLSearchParams();
     Object.entries(filters).forEach(([key, value]) => {
       if (value) {
-        searchParams.set(key, value);
+        // Si c'est un tableau, le joindre avec des virgules
+        if (Array.isArray(value)) {
+          if (value.length > 0) {
+            searchParams.set(key, value.join(","));
+          }
+        } else {
+          // Pour les chaînes, vérifier qu'elles ne sont pas vides
+          const stringValue = value as string;
+          if (stringValue.trim() !== "") {
+            searchParams.set(key, stringValue);
+          }
+        }
       }
     });
 
