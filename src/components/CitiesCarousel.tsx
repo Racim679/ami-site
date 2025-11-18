@@ -135,7 +135,7 @@ const CitiesCarousel = () => {
   }
   return <Section className="pt-2 md:pt-3 pb-4 md:pb-6 lg:pb-8 bg-background">
       <SectionHeader className="mb-3 md:mb-4">
-        <SectionTitle className="text-3xl md:text-4xl lg:text-5xl">
+        <SectionTitle className="text-3xl md:text-4xl font-serif lg:text-5xl">
           Trouvez des propriétés dans ces villes
         </SectionTitle>
         <SectionSubtitle className="text-base md:text-lg">
