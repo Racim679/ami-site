@@ -56,6 +56,7 @@ const CRM = () => {
   const [newPropertyId, setNewPropertyId] = useState<string | null>(null);
   const [tempPropertyId, setTempPropertyId] = useState<string>(() => crypto.randomUUID());
   const [activeTab, setActiveTab] = useState<string>("list");
+  const [galleryPhotos, setGalleryPhotos] = useState<Array<{id?: string, url: string}>>([]);
   const [formData, setFormData] = useState<PropertyFormData>({
     title: "",
     description: "",
@@ -298,6 +299,8 @@ const CRM = () => {
       
       // Set the new property for details editing
       setNewPropertyId(data.id);
+      // Charger les photos existantes
+      await loadGalleryPhotos(data.id);
       loadProperties();
       
       // Générer un nouvel ID temporaire pour la prochaine création
@@ -317,7 +320,7 @@ const CRM = () => {
     }
   };
 
-  const handleEdit = (property: Property) => {
+  const handleEdit = async (property: Property) => {
     setEditingProperty(property);
     setNewPropertyId(null);
     setFormData({
@@ -333,6 +336,8 @@ const CRM = () => {
       longitude: property.longitude?.toString() || "",
       phone_whatsapp: property.phone_whatsapp || "+213",
     });
+    // Charger les photos de la galerie
+    await loadGalleryPhotos(property.id);
     setActiveTab("add");
   };
 
@@ -416,6 +421,7 @@ const CRM = () => {
   const cancelEdit = () => {
     setEditingProperty(null);
     setNewPropertyId(null);
+    setGalleryPhotos([]); // Réinitialiser les photos
     setTempPropertyId(crypto.randomUUID()); // Générer un nouvel ID temporaire
     setFormData({
       title: "",
@@ -446,6 +452,89 @@ const CRM = () => {
     if (!localityId) return "Non spécifié";
     const locality = localities.find(l => l.id === localityId);
     return locality?.name || "Inconnu";
+  };
+
+  // Fonction pour charger les photos de la galerie
+  const loadGalleryPhotos = async (propertyId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('property_photos')
+        .select('id, text')
+        .eq('property_id', propertyId)
+        .order('created_at', { ascending: true });
+      
+      if (error) throw error;
+      
+      setGalleryPhotos(data?.map(photo => ({ id: photo.id, url: photo.text })) || []);
+    } catch (error) {
+      console.error('Erreur lors du chargement des photos:', error);
+    }
+  };
+
+  // Fonction pour ajouter une photo à la galerie
+  const addGalleryPhoto = async (url: string) => {
+    const propertyId = editingProperty?.id || newPropertyId;
+    if (!propertyId) {
+      toast({
+        title: "Attention",
+        description: "Veuillez d'abord créer le bien avant d'ajouter des photos",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('property_photos')
+        .insert({
+          property_id: propertyId,
+          text: url
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setGalleryPhotos(prev => [...prev, { id: data.id, url: url }]);
+      
+      toast({
+        title: "Photo ajoutée",
+        description: "La photo a été ajoutée à la galerie",
+      });
+    } catch (error: any) {
+      console.error('Erreur lors de l\'ajout de la photo:', error);
+      toast({
+        title: "Erreur",
+        description: error.message || "Impossible d'ajouter la photo",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Fonction pour supprimer une photo
+  const removeGalleryPhoto = async (photoId: string) => {
+    try {
+      const { error } = await supabase
+        .from('property_photos')
+        .delete()
+        .eq('id', photoId);
+
+      if (error) throw error;
+
+      setGalleryPhotos(prev => prev.filter(photo => photo.id !== photoId));
+      
+      toast({
+        title: "Photo supprimée",
+        description: "La photo a été retirée de la galerie",
+      });
+    } catch (error: any) {
+      console.error('Erreur lors de la suppression:', error);
+      toast({
+        title: "Erreur",
+        description: error.message || "Impossible de supprimer la photo",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -695,6 +784,46 @@ const CRM = () => {
                           </div>
                         )}
                       </div>
+
+                      {/* Galerie de photos supplémentaires */}
+                      {(editingProperty || newPropertyId) && (
+                        <div className="space-y-2 md:col-span-2">
+                          <Label>Photos supplémentaires de la galerie</Label>
+                          <ImageUploadDropzone
+                            onImageUploaded={(url) => addGalleryPhoto(url)}
+                            propertyId={editingProperty?.id || newPropertyId || tempPropertyId}
+                            className="h-32"
+                            bucketType="gallery"
+                          />
+                          
+                          {galleryPhotos.length > 0 && (
+                            <div className="mt-4">
+                              <p className="text-sm text-muted-foreground mb-2">
+                                {galleryPhotos.length} photo{galleryPhotos.length > 1 ? 's' : ''} dans la galerie
+                              </p>
+                              <div className="grid grid-cols-4 gap-2">
+                                {galleryPhotos.map((photo) => (
+                                  <div key={photo.id || photo.url} className="relative group">
+                                    <img 
+                                      src={photo.url} 
+                                      alt="Photo galerie" 
+                                      className="h-20 w-full object-cover rounded-lg border"
+                                    />
+                                    <Button
+                                      variant="destructive"
+                                      size="sm"
+                                      className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0"
+                                      onClick={() => photo.id && removeGalleryPhoto(photo.id)}
+                                    >
+                                      <X className="h-3 w-3" />
+                                    </Button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
 
                       {/* Coordonnées GPS */}
                       <div className="space-y-2">

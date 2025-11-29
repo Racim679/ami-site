@@ -25,8 +25,9 @@ serve(async (req) => {
     const file = formData.get('file') as File
     const propertyId = formData.get('propertyId') as string
     const bucketType = formData.get('bucketType') as string
+    const tag = formData.get('tag') as string || 'secondary'
 
-    console.log('Form data parsed:', { fileName: file?.name, propertyId, bucketType })
+    console.log('Form data parsed:', { fileName: file?.name, propertyId, bucketType, tag })
 
     if (!file || !propertyId) {
       console.error('Missing file or propertyId')
@@ -39,9 +40,10 @@ serve(async (req) => {
     // Determine which bucket to use
     const bucketName = bucketType === 'main' ? 'photo_principale' : 'property-images'
     
-    // Create unique filename
+    // Create unique filename with folder structure based on tag
     const fileExt = file.name.split('.').pop()
-    const fileName = `${propertyId}/${crypto.randomUUID()}.${fileExt}`
+    const folder = tag === 'main' ? 'main' : 'gallery'
+    const fileName = `${propertyId}/${folder}/${crypto.randomUUID()}.${fileExt}`
 
     console.log('Uploading file to bucket:', bucketName, 'fileName:', fileName)
 
@@ -77,7 +79,10 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         url: urlData.publicUrl,
-        path: fileName 
+        path: fileName,
+        storage_path: fileName,
+        bucket_name: bucketName,
+        tag: tag
       }),
       { 
         status: 200, 

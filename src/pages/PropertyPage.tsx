@@ -101,55 +101,133 @@ const PropertyPage: React.FC = () => {
           throw propertyError;
         }
 
-        // Mock data for now - will be replaced when Supabase types are updated
-        const photos = [
-          { photo_url: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800', caption: 'Vue principale' },
-          { photo_url: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400', caption: 'Salon' },
-          { photo_url: 'https://images.unsplash.com/photo-1586105251261-72a756497a11?w=400', caption: 'Cuisine' },
-          { photo_url: 'https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=400', caption: 'Chambre' },
-          { photo_url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400', caption: 'Salle de bain' }
-        ];
+        // Charger les photos depuis la base de données
+        const { data: photosData } = await supabase
+          .from('property_photos')
+          .select('text')
+          .eq('property_id', propertyId)
+          .order('created_at', { ascending: true });
+
+        const photos = photosData?.map(p => ({ photo_url: p.text })) || [];
         
-        const videos = [
-          { video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', video_type: 'youtube' }
-        ];
+        // Charger les vidéos depuis la base de données
+        const { data: videosData } = await supabase
+          .from('property_videos')
+          .select('text')
+          .eq('property_id', propertyId)
+          .order('created_at', { ascending: true });
+
+        const videos = videosData?.map(v => ({ video_url: v.text, video_type: 'youtube' })) || [];
         
-        const details = {
-          bedrooms: 3,
-          bathrooms: 2,
-          rooms: 5,
-          floors: 2,
-          living_area: 150,
-          has_city_view: true,
-          condition: 'Excellent'
-        };
+        // Charger les détails de la propriété
+        const { data: detailsData } = await supabase
+          .from('property_details')
+          .select('*')
+          .eq('property_id', propertyId)
+          .maybeSingle();
+
+        const details = detailsData ? {
+          bedrooms: detailsData.bedrooms,
+          bathrooms: detailsData.bathrooms,
+          rooms: detailsData.rooms,
+          floors: detailsData.floors,
+          living_area: detailsData.living_area,
+          has_city_view: detailsData.has_city_view,
+          condition: detailsData.condition
+        } : null;
         
-        const amenities = [
-          { amenity: 'Climatisation' },
-          { amenity: 'Cuisine équipée' },
-          { amenity: 'Terrasse' }
-        ];
+        // Charger les commodités structurées
+        const { data: amenitiesData } = await supabase
+          .from('property_amenities_structured')
+          .select('*')
+          .eq('property_id', propertyId)
+          .maybeSingle();
+
+        const amenities = amenitiesData ? [
+          ...(amenitiesData.piscine ? [{ amenity: 'Piscine' }] : []),
+          ...(amenitiesData.garage ? [{ amenity: 'Garage' }] : []),
+          ...(amenitiesData.jardin ? [{ amenity: 'Jardin' }] : []),
+          ...(amenitiesData.terrasse ? [{ amenity: 'Terrasse' }] : []),
+          ...(amenitiesData.balcon ? [{ amenity: 'Balcon' }] : []),
+          ...(amenitiesData.cave ? [{ amenity: 'Cave' }] : []),
+          ...(amenitiesData.grenier ? [{ amenity: 'Grenier' }] : []),
+          ...(amenitiesData.buanderie ? [{ amenity: 'Buanderie' }] : [])
+        ] : [];
         
-        const securityFeatures = [
-          { security_feature: 'Interphone' },
-          { security_feature: 'Alarme' }
-        ];
+        // Charger les éléments de sécurité
+        const { data: securityData } = await supabase
+          .from('property_security_structured')
+          .select('*')
+          .eq('property_id', propertyId)
+          .maybeSingle();
+
+        const securityFeatures = securityData ? [
+          ...(securityData.gardien ? [{ security_feature: 'Gardiennage' }] : []),
+          ...(securityData.ascenseur ? [{ security_feature: 'Ascenseur' }] : []),
+          ...(securityData.acces_handicape ? [{ security_feature: 'Accès handicapé' }] : []),
+          ...(securityData.video_surveillance ? [{ security_feature: 'Vidéosurveillance' }] : []),
+          ...(securityData.digicode ? [{ security_feature: 'Digicode' }] : []),
+          ...(securityData.interphone ? [{ security_feature: 'Interphone' }] : []),
+          ...(securityData.alarme ? [{ security_feature: 'Alarme' }] : []),
+          ...(securityData.portail_electrique ? [{ security_feature: 'Portail électrique' }] : [])
+        ] : [];
         
-        const buildingFeatures = [
-          { building_feature: 'Ascenseur' },
-          { building_feature: 'Jardin' }
-        ];
+        // Charger les caractéristiques du bâtiment
+        const { data: buildingData } = await supabase
+          .from('property_building')
+          .select('text')
+          .eq('property_id', propertyId)
+          .order('created_at', { ascending: true });
+
+        const buildingFeatures = buildingData?.map(b => ({ building_feature: b.text })) || [];
         
-        const nearby = [
-          { nearby_feature: 'École' },
-          { nearby_feature: 'Commerces' },
-          { nearby_feature: 'Transport' }
-        ];
+        // Charger les éléments à proximité
+        const { data: nearbyData } = await supabase
+          .from('property_nearby_structured')
+          .select('*')
+          .eq('property_id', propertyId)
+          .maybeSingle();
+
+        const nearby = nearbyData ? [
+          ...(nearbyData.ecoles ? [{ nearby_feature: 'Écoles' }] : []),
+          ...(nearbyData.pharmacies ? [{ nearby_feature: 'Pharmacies' }] : []),
+          ...(nearbyData.mosquees ? [{ nearby_feature: 'Mosquées' }] : []),
+          ...(nearbyData.transports_publics ? [{ nearby_feature: 'Transports publics' }] : []),
+          ...(nearbyData.banques ? [{ nearby_feature: 'Banques' }] : []),
+          ...(nearbyData.universites ? [{ nearby_feature: 'Universités' }] : []),
+          ...(nearbyData.commerces ? [{ nearby_feature: 'Commerces' }] : []),
+          ...(nearbyData.restaurants ? [{ nearby_feature: 'Restaurants' }] : []),
+          ...(nearbyData.aeroports ? [{ nearby_feature: 'Aéroports' }] : []),
+          ...(nearbyData.hopitaux ? [{ nearby_feature: 'Hôpitaux' }] : []),
+          ...(nearbyData.parcs ? [{ nearby_feature: 'Parcs' }] : []),
+          ...(nearbyData.plages ? [{ nearby_feature: 'Plages' }] : [])
+        ] : [];
         
-        const documents = [
-          { document_name: 'Acte de propriété' },
-          { document_name: 'Certificat d\'urbanisme' }
-        ];
+        // Charger les documents
+        const { data: documentsData } = await supabase
+          .from('property_documents_structured')
+          .select('*')
+          .eq('property_id', propertyId)
+          .maybeSingle();
+
+        const documents = documentsData ? [
+          ...(documentsData.livret_foncier ? [{ document_name: 'Livret foncier' }] : []),
+          ...(documentsData.acte_propriete ? [{ document_name: 'Acte de propriété' }] : []),
+          ...(documentsData.titre_propriete ? [{ document_name: 'Titre de propriété' }] : []),
+          ...(documentsData.contrat_location ? [{ document_name: 'Contrat de location' }] : []),
+          ...(documentsData.certification_possession ? [{ document_name: 'Certification de possession' }] : []),
+          ...(documentsData.certificat_inscription_fonciere ? [{ document_name: 'Certificat d\'inscription foncière' }] : []),
+          ...(documentsData.fiche_fiscale ? [{ document_name: 'Fiche fiscale' }] : []),
+          ...(documentsData.documents_cadastraux ? [{ document_name: 'Documents cadastraux' }] : []),
+          ...(documentsData.plans_cadastraux ? [{ document_name: 'Plans cadastraux' }] : []),
+          ...(documentsData.certificat_urbanisme ? [{ document_name: 'Certificat d\'urbanisme' }] : []),
+          ...(documentsData.permis_construire ? [{ document_name: 'Permis de construire' }] : []),
+          ...(documentsData.certification_conformite ? [{ document_name: 'Certification de conformité' }] : []),
+          ...(documentsData.promesse_vente ? [{ document_name: 'Promesse de vente' }] : []),
+          ...(documentsData.mainlevee ? [{ document_name: 'Mainlevée' }] : []),
+          ...(documentsData.permis_exploitation ? [{ document_name: 'Permis d\'exploitation' }] : []),
+          ...(documentsData.certificat_non_negativite ? [{ document_name: 'Certificat de non-négativité' }] : [])
+        ] : [];
 
         console.log('All property data fetched:', { propertyData, photos, videos, details, amenities });
 

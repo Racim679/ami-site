@@ -362,18 +362,30 @@ export interface Database {
           id: string;
           property_id: string | null;
           text: string;
+          tag?: string;
+          display_order?: number;
+          storage_path?: string;
+          bucket_name?: string;
           created_at: string;
         };
         Insert: {
           id?: string;
           property_id?: string | null;
           text: string;
+          tag?: string;
+          display_order?: number;
+          storage_path?: string;
+          bucket_name?: string;
           created_at?: string;
         };
         Update: {
           id?: string;
           property_id?: string | null;
           text?: string;
+          tag?: string;
+          display_order?: number;
+          storage_path?: string;
+          bucket_name?: string;
           created_at?: string;
         };
       };
