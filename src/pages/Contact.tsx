@@ -184,7 +184,7 @@ const Contact = () => {
                 <Label htmlFor="acceptTerms" className="text-sm text-black leading-relaxed">
                   En soumettant ce formulaire, j'accepte les{" "}
                   <span className="font-semibold">Conditions Générales d'Utilisation</span> et j'accepte que les informations
-                  saisies soient utilisées par <span className="font-semibold">AYMEN PROMOTION</span> pour me recontacter dans le cadre de la relation qui
+                  saisies soient utilisées par <span className="font-semibold">AMI IMMOBILIER</span> pour me recontacter dans le cadre de la relation qui
                   découle de ma demande. <span className="text-red-500">*</span>
                 </Label>
               </div>
@@ -247,10 +247,10 @@ const Contact = () => {
               </div>
               <h3 className="text-lg font-semibold text-black mb-2">Email</h3>
               <a
-                href="mailto:contact@aymenpromotion.com"
+                href="mailto:ami.immobilier.dz@gmail.com"
                 className="text-primary hover:text-primary/80 font-medium transition-colors duration-200"
               >
-                contact@aymenpromotion.com
+                ami.immobilier.dz@gmail.com
               </a>
             </div>
 
@@ -261,7 +261,7 @@ const Contact = () => {
               </div>
               <h3 className="text-lg font-semibold text-black mb-2">Adresse</h3>
               <p className="text-primary font-medium">
-                îlot N 52 section 05, Bir Mourad Raîs – Alger 16000
+                15 Rue des Frères Boutouta, Alger Centre, Algérie
               </p>
             </div>
           </div>
@@ -271,14 +271,14 @@ const Contact = () => {
         <div className="max-w-6xl mx-auto mb-12">
           <div className="bg-white rounded-lg shadow-lg border overflow-hidden">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3196.8!2d3.0!3d36.7!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzYuNzAwMDAwLCAzLjAwMDAwMA!5e0!3m2!1sfr!2sdz!4v1000000000000!5m2!1sfr!2sdz"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3197.2289067688484!2d3.0563847!3d36.7676529!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128fad8e1f6b7e29%3A0x6d3b1e3f1f6b7e29!2s15%20Rue%20des%20Fr%C3%A8res%20Boutouta%2C%20Alger%20Centre%2C%20Alg%C3%A9rie!5e0!3m2!1sfr!2sdz!4v1000000000000!5m2!1sfr!2sdz"
               width="100%"
               height="400"
               style={{ border: 0 }}
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Localisation Aymen Promotion"
+              title="Localisation AMI Immobilier"
             ></iframe>
           </div>
         </div>

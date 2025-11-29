@@ -14,51 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      appointments: {
-        Row: {
-          agent: string
-          created_at: string | null
-          date: string
-          email: string
-          id: string
-          message: string | null
-          name: string
-          phone: string
-          property: string | null
-          status: string | null
-          time: string
-          updated_at: string | null
-        }
-        Insert: {
-          agent: string
-          created_at?: string | null
-          date: string
-          email: string
-          id?: string
-          message?: string | null
-          name: string
-          phone: string
-          property?: string | null
-          status?: string | null
-          time: string
-          updated_at?: string | null
-        }
-        Update: {
-          agent?: string
-          created_at?: string | null
-          date?: string
-          email?: string
-          id?: string
-          message?: string | null
-          name?: string
-          phone?: string
-          property?: string | null
-          status?: string | null
-          time?: string
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
       cities: {
         Row: {
           created_at: string | null
@@ -74,6 +29,24 @@ export type Database = {
           created_at?: string | null
           id?: number
           name?: string
+        }
+        Relationships: []
+      }
+      communes_alger: {
+        Row: {
+          arabe: string
+          francais: string
+          id: number
+        }
+        Insert: {
+          arabe: string
+          francais: string
+          id?: number
+        }
+        Update: {
+          arabe?: string
+          francais?: string
+          id?: number
         }
         Relationships: []
       }
@@ -167,6 +140,51 @@ export type Database = {
         }
         Relationships: []
       }
+      lead_information: {
+        Row: {
+          agent_note: string | null
+          created_at: string | null
+          id: number
+          nom_prenom: string
+          platform_lead: string | null
+          resume_lead: string | null
+          score_lead: number | null
+          statut: string | null
+          telephone: string | null
+          temps_de_vente_ideal: string | null
+          type_de_bien: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          agent_note?: string | null
+          created_at?: string | null
+          id?: number
+          nom_prenom: string
+          platform_lead?: string | null
+          resume_lead?: string | null
+          score_lead?: number | null
+          statut?: string | null
+          telephone?: string | null
+          temps_de_vente_ideal?: string | null
+          type_de_bien?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          agent_note?: string | null
+          created_at?: string | null
+          id?: number
+          nom_prenom?: string
+          platform_lead?: string | null
+          resume_lead?: string | null
+          score_lead?: number | null
+          statut?: string | null
+          telephone?: string | null
+          temps_de_vente_ideal?: string | null
+          type_de_bien?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       localities: {
         Row: {
           city_id: number | null
@@ -195,6 +213,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      medias: {
+        Row: {
+          ai_detection: boolean | null
+          comments: string[] | null
+          first_dm: string | null
+          id: number
+          id_du_bien: number | null
+          keywords: string[] | null
+          media_product_type: string
+        }
+        Insert: {
+          ai_detection?: boolean | null
+          comments?: string[] | null
+          first_dm?: string | null
+          id: number
+          id_du_bien?: number | null
+          keywords?: string[] | null
+          media_product_type: string
+        }
+        Update: {
+          ai_detection?: boolean | null
+          comments?: string[] | null
+          first_dm?: string | null
+          id?: number
+          id_du_bien?: number | null
+          keywords?: string[] | null
+          media_product_type?: string
+        }
+        Relationships: []
       }
       message_queue: {
         Row: {
@@ -259,70 +307,7 @@ export type Database = {
         }
         Relationships: []
       }
-      Mesures_en_fonction_de_I: {
-        Row: {
-          "Amplitude en mT": number | null
-          created_at: string
-          id: number
-          Intensité: number | null
-        }
-        Insert: {
-          "Amplitude en mT"?: number | null
-          created_at?: string
-          id?: number
-          Intensité?: number | null
-        }
-        Update: {
-          "Amplitude en mT"?: number | null
-          created_at?: string
-          id?: number
-          Intensité?: number | null
-        }
-        Relationships: []
-      }
-      Mesures_en_fontion_de_z: {
-        Row: {
-          Amplitude_en_mT: number | null
-          created_at: string
-          id: number
-          "x(lecture_sur_le_support)": number | null
-          z: number | null
-        }
-        Insert: {
-          Amplitude_en_mT?: number | null
-          created_at?: string
-          id?: number
-          "x(lecture_sur_le_support)"?: number | null
-          z?: number | null
-        }
-        Update: {
-          Amplitude_en_mT?: number | null
-          created_at?: string
-          id?: number
-          "x(lecture_sur_le_support)"?: number | null
-          z?: number | null
-        }
-        Relationships: []
-      }
       n8n_chat_histories: {
-        Row: {
-          id: number
-          message: Json
-          session_id: string
-        }
-        Insert: {
-          id?: number
-          message: Json
-          session_id: string
-        }
-        Update: {
-          id?: number
-          message?: Json
-          session_id?: string
-        }
-        Relationships: []
-      }
-      n8n_insta_histories_elwakil: {
         Row: {
           id: number
           message: Json
