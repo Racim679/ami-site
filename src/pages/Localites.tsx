@@ -13,27 +13,27 @@ import elKhroubImage from "@/assets/el-khroub.jpg";
 import belgaidImage from "@/assets/belgaid.jpg";
 import birElDjirImage from "@/assets/bir-el-djir.jpg";
 
-interface Locality {
+interface Commune {
   id: string;
   name: string;
-  description: string;
-  city_id: string;
+  description?: string;
+  wilaya_id: number;
 }
 
 interface City {
-  id: string;
+  id: number;
   name: string;
-  localities: Locality[];
+  communes: Commune[];
 }
 
 const Localites = () => {
-  const [citiesWithLocalities, setCitiesWithLocalities] = useState<City[]>([]);
+  const [citiesWithCommunes, setCitiesWithCommunes] = useState<City[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [propertyCounts, setPropertyCounts] = useState<Record<string, number>>({});
 
-  // Map locality names to their corresponding images
-  const localityImages: Record<string, string> = {
+  // Map commune names to their corresponding images
+  const communeImages: Record<string, string> = {
     "Bab El Oued": babElOuedImage,
     "El Madania": elMadaniaImage,
     "Hydra": hydraImage,
@@ -43,7 +43,7 @@ const Localites = () => {
   };
 
   useEffect(() => {
-    const fetchCitiesAndLocalities = async () => {
+    const fetchCitiesAndCommunes = async () => {
       try {
         // Fetch cities
         const { data: cities, error: citiesError } = await supabase
@@ -53,30 +53,30 @@ const Localites = () => {
 
         if (citiesError) throw citiesError;
 
-        // Fetch localities
-        const { data: localities, error: localitiesError } = await supabase
-          .from("localities")
+        // Fetch communes
+        const { data: communes, error: communesError } = await supabase
+          .from("communes")
           .select("*")
           .order("name");
 
-        if (localitiesError) throw localitiesError;
+        if (communesError) throw communesError;
 
-        // Group localities by city
-        const citiesWithLocalitiesData: City[] = cities.map((city) => ({
+        // Group communes by city (wilaya)
+        const citiesWithCommunesData: City[] = cities.map((city) => ({
           ...city,
-          localities: localities.filter((locality) => locality.city_id === city.id),
+          communes: communes.filter((commune) => commune.wilaya_id === city.id),
         }));
 
-        setCitiesWithLocalities(citiesWithLocalitiesData);
+        setCitiesWithCommunes(citiesWithCommunesData);
 
-        // Fetch property counts for each locality
+        // Fetch property counts for each commune
         const counts: Record<string, number> = {};
-        for (const locality of localities) {
+        for (const commune of communes) {
           const { count } = await supabase
             .from('properties')
             .select('*', { count: 'exact', head: true })
-            .eq('locality_id', locality.id);
-          counts[locality.id] = count || 0;
+            .eq('commune_id', commune.id);
+          counts[commune.id] = count || 0;
         }
         setPropertyCounts(counts);
       } catch (error) {
@@ -88,7 +88,7 @@ const Localites = () => {
       }
     };
 
-    fetchCitiesAndLocalities();
+    fetchCitiesAndCommunes();
   }, []);
 
   if (loading) {
@@ -141,55 +141,55 @@ const Localites = () => {
           </div>
         </div>
 
-        {citiesWithLocalities.map((city) => {
-          // Filtrer les localités selon la recherche
-          const filteredLocalities = city.localities.filter((locality) =>
-            locality.name.toLowerCase().includes(searchQuery.toLowerCase())
+        {citiesWithCommunes.map((city) => {
+          // Filtrer les communes selon la recherche
+          const filteredCommunes = city.communes.filter((commune) =>
+            commune.name.toLowerCase().includes(searchQuery.toLowerCase())
           );
 
-          if (filteredLocalities.length === 0) return null;
+          if (filteredCommunes.length === 0) return null;
 
           return (
-          <section key={city.id} className="mb-16">
-            <h2 className="text-3xl font-bold mb-8 text-foreground text-center">
-              {city.name}
-            </h2>
+            <section key={city.id} className="mb-16">
+              <h2 className="text-3xl font-bold mb-8 text-foreground text-center">
+                {city.name}
+              </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredLocalities.map((locality) => (
-                <Link key={locality.id} to={`/localite/${locality.id}`}>
-                  <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer">
-                    <div className="relative h-64 overflow-hidden">
-                      <img
-                        src={localityImages[locality.name] || babElOuedImage}
-                        alt={locality.name}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                      <div className="absolute bottom-4 left-4 right-4">
-                        <div className="flex items-center gap-2 mb-2">
-                          <MapPin className="h-5 w-5 text-white" />
-                          <h3 className="text-xl font-semibold text-white">
-                            {locality.name}
-                          </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filteredCommunes.map((commune) => (
+                  <Link key={commune.id} to={`/localite/${commune.id}`}>
+                    <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer">
+                      <div className="relative h-64 overflow-hidden">
+                        <img
+                          src={communeImages[commune.name] || babElOuedImage}
+                          alt={commune.name}
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                        <div className="absolute bottom-4 left-4 right-4">
+                          <div className="flex items-center gap-2 mb-2">
+                            <MapPin className="h-5 w-5 text-white" />
+                            <h3 className="text-xl font-semibold text-white">
+                              {commune.name}
+                            </h3>
+                          </div>
+                          {commune.description && (
+                            <p className="text-white/90 text-sm">
+                              {commune.description}
+                            </p>
+                          )}
+                          {propertyCounts[commune.id] !== undefined && (
+                            <p className="text-white font-semibold text-sm mt-1">
+                              {propertyCounts[commune.id]} {propertyCounts[commune.id] === 1 ? 'bien disponible' : 'biens disponibles'}
+                            </p>
+                          )}
                         </div>
-                        {locality.description && (
-                          <p className="text-white/90 text-sm">
-                            {locality.description}
-                          </p>
-                        )}
-                        {propertyCounts[locality.id] !== undefined && (
-                          <p className="text-white font-semibold text-sm mt-1">
-                            {propertyCounts[locality.id]} {propertyCounts[locality.id] === 1 ? 'bien disponible' : 'biens disponibles'}
-                          </p>
-                        )}
                       </div>
-                    </div>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-          </section>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            </section>
           );
         })}
       </main>

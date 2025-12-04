@@ -40,46 +40,75 @@ export interface Database {
           created_at?: string;
         };
       };
+      communes: {
+        Row: {
+          id: number;
+          name: string;
+          wilaya_id: number | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: number;
+          name: string;
+          wilaya_id?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: number;
+          name?: string;
+          wilaya_id?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
       properties: {
         Row: {
           id: string;
           title: string;
-          locality_id: number | null;
+          commune_id: number | null;
           typology: string | null;
-          status: string | null;
+          status: string;
           surface: number | null;
           price: number | null;
           latitude: number | null;
           longitude: number | null;
           image_url: string | null;
+          phone_whatsapp: string;
+          description: string | null;
           created_at: string;
           updated_at: string;
         };
         Insert: {
           id?: string;
           title: string;
-          locality_id?: number | null;
+          commune_id?: number | null;
           typology?: string | null;
-          status?: string | null;
+          status?: string;
           surface?: number | null;
           price?: number | null;
           latitude?: number | null;
           longitude?: number | null;
           image_url?: string | null;
+          phone_whatsapp?: string;
+          description?: string | null;
           created_at?: string;
           updated_at?: string;
         };
         Update: {
           id?: string;
           title?: string;
-          locality_id?: number | null;
+          commune_id?: number | null;
           typology?: string | null;
-          status?: string | null;
+          status?: string;
           surface?: number | null;
           price?: number | null;
           latitude?: number | null;
           longitude?: number | null;
           image_url?: string | null;
+          phone_whatsapp?: string;
+          description?: string | null;
           created_at?: string;
           updated_at?: string;
         };

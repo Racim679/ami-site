@@ -7,10 +7,10 @@ import Header from "@/components/Header";
 import FavoritesSystem from "@/components/FavoritesSystem";
 import { formatPrice } from "@/lib/utils";
 
-interface Locality {
+interface Commune {
   id: string;
   name: string;
-  description: string;
+  description?: string;
   image_url?: string;
 }
 
@@ -34,27 +34,27 @@ interface Property {
 
 const LocalityDetail = () => {
   const { localityId } = useParams<{ localityId: string }>();
-  const [locality, setLocality] = useState<Locality | null>(null);
+  const [commune, setCommune] = useState<Commune | null>(null);
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchLocalityAndProperties = async () => {
+    const fetchCommuneAndProperties = async () => {
       if (!localityId) return;
 
       try {
-        // Fetch locality details
-        const { data: localityData } = await supabase
-          .from('localities')
+        // Fetch commune details
+        const { data: communeData } = await supabase
+          .from('communes')
           .select('*')
           .eq('id', localityId)
           .single();
 
-        if (localityData) {
-          setLocality(localityData);
+        if (communeData) {
+          setCommune(communeData);
         }
 
-        // Fetch properties in this locality with details
+        // Fetch properties in this commune with details
         const { data: propertiesData } = await supabase
           .from('properties')
           .select(`
@@ -65,19 +65,19 @@ const LocalityDetail = () => {
               rooms
             )
           `)
-          .eq('locality_id', localityId);
+          .eq('commune_id', localityId);
 
         if (propertiesData) {
           setProperties(propertiesData as any);
         }
       } catch (error) {
-        console.error('Error fetching locality data:', error);
+        console.error('Error fetching commune data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchLocalityAndProperties();
+    fetchCommuneAndProperties();
   }, [localityId]);
 
   if (loading) {
@@ -91,12 +91,12 @@ const LocalityDetail = () => {
     );
   }
 
-  if (!locality) {
+  if (!commune) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
         <div className="container mx-auto px-4 py-8">
-          <div className="text-center">Localité non trouvée</div>
+          <div className="text-center">Commune non trouvée</div>
         </div>
       </div>
     );
@@ -105,22 +105,22 @@ const LocalityDetail = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-4">
-            Découvrez la commune de {locality.name}
+            Découvrez la commune de {commune.name}
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed">
-            {locality.description}
+            {commune.description}
           </p>
         </div>
 
         {/* Properties Section */}
         <div className="mb-6">
           <h2 className="text-2xl font-semibold text-foreground mb-6">
-            Nos biens à {locality.name}
+            Nos biens à {commune.name}
           </h2>
         </div>
 
@@ -151,7 +151,7 @@ const LocalityDetail = () => {
                               title: property.title,
                               price: property.price,
                               surface: property.surface || 0,
-                              location: locality.name,
+                              location: commune.name,
                               image: property.image_url || "",
                               type: property.status
                             }} />
@@ -171,7 +171,7 @@ const LocalityDetail = () => {
                           <p className="text-muted-foreground mb-4 line-clamp-2">
                             {property.description}
                           </p>
-                          
+
                           {/* Property Details */}
                           <div className="flex flex-wrap gap-4 mb-4 text-sm text-muted-foreground">
                             {property.surface && (
@@ -215,7 +215,7 @@ const LocalityDetail = () => {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                               </svg>
-                              <span>{locality.name}</span>
+                              <span>{commune.name}</span>
                             </div>
                           </div>
 
@@ -234,7 +234,7 @@ const LocalityDetail = () => {
               <Card>
                 <CardContent className="p-8 text-center">
                   <p className="text-muted-foreground">
-                    Aucun bien disponible dans cette localité pour le moment.
+                    Aucun bien disponible dans cette commune pour le moment.
                   </p>
                 </CardContent>
               </Card>

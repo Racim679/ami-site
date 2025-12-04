@@ -8,7 +8,7 @@ export interface SearchResult {
   typology: string | null;
   surface: number | null;
   price: number | null;
-  locality_id: number | null;
+  commune_id: number | null;
   latitude: number | null;
   longitude: number | null;
   phone_whatsapp: string;
@@ -16,7 +16,7 @@ export interface SearchResult {
   status: string | null;
   created_at: string;
   updated_at: string | null;
-  locality_name: string | null;
+  commune_name: string | null;
   city_name: string | null;
   search_score: number;
 }

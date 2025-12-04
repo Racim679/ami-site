@@ -33,11 +33,9 @@ interface PropertyDetailData {
   longitude?: number;
   typology?: string;
   phone_whatsapp: string;
-  locality?: {
+  commune?: {
     name: string;
-    city?: {
-      name: string;
-    };
+    wilaya_id?: number;
   };
   property_details?: {
     bedrooms?: number;
@@ -128,9 +126,9 @@ const PropertyDetail: React.FC = () => {
           .from('properties')
           .select(`
             *,
-            locality:localities(
+            commune:communes(
               name,
-              city:cities(name)
+              wilaya_id
             ),
             property_details(*),
             property_photos(text),
@@ -145,31 +143,25 @@ const PropertyDetail: React.FC = () => {
           .maybeSingle();
 
         if (error) throw error;
-        
+
         // Transform the data to match our interface
         if (data) {
           console.log('Raw data from Supabase:', data);
-          console.log('property_amenities_structured:', data.property_amenities_structured);
-          console.log('property_security_structured:', data.property_security_structured);
-          
+
           const transformedData = {
             ...data,
             property_details: data.property_details?.[0] || null,
-            property_photos: data.property_photos?.map(p => ({ photo_url: p.text })) || [],
-            property_videos: data.property_videos?.map(v => ({ video_url: v.text, video_type: 'youtube' })) || [],
+            property_photos: data.property_photos?.map((p: any) => ({ photo_url: p.text })) || [],
+            property_videos: data.property_videos?.map((v: any) => ({ video_url: v.text, video_type: 'youtube' })) || [],
             property_building: data.property_building || [],
             property_amenities_structured: data.property_amenities_structured || null,
             property_security_structured: data.property_security_structured || null,
             property_documents_structured: data.property_documents_structured || null,
             property_nearby_structured: data.property_nearby_structured || null,
           };
-          
-          console.log('Transformed data:', transformedData);
-          console.log('Final amenities:', transformedData.property_amenities_structured);
-          console.log('Final security:', transformedData.property_security_structured);
-          
+
           setProperty(transformedData);
-          
+
           // Stocker le type de bien dans localStorage si disponible
           if (transformedData.typology) {
             storePropertyType(transformedData.typology);
@@ -226,7 +218,7 @@ const PropertyDetail: React.FC = () => {
 
   const formatPrice = (price?: number) => {
     if (!price) return 'Prix sur demande';
-    
+
     if (price >= 10000000) {
       const md = price / 10000000;
       return `${md % 1 === 0 ? md.toString() : md.toFixed(1)} Md`;
@@ -246,8 +238,7 @@ const PropertyDetail: React.FC = () => {
 
   const getLocationText = () => {
     const parts = [];
-    if (property.locality?.name) parts.push(property.locality.name);
-    if (property.locality?.city?.name) parts.push(property.locality.city.name);
+    if (property.commune?.name) parts.push(property.commune.name);
     return parts.join(', ') || 'Localisation non spécifiée';
   };
 
@@ -257,8 +248,8 @@ const PropertyDetail: React.FC = () => {
   };
 
   const getMediaItems = () => {
-    const media = [];
-    
+    const media: any[] = [];
+
     // Ajouter les photos
     if (property?.property_photos) {
       property.property_photos.forEach(photo => {
@@ -269,7 +260,7 @@ const PropertyDetail: React.FC = () => {
         });
       });
     }
-    
+
     // Ajouter les vidéos
     if (property?.property_videos) {
       property.property_videos.forEach(video => {
@@ -280,7 +271,7 @@ const PropertyDetail: React.FC = () => {
         });
       });
     }
-    
+
     return media;
   };
 
@@ -292,7 +283,7 @@ const PropertyDetail: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="container mx-auto px-4 py-8">
         <div className="mb-6">
           <Link to="/nos-biens">
@@ -305,7 +296,7 @@ const PropertyDetail: React.FC = () => {
 
         {/* Main Image - Full Width - Hidden on mobile */}
         <div className="mb-8 -mx-4 hidden md:block">
-          <div 
+          <div
             className="w-full bg-muted cursor-pointer hover:opacity-95 transition-opacity"
             style={{ height: '80vh' }}
             onClick={() => openCarousel(0)}
@@ -339,29 +330,29 @@ const PropertyDetail: React.FC = () => {
             <div className="px-4">
               <div className="relative">
                 <h3 className="text-2xl font-bold mb-4 hidden md:block">Photos de la propriété</h3>
-                
+
                 {/* Mobile: Une seule image */}
                 <div className="block md:hidden">
-                  <div 
+                  <div
                     className="h-64 rounded-lg overflow-hidden bg-muted cursor-pointer hover:opacity-90 transition-opacity"
                     onClick={() => openCarousel(0)}
                   >
                     <img
-                      src={property.property_photos[0].photo_url}
-                      alt={property.property_photos[0].caption || `Photo principale`}
+                      src={property.property_photos![0].photo_url}
+                      alt={property.property_photos![0].caption || `Photo principale`}
                       className="w-full h-full object-cover"
                     />
                   </div>
                   <div className="text-center text-sm text-muted-foreground mt-2">
-                    Cliquez pour voir toutes les {property.property_photos.length} photo{property.property_photos.length > 1 ? 's' : ''}
+                    Cliquez pour voir toutes les {property.property_photos!.length} photo{property.property_photos!.length > 1 ? 's' : ''}
                   </div>
                 </div>
 
                 {/* Desktop: Grille de photos */}
                 <div className="hidden md:block">
                   <div className="grid grid-cols-4 gap-4">
-                    {property.property_photos.slice(0, 4).map((photo, index) => (
-                      <div 
+                    {property.property_photos!.slice(0, 4).map((photo, index) => (
+                      <div
                         key={index}
                         className="h-56 rounded-lg overflow-hidden bg-muted cursor-pointer hover:opacity-90 transition-opacity"
                         onClick={() => openCarousel(index)}
@@ -375,8 +366,8 @@ const PropertyDetail: React.FC = () => {
                     ))}
                   </div>
                   <div className="text-center text-sm text-muted-foreground mt-2">
-                    Affichage de {Math.min(4, property.property_photos.length)} sur {property.property_photos.length} photo{property.property_photos.length > 1 ? 's' : ''}
-                    {property.property_photos.length > 4 && (
+                    Affichage de {Math.min(4, property.property_photos!.length)} sur {property.property_photos!.length} photo{property.property_photos!.length > 1 ? 's' : ''}
+                    {property.property_photos!.length > 4 && (
                       <span className="block mt-1 text-primary cursor-pointer" onClick={() => openCarousel(0)}>
                         Cliquez sur une image pour voir toutes les photos et vidéos
                       </span>
@@ -402,7 +393,7 @@ const PropertyDetail: React.FC = () => {
                 <MapPin className="w-5 h-5 mr-2" />
                 <span className="text-lg">{getLocationText()}</span>
               </div>
-              
+
               {/* Additional Property Info */}
               <div className="grid grid-cols-3 md:grid-cols-3 gap-2 md:gap-4 mb-6">
                 {property.surface && (
@@ -431,11 +422,11 @@ const PropertyDetail: React.FC = () => {
             {/* Property Details */}
             {property.property_details && (
               <div className="mb-8">
-                <PropertyInfoSection 
+                <PropertyInfoSection
                   propertyInfo={{
                     ...property.property_details,
                     surface: property.surface
-                  }} 
+                  }}
                   className="md:block"
                 />
               </div>
@@ -443,7 +434,7 @@ const PropertyDetail: React.FC = () => {
 
             {/* Points forts - Onglets */}
             <div className="mb-8">
-              <PropertyFeaturesTabsSection 
+              <PropertyFeaturesTabsSection
                 amenities={property.property_amenities_structured || {}}
                 security={property.property_security_structured || {}}
                 documents={property.property_documents_structured || {}}
@@ -473,8 +464,8 @@ const PropertyDetail: React.FC = () => {
                     <CardTitle>Localisation</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <PropertyMap 
-                      latitude={property.latitude} 
+                    <PropertyMap
+                      latitude={property.latitude}
                       longitude={property.longitude}
                       title={property.title}
                     />
@@ -497,8 +488,8 @@ const PropertyDetail: React.FC = () => {
                     <Phone className="w-5 h-5 text-primary" />
                     <span className="text-lg">{property.phone_whatsapp}</span>
                   </div>
-                  
-                  <Button 
+
+                  <Button
                     onClick={() => window.open(getWhatsAppLink(), '_blank')}
                     className="w-full bg-green-600 hover:bg-green-700 text-white"
                   >
@@ -533,17 +524,17 @@ const PropertyDetail: React.FC = () => {
           </div>
         </div>
       </main>
-      
+
       {/* Carrousel dynamique par type */}
-      <DynamicTypeCarousel 
+      <DynamicTypeCarousel
         currentPropertyId={property.id}
       />
-      
+
       {/* Section des biens similaires */}
-      <SimilarPropertiesCarousel 
+      <SimilarPropertiesCarousel
         currentPropertyId={property.id}
         typology={property.typology}
-        cityName={property.locality?.city?.name}
+        cityName={property.commune?.name}
         surface={property.surface}
       />
 
@@ -554,7 +545,7 @@ const PropertyDetail: React.FC = () => {
         media={getMediaItems()}
         initialIndex={carouselIndex}
       />
-      
+
       {/* WhatsApp Floating Button */}
       <WhatsAppFloatingButton phoneNumber={property.phone_whatsapp} />
     </div>
