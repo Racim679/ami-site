@@ -89,7 +89,7 @@ const NosBiens = () => {
   const [filters, setFilters] = useState<FilterState>({
     typeOffre: "",
     type: "",
-    localite: "",
+    wilaya: "",
     minPrice: "",
     maxPrice: "",
     minSurface: "",
@@ -224,7 +224,7 @@ const NosBiens = () => {
       setLoading(true);
       try {
         const searchQuery = searchParams.get('q');
-        
+
         if (searchQuery && searchQuery.trim().length > 0) {
           // Utiliser la recherche intelligente
           const searchResults = await performSearch(searchQuery.trim());
@@ -334,7 +334,7 @@ const NosBiens = () => {
     const urlFilters: FilterState = {
       typeOffre: searchParams.get("typeOffre") || "",
       type: searchParams.get("type") || "",
-      localite: searchParams.get("localite") || "",
+      wilaya: searchParams.get("wilaya") || "",
       minPrice: searchParams.get("minPrice") || "",
       maxPrice: searchParams.get("maxPrice") || "",
       minSurface: searchParams.get("minSurface") || "",
@@ -378,7 +378,7 @@ const NosBiens = () => {
     // Filtres principaux avec comparaisons insensibles à la casse
     if (filters.typeOffre && property.status?.toLowerCase() !== filters.typeOffre.toLowerCase()) return false;
     if (filters.type && property.typology?.toLowerCase() !== filters.type.toLowerCase()) return false;
-    if (filters.localite && property.commune?.name?.toLowerCase() !== filters.localite.toLowerCase()) return false;
+    if (filters.wilaya && property.commune?.wilaya?.name?.toLowerCase() !== filters.wilaya.toLowerCase()) return false;
 
     // Filtres de prix (convertir de M en DZD: M = 10 000 DZD)
     if (filters.minPrice) {
@@ -477,11 +477,11 @@ const NosBiens = () => {
     }
     return true;
   });
-  
+
   console.log('Propriétés totales:', properties.length);
   console.log('Filtres actifs:', filters);
   console.log('Propriétés filtrées:', filteredProperties.length);
-  
+
   // Appliquer le tri
   const sortedProperties = [...filteredProperties].sort((a, b) => {
     switch (sortOption) {
@@ -503,7 +503,7 @@ const NosBiens = () => {
         return 0;
     }
   });
-  
+
   console.log('Propriétés à afficher:', sortedProperties.slice(0, visibleResidences).length);
   const displayedProperties = sortedProperties.slice(0, visibleResidences);
   const loadMore = () => {
@@ -512,7 +512,7 @@ const NosBiens = () => {
 
   const handleRemoveFilter = (key: keyof FilterState, value?: string) => {
     const newFilters = { ...filters };
-    
+
     if (key === 'commodites' || key === 'securite' || key === 'documents' || key === 'proximite') {
       // Pour les filtres array, retirer la valeur spécifique
       const currentArray = newFilters[key] as string[];
@@ -521,7 +521,7 @@ const NosBiens = () => {
       // Pour les filtres simples, les réinitialiser
       newFilters[key] = "" as any;
     }
-    
+
     setFilters(newFilters);
   };
 
@@ -529,7 +529,7 @@ const NosBiens = () => {
     const resetFilters: FilterState = {
       typeOffre: "",
       type: "",
-      localite: "",
+      wilaya: "",
       minPrice: "",
       maxPrice: "",
       minSurface: "",
@@ -547,65 +547,65 @@ const NosBiens = () => {
   };
   if (loading) {
     return <div className="min-h-screen bg-background">
-        <Header />
-        <div className="flex items-center justify-center h-96">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p>Chargement des propriétés...</p>
-          </div>
+      <Header />
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p>Chargement des propriétés...</p>
         </div>
-      </div>;
+      </div>
+    </div>;
   }
   return <div className="min-h-screen bg-background">
-      <Header />
+    <Header />
 
 
-      {/* Carousel des typologies */}
-      <AnimatedSection className="py-2 md:py-4 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <TypologyCarousel 
-            onSelectTypology={(typology) => {
-              setFilters(prev => ({ ...prev, type: typology }));
-            }}
-            selectedTypology={filters.type}
+    {/* Carousel des typologies */}
+    <AnimatedSection className="py-2 md:py-4 bg-muted/30">
+      <div className="container mx-auto px-4">
+        <TypologyCarousel
+          onSelectTypology={(typology) => {
+            setFilters(prev => ({ ...prev, type: typology }));
+          }}
+          selectedTypology={filters.type}
+        />
+      </div>
+    </AnimatedSection>
+
+    {/* Filtres - Desktop seulement (mobile géré par Header) */}
+    <AnimatedSection className="hidden md:block py-2 md:py-4 bg-muted/30">
+      <div className="container mx-auto px-4">
+        <PropertyFilters onSearch={setFilters} />
+      </div>
+    </AnimatedSection>
+
+
+    {/* Liste des biens */}
+    <AnimatedSection className="py-2 md:py-8">
+      <div className="container mx-auto px-4">
+        {/* Compteur de résultats, tri et tags de filtres actifs */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-2 flex-wrap gap-4">
+            <p className="text-sm text-muted-foreground">
+              {filteredProperties.length === 0
+                ? "Aucun bien trouvé"
+                : `${filteredProperties.length} ${filteredProperties.length === 1 ? 'bien trouvé' : 'biens trouvés'}`}
+            </p>
+            {filteredProperties.length > 0 && (
+              <SortSelector
+                value={sortOption}
+                onValueChange={setSortOption}
+              />
+            )}
+          </div>
+          <ActiveFilters
+            filters={filters}
+            onRemoveFilter={handleRemoveFilter}
+            onResetAll={handleResetAllFilters}
           />
         </div>
-      </AnimatedSection>
 
-      {/* Filtres - Desktop seulement (mobile géré par Header) */}
-      <AnimatedSection className="hidden md:block py-2 md:py-4 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <PropertyFilters onSearch={setFilters} />
-        </div>
-      </AnimatedSection>
-
-
-      {/* Liste des biens */}
-      <AnimatedSection className="py-2 md:py-8">
-        <div className="container mx-auto px-4">
-          {/* Compteur de résultats, tri et tags de filtres actifs */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-2 flex-wrap gap-4">
-              <p className="text-sm text-muted-foreground">
-                {filteredProperties.length === 0 
-                  ? "Aucun bien trouvé" 
-                  : `${filteredProperties.length} ${filteredProperties.length === 1 ? 'bien trouvé' : 'biens trouvés'}`}
-              </p>
-              {filteredProperties.length > 0 && (
-                <SortSelector 
-                  value={sortOption} 
-                  onValueChange={setSortOption}
-                />
-              )}
-            </div>
-            <ActiveFilters 
-              filters={filters} 
-              onRemoveFilter={handleRemoveFilter}
-              onResetAll={handleResetAllFilters}
-            />
-          </div>
-          
-          <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" variants={{
+        <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" variants={{
           hidden: {
             opacity: 0
           },
@@ -616,125 +616,125 @@ const NosBiens = () => {
             }
           }
         }} initial="hidden" animate="show">
-            {displayedProperties.length === 0 ? (
-              <div className="col-span-full">
-                {filteredProperties.length === 0 && properties.length > 0 ? (
-                  <EmptyState
-                    title="Aucun bien trouvé avec les filtres sélectionnés"
-                    description="Essayez de modifier vos critères de recherche ou réinitialisez les filtres pour voir tous les biens disponibles."
-                    onReset={handleResetAllFilters}
-                  />
-                ) : filteredProperties.length === 0 && properties.length === 0 ? (
-                  <EmptyState
-                    title="Aucun bien disponible"
-                    description="Il n'y a actuellement aucun bien disponible dans notre base de données."
-                  />
-                ) : null}
-              </div>
-            ) : (
-              displayedProperties.map((property, index) => <motion.div key={property.id} variants={{
-            hidden: {
-              opacity: 0,
-              y: 30
-            },
-            show: {
-              opacity: 1,
-              y: 0
-            }
-          }} transition={{
-            duration: 0.5
-          }}>
-                <AnimatedCard className="group overflow-hidden hover:shadow-xl transition-all duration-300 bg-card border border-border">
-                  <Link to={`/bien/${property.id}`} className="block">
-                    <div className="relative overflow-hidden">
-                      <img src={property.image_url || "/placeholder.svg"} alt={property.title} className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300" />
-                      <div className="absolute top-4 left-4">
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(property.status)}`}>
-                          {getStatusLabel(property.status)}
-                        </span>
-                      </div>
-                      <div className="absolute top-4 right-4 flex gap-2">
-                        <Button variant="ghost" size="sm" onClick={e => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      isFavorite(property.id) ? removeFromFavorites(property.id) : addToFavorites({
-                        id: property.id,
-                        title: property.title,
-                        price: property.price || 0,
-                        surface: property.surface || 0,
-                        location: property.commune?.name || "",
-                        image: property.image_url || "/placeholder.svg",
-                        type: property.typology || ""
-                      });
-                    }} className="w-8 h-8 p-0 rounded-full bg-white/80 hover:bg-white">
-                          <Heart className={`w-4 h-4 ${isFavorite(property.id) ? "fill-red-500 text-red-500" : "text-gray-600"}`} />
-                        </Button>
-                        <Button variant="ghost" size="sm" onClick={e => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      addToComparison({
-                        id: property.id,
-                        title: property.title,
-                        price: property.price || 0,
-                        surface: property.surface || 0,
-                        location: property.commune?.name || "",
-                        image: property.image_url || "/placeholder.svg",
-                        type: property.typology || "",
-                        status: getStatusLabel(property.status)
-                      });
-                    }} disabled={isInComparison(property.id)} className="w-8 h-8 p-0 rounded-full bg-white/80 hover:bg-white">
-                          <BarChart3 className={`w-4 h-4 ${isInComparison(property.id) ? "text-primary" : "text-gray-600"}`} />
-                        </Button>
-                      </div>
-                       {property.price && property.price > 0 && <div className="absolute bottom-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
-                           {formatPrice(property.price)}
-                         </div>}
+          {displayedProperties.length === 0 ? (
+            <div className="col-span-full">
+              {filteredProperties.length === 0 && properties.length > 0 ? (
+                <EmptyState
+                  title="Aucun bien trouvé avec les filtres sélectionnés"
+                  description="Essayez de modifier vos critères de recherche ou réinitialisez les filtres pour voir tous les biens disponibles."
+                  onReset={handleResetAllFilters}
+                />
+              ) : filteredProperties.length === 0 && properties.length === 0 ? (
+                <EmptyState
+                  title="Aucun bien disponible"
+                  description="Il n'y a actuellement aucun bien disponible dans notre base de données."
+                />
+              ) : null}
+            </div>
+          ) : (
+            displayedProperties.map((property, index) => <motion.div key={property.id} variants={{
+              hidden: {
+                opacity: 0,
+                y: 30
+              },
+              show: {
+                opacity: 1,
+                y: 0
+              }
+            }} transition={{
+              duration: 0.5
+            }}>
+              <AnimatedCard className="group overflow-hidden hover:shadow-xl transition-all duration-300 bg-card border border-border">
+                <Link to={`/bien/${property.id}`} className="block">
+                  <div className="relative overflow-hidden">
+                    <img src={property.image_url || "/placeholder.svg"} alt={property.title} className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300" />
+                    <div className="absolute top-4 left-4">
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(property.status)}`}>
+                        {getStatusLabel(property.status)}
+                      </span>
+                    </div>
+                    <div className="absolute top-4 right-4 flex gap-2">
+                      <Button variant="ghost" size="sm" onClick={e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        isFavorite(property.id) ? removeFromFavorites(property.id) : addToFavorites({
+                          id: property.id,
+                          title: property.title,
+                          price: property.price || 0,
+                          surface: property.surface || 0,
+                          location: property.commune?.name || "",
+                          image: property.image_url || "/placeholder.svg",
+                          type: property.typology || ""
+                        });
+                      }} className="w-8 h-8 p-0 rounded-full bg-white/80 hover:bg-white">
+                        <Heart className={`w-4 h-4 ${isFavorite(property.id) ? "fill-red-500 text-red-500" : "text-gray-600"}`} />
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        addToComparison({
+                          id: property.id,
+                          title: property.title,
+                          price: property.price || 0,
+                          surface: property.surface || 0,
+                          location: property.commune?.name || "",
+                          image: property.image_url || "/placeholder.svg",
+                          type: property.typology || "",
+                          status: getStatusLabel(property.status)
+                        });
+                      }} disabled={isInComparison(property.id)} className="w-8 h-8 p-0 rounded-full bg-white/80 hover:bg-white">
+                        <BarChart3 className={`w-4 h-4 ${isInComparison(property.id) ? "text-primary" : "text-gray-600"}`} />
+                      </Button>
+                    </div>
+                    {property.price && property.price > 0 && <div className="absolute bottom-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
+                      {formatPrice(property.price)}
+                    </div>}
+                  </div>
+
+                  <CardContent className="p-6">
+                    <h3 className="text-xl font-bold mb-3 text-foreground">
+                      {property.title}
+                    </h3>
+
+                    {/* Property Details Row */}
+                    {property.property_details && property.property_details.length > 0 && <div className="flex items-center gap-4 mb-3 text-sm text-muted-foreground">
+                      {property.property_details[0].bedrooms !== null && <div className="flex items-center gap-1">
+                        <Bed className="h-4 w-4" />
+                        <span>{property.property_details[0].bedrooms}</span>
+                      </div>}
+                      {property.property_details[0].bathrooms !== null && <div className="flex items-center gap-1">
+                        <Bath className="h-4 w-4" />
+                        <span>{property.property_details[0].bathrooms}</span>
+                      </div>}
+                      {property.surface && <div className="flex items-center gap-1">
+                        <Square className="h-4 w-4" />
+                        <span>{property.surface} m²</span>
+                      </div>}
+                    </div>}
+
+                    {/* Location */}
+                    <div className="flex items-center text-muted-foreground mb-4">
+                      <MapPin className="h-4 w-4 mr-1" />
+                      <span className="text-sm">{property.commune?.name || "N/A"}</span>
                     </div>
 
-                    <CardContent className="p-6">
-                      <h3 className="text-xl font-bold mb-3 text-foreground">
-                        {property.title}
-                      </h3>
-                      
-                      {/* Property Details Row */}
-                      {property.property_details && property.property_details.length > 0 && <div className="flex items-center gap-4 mb-3 text-sm text-muted-foreground">
-                          {property.property_details[0].bedrooms !== null && <div className="flex items-center gap-1">
-                              <Bed className="h-4 w-4" />
-                              <span>{property.property_details[0].bedrooms}</span>
-                            </div>}
-                          {property.property_details[0].bathrooms !== null && <div className="flex items-center gap-1">
-                              <Bath className="h-4 w-4" />
-                              <span>{property.property_details[0].bathrooms}</span>
-                            </div>}
-                          {property.surface && <div className="flex items-center gap-1">
-                              <Square className="h-4 w-4" />
-                              <span>{property.surface} m²</span>
-                            </div>}
-                        </div>}
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm px-3 py-1 bg-muted rounded-full text-muted-foreground">
+                        {property.typology || "N/A"}
+                      </span>
+                      <Button variant="outline" size="sm">
+                        Voir détails
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Link>
+              </AnimatedCard>
+            </motion.div>)
+          )}
+        </motion.div>
 
-                      {/* Location */}
-                      <div className="flex items-center text-muted-foreground mb-4">
-                        <MapPin className="h-4 w-4 mr-1" />
-                        <span className="text-sm">{property.commune?.name || "N/A"}</span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm px-3 py-1 bg-muted rounded-full text-muted-foreground">
-                          {property.typology || "N/A"}
-                        </span>
-                        <Button variant="outline" size="sm">
-                          Voir détails
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Link>
-                </AnimatedCard>
-              </motion.div>)
-            )}
-          </motion.div>
-
-          {/* Bouton "Voir plus" */}
-          {visibleResidences < filteredProperties.length && <motion.div className="text-center mt-12" initial={{
+        {/* Bouton "Voir plus" */}
+        {visibleResidences < filteredProperties.length && <motion.div className="text-center mt-12" initial={{
           opacity: 0,
           y: 20
         }} animate={{
@@ -743,15 +743,15 @@ const NosBiens = () => {
         }} transition={{
           duration: 0.5
         }}>
-              <Button onClick={loadMore} size="lg" className="bg-primary hover:bg-primary/90">
-                Voir plus de biens
-              </Button>
-            </motion.div>}
-        </div>
-      </AnimatedSection>
+          <Button onClick={loadMore} size="lg" className="bg-primary hover:bg-primary/90">
+            Voir plus de biens
+          </Button>
+        </motion.div>}
+      </div>
+    </AnimatedSection>
 
-      {/* Scroll to Top */}
-      <ScrollToTop />
-    </div>;
+    {/* Scroll to Top */}
+    <ScrollToTop />
+  </div>;
 };
 export default NosBiens;
