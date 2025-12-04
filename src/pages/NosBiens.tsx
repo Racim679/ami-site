@@ -27,8 +27,11 @@ interface Property {
   surface?: number;
   price?: number;
   image_url?: string;
-  localities?: {
+  commune?: {
     name: string;
+    wilaya?: {
+      name: string;
+    };
   } | null;
   typology?: string;
   property_details?: {
@@ -133,7 +136,7 @@ const NosBiens = () => {
         price,
         image_url,
         typology,
-        localities(name),
+        commune:communes(name, wilaya:wilayas(name)),
         property_details (
           bedrooms,
           bathrooms,
@@ -194,16 +197,16 @@ const NosBiens = () => {
     // Transformer les données
     const transformedData = data?.map(property => {
       let locality = null;
-      if (property.localities) {
-        if (Array.isArray(property.localities) && property.localities.length > 0) {
-          locality = property.localities[0];
-        } else if (typeof property.localities === 'object' && !Array.isArray(property.localities) && 'name' in property.localities) {
-          locality = property.localities;
+      if (property.commune) {
+        if (Array.isArray(property.commune) && property.commune.length > 0) {
+          locality = property.commune[0];
+        } else if (typeof property.commune === 'object' && !Array.isArray(property.commune) && 'name' in property.commune) {
+          locality = property.commune;
         }
       }
       return {
         ...property,
-        localities: locality
+        commune
       };
     }) || [];
 
@@ -242,7 +245,7 @@ const NosBiens = () => {
               price,
               image_url,
               typology,
-              localities(name),
+              commune:communes(name, wilaya:wilayas(name)),
               property_details (
                 bedrooms,
                 bathrooms,
@@ -302,16 +305,16 @@ const NosBiens = () => {
             const transformedData = data?.map(property => {
               // Handle localities - can be array, object, or null
               let locality = null;
-              if (property.localities) {
-                if (Array.isArray(property.localities) && property.localities.length > 0) {
-                  locality = property.localities[0];
-                } else if (typeof property.localities === 'object' && !Array.isArray(property.localities) && 'name' in property.localities) {
-                  locality = property.localities;
+              if (property.commune) {
+                if (Array.isArray(property.commune) && property.commune.length > 0) {
+                  locality = property.commune[0];
+                } else if (typeof property.commune === 'object' && !Array.isArray(property.commune) && 'name' in property.commune) {
+                  locality = property.commune;
                 }
               }
               return {
                 ...property,
-                localities: locality
+                commune
               };
             }) || [];
             setProperties(transformedData);
@@ -375,7 +378,7 @@ const NosBiens = () => {
     // Filtres principaux avec comparaisons insensibles à la casse
     if (filters.typeOffre && property.status?.toLowerCase() !== filters.typeOffre.toLowerCase()) return false;
     if (filters.type && property.typology?.toLowerCase() !== filters.type.toLowerCase()) return false;
-    if (filters.localite && property.localities?.name?.toLowerCase() !== filters.localite.toLowerCase()) return false;
+    if (filters.localite && property.commune?.name?.toLowerCase() !== filters.localite.toLowerCase()) return false;
 
     // Filtres de prix (convertir de M en DZD: M = 10 000 DZD)
     if (filters.minPrice) {
@@ -659,7 +662,7 @@ const NosBiens = () => {
                         title: property.title,
                         price: property.price || 0,
                         surface: property.surface || 0,
-                        location: property.localities?.name || "",
+                        location: property.commune?.name || "",
                         image: property.image_url || "/placeholder.svg",
                         type: property.typology || ""
                       });
@@ -674,7 +677,7 @@ const NosBiens = () => {
                         title: property.title,
                         price: property.price || 0,
                         surface: property.surface || 0,
-                        location: property.localities?.name || "",
+                        location: property.commune?.name || "",
                         image: property.image_url || "/placeholder.svg",
                         type: property.typology || "",
                         status: getStatusLabel(property.status)
@@ -712,7 +715,7 @@ const NosBiens = () => {
                       {/* Location */}
                       <div className="flex items-center text-muted-foreground mb-4">
                         <MapPin className="h-4 w-4 mr-1" />
-                        <span className="text-sm">{property.localities?.name || "N/A"}</span>
+                        <span className="text-sm">{property.commune?.name || "N/A"}</span>
                       </div>
 
                       <div className="flex justify-between items-center">
