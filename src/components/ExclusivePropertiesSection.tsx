@@ -16,9 +16,9 @@ interface Property {
   price?: number;
   image_url?: string;
   typology?: string;
-  localities?: {
+  commune?: {
     name: string;
-    city?: {
+    wilaya?: {
       name: string;
     };
   } | null;
@@ -59,22 +59,35 @@ const ExclusivePropertiesSection = () => {
             price,
             image_url,
             typology,
-            localities(
+            commune:communes(
               name,
-              city:cities(name)
+              wilaya:wilayas(name)
             ),
             property_details(
               bedrooms,
               bathrooms
             )
           `)
-          .eq("status", "available")
+          .neq("status", "Vendu")
           .not("price", "is", null)
           .order("price", { ascending: false })
           .limit(15);
 
         if (error) throw error;
-        setProperties(data || []);
+        
+        // Transform data to handle array/object responses
+        const transformedData = (data || []).map(property => {
+          let communeData = null;
+          if (property.commune) {
+            if (Array.isArray(property.commune) && property.commune.length > 0) {
+              communeData = property.commune[0];
+            } else if (typeof property.commune === 'object' && !Array.isArray(property.commune)) {
+              communeData = property.commune;
+            }
+          }
+          return { ...property, commune: communeData };
+        });
+        setProperties(transformedData);
       } catch (error) {
         console.error("Error fetching exclusive properties:", error);
       } finally {
@@ -104,8 +117,8 @@ const ExclusivePropertiesSection = () => {
 
   const getLocationText = (property: Property) => {
     const parts = [];
-    if (property.localities?.name) parts.push(property.localities.name);
-    if (property.localities?.city?.name) parts.push(property.localities.city.name);
+    if (property.commune?.name) parts.push(property.commune.name);
+    if (property.commune?.wilaya?.name) parts.push(property.commune.wilaya.name);
     return parts.join(", ") || "Localisation non spécifiée";
   };
 
