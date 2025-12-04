@@ -35,7 +35,9 @@ interface PropertyDetailData {
   phone_whatsapp: string;
   commune?: {
     name: string;
-    wilaya_id?: number;
+    wilaya?: {
+      name: string;
+    };
   };
   property_details?: {
     bedrooms?: number;
@@ -128,7 +130,7 @@ const PropertyDetail: React.FC = () => {
             *,
             commune:communes(
               name,
-              wilaya_id
+              wilaya:wilayas(name)
             ),
             property_details(*),
             property_photos(text),
@@ -239,6 +241,7 @@ const PropertyDetail: React.FC = () => {
   const getLocationText = () => {
     const parts = [];
     if (property.commune?.name) parts.push(property.commune.name);
+    if (property.commune?.wilaya?.name) parts.push(property.commune.wilaya.name);
     return parts.join(', ') || 'Localisation non spécifiée';
   };
 
@@ -534,7 +537,7 @@ const PropertyDetail: React.FC = () => {
       <SimilarPropertiesCarousel
         currentPropertyId={property.id}
         typology={property.typology}
-        cityName={property.commune?.name}
+        cityName={property.commune?.wilaya?.name}
         surface={property.surface}
       />
 

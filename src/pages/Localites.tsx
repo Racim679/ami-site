@@ -20,14 +20,14 @@ interface Commune {
   wilaya_id: number;
 }
 
-interface City {
+interface Wilaya {
   id: number;
   name: string;
   communes: Commune[];
 }
 
 const Localites = () => {
-  const [citiesWithCommunes, setCitiesWithCommunes] = useState<City[]>([]);
+  const [wilayasWithCommunes, setWilayasWithCommunes] = useState<Wilaya[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [propertyCounts, setPropertyCounts] = useState<Record<string, number>>({});
@@ -43,15 +43,15 @@ const Localites = () => {
   };
 
   useEffect(() => {
-    const fetchCitiesAndCommunes = async () => {
+    const fetchWilayasAndCommunes = async () => {
       try {
-        // Fetch cities
-        const { data: cities, error: citiesError } = await supabase
-          .from("cities")
+        // Fetch wilayas
+        const { data: wilayas, error: wilayasError } = await supabase
+          .from("wilayas")
           .select("*")
           .order("name");
 
-        if (citiesError) throw citiesError;
+        if (wilayasError) throw wilayasError;
 
         // Fetch communes
         const { data: communes, error: communesError } = await supabase
@@ -61,13 +61,13 @@ const Localites = () => {
 
         if (communesError) throw communesError;
 
-        // Group communes by city (wilaya)
-        const citiesWithCommunesData: City[] = cities.map((city) => ({
-          ...city,
-          communes: communes.filter((commune) => commune.wilaya_id === city.id),
+        // Group communes by wilaya
+        const wilayasWithCommunesData: Wilaya[] = wilayas.map((wilaya) => ({
+          ...wilaya,
+          communes: communes.filter((commune) => commune.wilaya_id === wilaya.id),
         }));
 
-        setCitiesWithCommunes(citiesWithCommunesData);
+        setWilayasWithCommunes(wilayasWithCommunesData);
 
         // Fetch property counts for each commune
         const counts: Record<string, number> = {};
@@ -88,7 +88,7 @@ const Localites = () => {
       }
     };
 
-    fetchCitiesAndCommunes();
+    fetchWilayasAndCommunes();
   }, []);
 
   if (loading) {
@@ -133,7 +133,7 @@ const Localites = () => {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               type="text"
-              placeholder="Rechercher une localité..."
+              placeholder="Rechercher une commune..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -141,18 +141,18 @@ const Localites = () => {
           </div>
         </div>
 
-        {citiesWithCommunes.map((city) => {
+        {wilayasWithCommunes.map((wilaya) => {
           // Filtrer les communes selon la recherche
-          const filteredCommunes = city.communes.filter((commune) =>
+          const filteredCommunes = wilaya.communes.filter((commune) =>
             commune.name.toLowerCase().includes(searchQuery.toLowerCase())
           );
 
           if (filteredCommunes.length === 0) return null;
 
           return (
-            <section key={city.id} className="mb-16">
+            <section key={wilaya.id} className="mb-16">
               <h2 className="text-3xl font-bold mb-8 text-foreground text-center">
-                {city.name}
+                {wilaya.name}
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

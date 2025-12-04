@@ -3,7 +3,7 @@
 export interface Database {
   public: {
     Tables: {
-      cities: {
+      wilayas: {
         Row: {
           id: number;
           name: string;
@@ -17,26 +17,6 @@ export interface Database {
         Update: {
           id?: number;
           name?: string;
-          created_at?: string;
-        };
-      };
-      localities: {
-        Row: {
-          id: number;
-          name: string;
-          city_id: number | null;
-          created_at: string;
-        };
-        Insert: {
-          id?: number;
-          name: string;
-          city_id?: number | null;
-          created_at?: string;
-        };
-        Update: {
-          id?: number;
-          name?: string;
-          city_id?: number | null;
           created_at?: string;
         };
       };
@@ -46,7 +26,7 @@ export interface Database {
           name: string;
           wilaya_id: number | null;
           created_at: string;
-          updated_at: string;
+          updated_at?: string;
         };
         Insert: {
           id?: number;
@@ -126,6 +106,12 @@ export interface Database {
           condition: string | null;
           created_at: string;
           updated_at: string;
+          vue_mer: boolean | null;
+          vue_montagne: boolean | null;
+          vue_ville: boolean | null;
+          vue_jardin: boolean | null;
+          vue_cour: boolean | null;
+          vue_degagee: boolean | null;
         };
         Insert: {
           id?: string;
@@ -139,6 +125,12 @@ export interface Database {
           condition?: string | null;
           created_at?: string;
           updated_at?: string;
+          vue_mer?: boolean | null;
+          vue_montagne?: boolean | null;
+          vue_ville?: boolean | null;
+          vue_jardin?: boolean | null;
+          vue_cour?: boolean | null;
+          vue_degagee?: boolean | null;
         };
         Update: {
           id?: string;
@@ -152,6 +144,12 @@ export interface Database {
           condition?: string | null;
           created_at?: string;
           updated_at?: string;
+          vue_mer?: boolean | null;
+          vue_montagne?: boolean | null;
+          vue_ville?: boolean | null;
+          vue_jardin?: boolean | null;
+          vue_cour?: boolean | null;
+          vue_degagee?: boolean | null;
         };
       };
       property_building: {

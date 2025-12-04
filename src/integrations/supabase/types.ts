@@ -14,7 +14,7 @@ export type Database = {
   }
   public: {
     Tables: {
-      cities: {
+      wilayas: {
         Row: {
           created_at: string | null
           id: number
@@ -50,30 +50,7 @@ export type Database = {
         }
         Relationships: []
       }
-      communes: {
-        Row: {
-          id: number
-          name: string
-          wilaya_id: number | null
-          created_at: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          id?: number
-          name: string
-          wilaya_id?: number | null
-          created_at?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          id?: number
-          name?: string
-          wilaya_id?: number | null
-          created_at?: string | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
+
       gemini_audio_transcription: {
         Row: {
           audio_file: string | null
@@ -209,21 +186,21 @@ export type Database = {
         }
         Relationships: []
       }
-      localities: {
+      communes: {
         Row: {
-          city_id: number | null
+          wilaya_id: number | null
           created_at: string | null
           id: number
           name: string
         }
         Insert: {
-          city_id?: number | null
+          wilaya_id?: number | null
           created_at?: string | null
           id?: number
           name: string
         }
         Update: {
-          city_id?: number | null
+          wilaya_id?: number | null
           created_at?: string | null
           id?: number
           name?: string
@@ -231,9 +208,9 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "localities_city_id_fkey"
-            columns: ["city_id"]
+            columns: ["wilaya_id"]
             isOneToOne: false
-            referencedRelation: "cities"
+            referencedRelation: "wilayas"
             referencedColumns: ["id"]
           },
         ]

@@ -1,91 +1,108 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
-import FavoritesSystem from "@/components/FavoritesSystem";
-import { formatPrice } from "@/lib/utils";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, MapPin } from "lucide-react";
+import babElOuedImage from "@/assets/bab-el-oued.jpg";
+import elMadaniaImage from "@/assets/el-madania.jpg";
+import hydraImage from "@/assets/hydra.jpg";
+import elKhroubImage from "@/assets/el-khroub.jpg";
+import belgaidImage from "@/assets/belgaid.jpg";
+import birElDjirImage from "@/assets/bir-el-djir.jpg";
 
 interface Commune {
-  id: string;
+  id: number;
   name: string;
-  description?: string;
-  image_url?: string;
-}
-
-interface PropertyDetails {
-  bedrooms: number;
-  bathrooms: number;
-  rooms: number;
+  wilaya_id: number;
+  wilaya?: {
+    name: string;
+  };
 }
 
 interface Property {
   id: string;
   title: string;
-  description: string;
   price: number;
-  surface: number;
-  status: string;
   image_url: string;
   typology: string;
-  property_details?: PropertyDetails;
+  surface: number;
+  commune: {
+    name: string;
+    wilaya?: {
+      name: string;
+    };
+  };
 }
 
+// Map commune names to their corresponding images
+const communeImages: Record<string, string> = {
+  "Bab El Oued": babElOuedImage,
+  "El Madania": elMadaniaImage,
+  "Hydra": hydraImage,
+  "El Khroub": elKhroubImage,
+  "Belgaïd": belgaidImage,
+  "Bir El Djir": birElDjirImage,
+};
+
 const LocalityDetail = () => {
-  const { localityId } = useParams<{ localityId: string }>();
+  const { id } = useParams<{ id: string }>();
   const [commune, setCommune] = useState<Commune | null>(null);
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCommuneAndProperties = async () => {
-      if (!localityId) return;
+      if (!id) return;
 
       try {
         // Fetch commune details
-        const { data: communeData } = await supabase
-          .from('communes')
-          .select('*')
-          .eq('id', localityId)
+        const { data: communeData, error: communeError } = await supabase
+          .from("communes")
+          .select("*, wilaya:wilayas(name)")
+          .eq("id", id)
           .single();
 
-        if (communeData) {
-          setCommune(communeData);
-        }
+        if (communeError) throw communeError;
+        setCommune(communeData);
 
-        // Fetch properties in this commune with details
-        const { data: propertiesData } = await supabase
-          .from('properties')
+        // Fetch properties in this commune
+        const { data: propertiesData, error: propertiesError } = await supabase
+          .from("properties")
           .select(`
-            *,
-            property_details (
-              bedrooms,
-              bathrooms,
-              rooms
+            id,
+            title,
+            price,
+            image_url,
+            typology,
+            surface,
+            commune:communes(
+              name,
+              wilaya:wilayas(name)
             )
           `)
-          .eq('commune_id', localityId);
+          .eq("commune_id", id)
+          .neq('status', 'Vendu'); // Exclude sold properties
 
-        if (propertiesData) {
-          setProperties(propertiesData as any);
-        }
+        if (propertiesError) throw propertiesError;
+        setProperties(propertiesData || []);
       } catch (error) {
-        console.error('Error fetching commune data:', error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchCommuneAndProperties();
-  }, [localityId]);
+  }, [id]);
 
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center">Chargement...</div>
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-lg text-muted-foreground">Chargement...</div>
         </div>
       </div>
     );
@@ -95,9 +112,17 @@ const LocalityDetail = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center">Commune non trouvée</div>
-        </div>
+        <main className="container mx-auto px-4 py-8">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold mb-4">Commune non trouvée</h2>
+            <Link to="/localites">
+              <Button>
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Retour aux localités
+              </Button>
+            </Link>
+          </div>
+        </main>
       </div>
     );
   }
@@ -106,177 +131,83 @@ const LocalityDetail = () => {
     <div className="min-h-screen bg-background">
       <Header />
 
-      <main className="container mx-auto px-4 py-8">
-        {/* Hero Section */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-4">
-            Découvrez la commune de {commune.name}
-          </h1>
-          <p className="text-lg text-muted-foreground leading-relaxed">
-            {commune.description}
-          </p>
-        </div>
-
-        {/* Properties Section */}
-        <div className="mb-6">
-          <h2 className="text-2xl font-semibold text-foreground mb-6">
-            Nos biens à {commune.name}
-          </h2>
-        </div>
-
-        {/* Main Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Properties List */}
-          <div className="lg:col-span-2">
-            {properties.length > 0 ? (
-              <div className="grid gap-6">
-                {properties.map((property) => (
-                  <Card key={property.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                    <div className="flex flex-col md:flex-row">
-                      <div className="md:w-1/3">
-                        <img
-                          src={property.image_url || "/placeholder.svg"}
-                          alt={property.title}
-                          className="w-full h-48 md:h-full object-cover"
-                        />
-                      </div>
-                      <div className="md:w-2/3 p-6">
-                        <CardHeader className="p-0 mb-4">
-                          <div className="flex justify-between items-start mb-2">
-                            <CardTitle className="text-xl font-semibold">
-                              {property.title}
-                            </CardTitle>
-                            <FavoritesSystem property={{
-                              id: property.id,
-                              title: property.title,
-                              price: property.price,
-                              surface: property.surface || 0,
-                              location: commune.name,
-                              image: property.image_url || "",
-                              type: property.status
-                            }} />
-                          </div>
-                          <div className="flex flex-wrap gap-2 mb-3">
-                            <Badge variant="secondary">
-                              {property.status}
-                            </Badge>
-                            {property.typology && (
-                              <Badge variant="outline">
-                                {property.typology}
-                              </Badge>
-                            )}
-                          </div>
-                        </CardHeader>
-                        <CardContent className="p-0">
-                          <p className="text-muted-foreground mb-4 line-clamp-2">
-                            {property.description}
-                          </p>
-
-                          {/* Property Details */}
-                          <div className="flex flex-wrap gap-4 mb-4 text-sm text-muted-foreground">
-                            {property.surface && (
-                              <div className="flex items-center gap-1">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                                </svg>
-                                <span>{property.surface} m²</span>
-                              </div>
-                            )}
-                            {property.property_details && (
-                              <>
-                                {property.property_details.bedrooms > 0 && (
-                                  <div className="flex items-center gap-1">
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                    </svg>
-                                    <span>{property.property_details.bedrooms} chambres</span>
-                                  </div>
-                                )}
-                                {property.property_details.bathrooms > 0 && (
-                                  <div className="flex items-center gap-1">
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
-                                    </svg>
-                                    <span>{property.property_details.bathrooms} salles de bain</span>
-                                  </div>
-                                )}
-                                {property.property_details.rooms > 0 && (
-                                  <div className="flex items-center gap-1">
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                                    </svg>
-                                    <span>{property.property_details.rooms} pièces</span>
-                                  </div>
-                                )}
-                              </>
-                            )}
-                            <div className="flex items-center gap-1">
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                              </svg>
-                              <span>{commune.name}</span>
-                            </div>
-                          </div>
-
-                          <div className="flex justify-between items-center">
-                            <span className="text-2xl font-bold text-primary">
-                              {formatPrice(property.price)}
-                            </span>
-                          </div>
-                        </CardContent>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <Card>
-                <CardContent className="p-8 text-center">
-                  <p className="text-muted-foreground">
-                    Aucun bien disponible dans cette commune pour le moment.
-                  </p>
-                </CardContent>
-              </Card>
+      {/* Hero Section */}
+      <div className="relative h-[40vh] overflow-hidden">
+        <img
+          src={communeImages[commune.name] || babElOuedImage}
+          alt={commune.name}
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center text-white">
+            <h1 className="text-4xl md:text-5xl font-bold mb-2">{commune.name}</h1>
+            {commune.wilaya && (
+              <p className="text-xl md:text-2xl text-white/90">Wilaya de {commune.wilaya.name}</p>
             )}
           </div>
-
-          {/* Right Column - Map Placeholder */}
-          <div className="lg:col-span-1">
-            <Card className="h-96 lg:sticky lg:top-8">
-              <CardHeader>
-                <CardTitle>Localisation</CardTitle>
-              </CardHeader>
-              <CardContent className="flex items-center justify-center h-full">
-                <div className="text-center text-muted-foreground">
-                  <div className="w-16 h-16 bg-muted rounded-lg mx-auto mb-4 flex items-center justify-center">
-                    <svg
-                      className="w-8 h-8"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
-                  </div>
-                  <p>Carte interactive</p>
-                  <p className="text-sm">(à configurer)</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
         </div>
+      </div>
+
+      <main className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <Link to="/localites">
+            <Button variant="outline">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Retour aux localités
+            </Button>
+          </Link>
+        </div>
+
+        <h2 className="text-2xl font-bold mb-6">
+          Propriétés à {commune.name} ({properties.length})
+        </h2>
+
+        {properties.length === 0 ? (
+          <div className="text-center py-12 bg-muted/30 rounded-lg">
+            <p className="text-muted-foreground text-lg">
+              Aucune propriété disponible dans cette commune pour le moment.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {properties.map((property) => (
+              <Link key={property.id} to={`/property/${property.id}`}>
+                <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 h-full">
+                  <div className="relative h-48">
+                    <img
+                      src={property.image_url || "/placeholder.svg"}
+                      alt={property.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute bottom-2 left-2 bg-black/60 text-white px-2 py-1 rounded text-sm">
+                      {property.typology}
+                    </div>
+                  </div>
+                  <CardContent className="p-4">
+                    <h3 className="text-xl font-semibold mb-2 line-clamp-1">
+                      {property.title}
+                    </h3>
+                    <div className="flex items-center text-muted-foreground mb-2 text-sm">
+                      <MapPin className="w-4 h-4 mr-1" />
+                      <span>{property.commune.name}, {property.commune.wilaya?.name}</span>
+                    </div>
+                    <div className="flex justify-between items-center mt-4">
+                      <span className="font-bold text-primary text-lg">
+                        {property.price ? `${property.price.toLocaleString()} DA` : "Prix sur demande"}
+                      </span>
+                      {property.surface && (
+                        <span className="text-sm text-muted-foreground">
+                          {property.surface} m²
+                        </span>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        )}
       </main>
     </div>
   );
