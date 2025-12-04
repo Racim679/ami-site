@@ -18,6 +18,7 @@ import { AnimatedSection, AnimatedCard } from "@/components/AnimatedComponents";
 import { supabase } from "@/integrations/supabase/client";
 import { formatPrice } from "@/lib/utils";
 import { usePropertySearch, SearchResult } from "@/hooks/usePropertySearch";
+import { matchesWilayaFilter } from "@/hooks/useWilayas";
 interface Property {
   id: string;
   title: string;
@@ -378,7 +379,7 @@ const NosBiens = () => {
     // Filtres principaux avec comparaisons insensibles à la casse
     if (filters.typeOffre && property.status?.toLowerCase() !== filters.typeOffre.toLowerCase()) return false;
     if (filters.type && property.typology?.toLowerCase() !== filters.type.toLowerCase()) return false;
-    if (filters.wilaya && property.commune?.wilaya?.name?.toLowerCase() !== filters.wilaya.toLowerCase()) return false;
+    if (filters.wilaya && !matchesWilayaFilter(property.commune?.wilaya?.name, filters.wilaya)) return false;
 
     // Filtres de prix (convertir de M en DZD: M = 10 000 DZD)
     if (filters.minPrice) {
