@@ -22,7 +22,7 @@ interface PropertyFormData {
   surface: string;
   price: string;
   typology: string;
-  locality_id: string;
+  commune_id: string;
   image_url: string;
   latitude: string;
   longitude: string;
@@ -37,7 +37,7 @@ interface Property {
   surface: number | null;
   price: number | null;
   typology: string | null;
-  locality_id: number | null;
+  commune_id: number | null;
   image_url: string | null;
   latitude: number | null;
   longitude: number | null;
@@ -56,7 +56,7 @@ const CRM = () => {
   const [newPropertyId, setNewPropertyId] = useState<string | null>(null);
   const [tempPropertyId, setTempPropertyId] = useState<string>(() => crypto.randomUUID());
   const [activeTab, setActiveTab] = useState<string>("list");
-  const [galleryPhotos, setGalleryPhotos] = useState<Array<{id?: string, url: string}>>([]);
+  const [galleryPhotos, setGalleryPhotos] = useState<Array<{ id?: string, url: string }>>([]);
   const [formData, setFormData] = useState<PropertyFormData>({
     title: "",
     description: "",
@@ -64,7 +64,7 @@ const CRM = () => {
     surface: "",
     price: "",
     typology: "",
-    locality_id: "",
+    commune_id: "",
     image_url: "",
     latitude: "",
     longitude: "",
@@ -73,7 +73,7 @@ const CRM = () => {
 
   const typologies = [
     "appartement",
-    "villa", 
+    "villa",
     "maison",
     "studio",
     "duplex",
@@ -85,7 +85,7 @@ const CRM = () => {
     "bureau"
   ];
 
-  const [localities, setLocalities] = useState<Array<{id: number, name: string}>>([]);
+  const [communes, setCommunes] = useState<Array<{ id: number, name: string }>>([]);
 
   // Vérification de l'authentification et chargement des biens
   useEffect(() => {
@@ -94,21 +94,21 @@ const CRM = () => {
       navigate("/login");
     } else {
       loadProperties();
-      loadLocalities();
+      loadCommunes();
     }
   }, [navigate]);
 
-  const loadLocalities = async () => {
+  const loadCommunes = async () => {
     try {
       const { data, error } = await supabase
-        .from("localities")
+        .from("communes")
         .select("id, name")
         .order("name");
 
       if (error) throw error;
-      setLocalities(data || []);
+      setCommunes(data || []);
     } catch (error: any) {
-      console.error("Erreur lors du chargement des localités:", error);
+      console.error("Erreur lors du chargement des communes:", error);
     }
   };
 
@@ -229,11 +229,11 @@ const CRM = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!formData.title || !formData.status || !formData.surface || !formData.locality_id || !formData.phone_whatsapp) {
+
+    if (!formData.title || !formData.status || !formData.surface || !formData.commune_id || !formData.phone_whatsapp) {
       toast({
         title: "Erreur",
-        description: "Le titre, le statut, la surface, la localité et le WhatsApp sont obligatoires",
+        description: "Le titre, le statut, la surface, la commune et le WhatsApp sont obligatoires",
         variant: "destructive",
       });
       return;
@@ -244,7 +244,7 @@ const CRM = () => {
     try {
       // Utiliser l'ID temporaire généré au début
       const propertyId = tempPropertyId;
-      
+
       const propertyData = {
         id: propertyId,
         title: formData.title,
@@ -253,7 +253,7 @@ const CRM = () => {
         surface: formData.surface ? parseFloat(formData.surface) : null,
         price: formData.price ? parseInt(formData.price) : null,
         typology: formData.typology || null,
-        locality_id: formData.locality_id ? parseInt(formData.locality_id) : null,
+        commune_id: formData.commune_id ? parseInt(formData.commune_id) : null,
         image_url: formData.image_url || null,
         latitude: formData.latitude ? parseFloat(formData.latitude) : null,
         longitude: formData.longitude ? parseFloat(formData.longitude) : null,
@@ -290,22 +290,22 @@ const CRM = () => {
         surface: "",
         price: "",
         typology: "",
-        locality_id: "",
+        commune_id: "",
         image_url: "",
         latitude: "",
         longitude: "",
         phone_whatsapp: "+213",
       });
-      
+
       // Set the new property for details editing
       setNewPropertyId(data.id);
       // Charger les photos existantes
       await loadGalleryPhotos(data.id);
       loadProperties();
-      
+
       // Générer un nouvel ID temporaire pour la prochaine création
       setTempPropertyId(crypto.randomUUID());
-      
+
       // Switch to details tab
       setActiveTab("details");
 
@@ -330,7 +330,7 @@ const CRM = () => {
       surface: property.surface?.toString() || "",
       price: property.price?.toString() || "",
       typology: property.typology || "",
-      locality_id: property.locality_id?.toString() || "",
+      commune_id: property.commune_id?.toString() || "",
       image_url: property.image_url || "",
       latitude: property.latitude?.toString() || "",
       longitude: property.longitude?.toString() || "",
@@ -343,13 +343,13 @@ const CRM = () => {
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!editingProperty) return;
-    
-    if (!formData.title || !formData.status || !formData.surface || !formData.locality_id || !formData.phone_whatsapp) {
+
+    if (!formData.title || !formData.status || !formData.surface || !formData.commune_id || !formData.phone_whatsapp) {
       toast({
         title: "Erreur",
-        description: "Le titre, le statut, la surface, la localité et le WhatsApp sont obligatoires",
+        description: "Le titre, le statut, la surface, la commune et le WhatsApp sont obligatoires",
         variant: "destructive",
       });
       return;
@@ -365,7 +365,7 @@ const CRM = () => {
         surface: formData.surface ? parseFloat(formData.surface) : null,
         price: formData.price ? parseInt(formData.price) : null,
         typology: formData.typology || null,
-        locality_id: formData.locality_id ? parseInt(formData.locality_id) : null,
+        commune_id: formData.commune_id ? parseInt(formData.commune_id) : null,
         image_url: formData.image_url || null,
         latitude: formData.latitude ? parseFloat(formData.latitude) : null,
         longitude: formData.longitude ? parseFloat(formData.longitude) : null,
@@ -399,7 +399,7 @@ const CRM = () => {
         surface: "",
         price: "",
         typology: "",
-        locality_id: "",
+        commune_id: "",
         image_url: "",
         latitude: "",
         longitude: "",
@@ -448,10 +448,10 @@ const CRM = () => {
     }
   };
 
-  const getLocalityLabel = (localityId: number | null) => {
-    if (!localityId) return "Non spécifié";
-    const locality = localities.find(l => l.id === localityId);
-    return locality?.name || "Inconnu";
+  const getCommuneLabel = (communeId: number | null) => {
+    if (!communeId) return "Non spécifié";
+    const commune = communes.find(c => c.id === communeId);
+    return commune?.name || "Inconnu";
   };
 
   // Fonction pour charger les photos de la galerie
@@ -462,9 +462,9 @@ const CRM = () => {
         .select('id, text')
         .eq('property_id', propertyId)
         .order('created_at', { ascending: true });
-      
+
       if (error) throw error;
-      
+
       setGalleryPhotos(data?.map(photo => ({ id: photo.id, url: photo.text })) || []);
     } catch (error) {
       console.error('Erreur lors du chargement des photos:', error);
@@ -496,7 +496,7 @@ const CRM = () => {
       if (error) throw error;
 
       setGalleryPhotos(prev => [...prev, { id: data.id, url: url }]);
-      
+
       toast({
         title: "Photo ajoutée",
         description: "La photo a été ajoutée à la galerie",
@@ -522,7 +522,7 @@ const CRM = () => {
       if (error) throw error;
 
       setGalleryPhotos(prev => prev.filter(photo => photo.id !== photoId));
-      
+
       toast({
         title: "Photo supprimée",
         description: "La photo a été retirée de la galerie",
@@ -540,7 +540,7 @@ const CRM = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
       <Header />
-      
+
       <main className="container mx-auto px-4 py-8 mt-16">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
@@ -583,7 +583,7 @@ const CRM = () => {
                           <TableRow>
                             <TableHead>Titre</TableHead>
                             <TableHead>Type</TableHead>
-                            <TableHead>Localité</TableHead>
+                            <TableHead>Commune</TableHead>
                             <TableHead>Surface</TableHead>
                             <TableHead>Prix</TableHead>
                             <TableHead>WhatsApp</TableHead>
@@ -596,10 +596,10 @@ const CRM = () => {
                             <TableRow key={property.id}>
                               <TableCell className="font-medium">{property.title}</TableCell>
                               <TableCell>{property.typology || "Non spécifié"}</TableCell>
-                              <TableCell>{getLocalityLabel(property.locality_id)}</TableCell>
+                              <TableCell>{getCommuneLabel(property.commune_id)}</TableCell>
                               <TableCell>{property.surface ? `${property.surface} m²` : "Non spécifié"}</TableCell>
                               <TableCell>
-                                {property.price 
+                                {property.price
                                   ? `${property.price.toLocaleString()} DZD`
                                   : "Non spécifié"
                                 }
@@ -609,9 +609,9 @@ const CRM = () => {
                               </TableCell>
                               <TableCell>
                                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                  ${property.status === 'Vendu' ? 'bg-red-100 text-red-800' : 
-                                    property.status === 'À louer' ? 'bg-blue-100 text-blue-800' : 
-                                    'bg-green-100 text-green-800'}`}>
+                                  ${property.status === 'Vendu' ? 'bg-red-100 text-red-800' :
+                                    property.status === 'À louer' ? 'bg-blue-100 text-blue-800' :
+                                      'bg-green-100 text-green-800'}`}>
                                   {getStatusLabel(property.status)}
                                 </span>
                               </TableCell>
@@ -653,7 +653,7 @@ const CRM = () => {
                     )}
                   </CardTitle>
                   <CardDescription>
-                    {editingProperty 
+                    {editingProperty
                       ? "Modifiez les informations du bien sélectionné"
                       : "Remplissez les informations pour ajouter un bien à votre portefeuille"
                     }
@@ -720,20 +720,20 @@ const CRM = () => {
                         </Select>
                       </div>
 
-                      {/* Localité */}
+                      {/* Commune */}
                       <div className="space-y-2">
-                        <Label htmlFor="locality">Localité *</Label>
+                        <Label htmlFor="commune">Commune *</Label>
                         <Select
-                          value={formData.locality_id}
-                          onValueChange={(value) => handleInputChange("locality_id", value)}
+                          value={formData.commune_id}
+                          onValueChange={(value) => handleInputChange("commune_id", value)}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="Sélectionner une localité" />
+                            <SelectValue placeholder="Sélectionner une commune" />
                           </SelectTrigger>
                           <SelectContent>
-                            {localities.map((locality) => (
-                              <SelectItem key={locality.id} value={locality.id.toString()}>
-                                {locality.name}
+                            {communes.map((commune) => (
+                              <SelectItem key={commune.id} value={commune.id.toString()}>
+                                {commune.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -776,9 +776,9 @@ const CRM = () => {
                         />
                         {formData.image_url && (
                           <div className="mt-2">
-                            <img 
-                              src={formData.image_url} 
-                              alt="Aperçu" 
+                            <img
+                              src={formData.image_url}
+                              alt="Aperçu"
                               className="h-20 w-20 object-cover rounded-lg border"
                             />
                           </div>
@@ -795,7 +795,7 @@ const CRM = () => {
                             className="h-32"
                             bucketType="gallery"
                           />
-                          
+
                           {galleryPhotos.length > 0 && (
                             <div className="mt-4">
                               <p className="text-sm text-muted-foreground mb-2">
@@ -804,9 +804,9 @@ const CRM = () => {
                               <div className="grid grid-cols-4 gap-2">
                                 {galleryPhotos.map((photo) => (
                                   <div key={photo.id || photo.url} className="relative group">
-                                    <img 
-                                      src={photo.url} 
-                                      alt="Photo galerie" 
+                                    <img
+                                      src={photo.url}
+                                      alt="Photo galerie"
                                       className="h-20 w-full object-cover rounded-lg border"
                                     />
                                     <Button
@@ -895,7 +895,7 @@ const CRM = () => {
                         )}
                       </Button>
                     </div>
-                    
+
                     {/* Informations après ajout */}
                     {newPropertyId && (
                       <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
@@ -905,7 +905,7 @@ const CRM = () => {
                         <p className="text-green-700 text-sm mb-3">
                           Vous pouvez maintenant compléter les détails avancés (commodités, sécurité, photos, etc.)
                         </p>
-                        <Button 
+                        <Button
                           onClick={() => setActiveTab("details")}
                           className="w-full"
                           variant="default"
@@ -924,9 +924,9 @@ const CRM = () => {
                 <CardHeader>
                   <CardTitle>Détails avancés de la propriété</CardTitle>
                   <CardDescription>
-                    {editingProperty 
+                    {editingProperty
                       ? `Gérez les détails avancés de: ${editingProperty.title}`
-                      : newPropertyId 
+                      : newPropertyId
                         ? "Ajoutez les détails avancés de votre nouveau bien"
                         : "Sélectionnez une propriété pour gérer ses détails avancés"
                     }
@@ -955,7 +955,7 @@ const CRM = () => {
         </div>
       </main>
 
-      
+
     </div>
   );
 };

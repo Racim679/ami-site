@@ -144,7 +144,8 @@ const Localites = () => {
         {wilayasWithCommunes.map((wilaya) => {
           // Filtrer les communes selon la recherche
           const filteredCommunes = wilaya.communes.filter((commune) =>
-            commune.name.toLowerCase().includes(searchQuery.toLowerCase())
+            commune.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+            (propertyCounts[commune.id] || 0) > 0
           );
 
           if (filteredCommunes.length === 0) return null;
