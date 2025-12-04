@@ -12,7 +12,6 @@ const BiensSection = () => {
   const [filters, setFilters] = useState<FilterState>({
     typeOffre: "",
     type: "",
-    etat: "",
     localite: "",
     minPrice: "",
     maxPrice: "",
@@ -167,10 +166,9 @@ const BiensSection = () => {
   const filteredResidences = residences.filter(residence => {
     const matchesTypeOffre = !filters.typeOffre || residence.status.toLowerCase() === filters.typeOffre.toLowerCase();
     const matchesType = !filters.type || residence.typology.toLowerCase().includes(filters.type.toLowerCase());
-    const matchesEtat = !filters.etat || residence.etat.toLowerCase() === filters.etat.toLowerCase();
     const matchesLocalite = !filters.localite || residence.location.toLowerCase().includes(filters.localite.toLowerCase());
 
-    return matchesTypeOffre && matchesType && matchesEtat && matchesLocalite;
+    return matchesTypeOffre && matchesType && matchesLocalite;
   });
   const displayedResidences = filteredResidences.slice(0, visibleResidences);
   const loadMore = () => {

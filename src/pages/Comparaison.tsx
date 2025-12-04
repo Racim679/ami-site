@@ -82,7 +82,7 @@ interface PropertyDocuments {
 
 interface Locality {
   name: string;
-  city?: {
+  wilaya?: {
     name: string;
   };
 }
@@ -141,7 +141,7 @@ const Comparaison: React.FC = () => {
             image_url,
             typology,
             description,
-            localities(name, city:cities(name)),
+            commune:communes(name, wilaya:wilayas(name)),
             property_details (
               bedrooms,
               bathrooms,
@@ -219,13 +219,19 @@ const Comparaison: React.FC = () => {
 
         // Transformer les données pour gérer les arrays/objects
         const transformedData = (data || []).map(property => {
-          // Gérer localities
+          // Gérer commune avec wilaya imbriquée
           let locality: Locality | null = null;
-          if (property.localities) {
-            if (Array.isArray(property.localities) && property.localities.length > 0) {
-              locality = property.localities[0];
-            } else if (typeof property.localities === 'object' && !Array.isArray(property.localities) && 'name' in property.localities) {
-              locality = property.localities;
+          if (property.commune) {
+            const communeData = Array.isArray(property.commune) ? property.commune[0] : property.commune;
+            if (communeData && typeof communeData === 'object' && 'name' in communeData) {
+              let wilayaData = null;
+              if (communeData.wilaya) {
+                wilayaData = Array.isArray(communeData.wilaya) ? communeData.wilaya[0] : communeData.wilaya;
+              }
+              locality = {
+                name: communeData.name,
+                wilaya: wilayaData
+              };
             }
           }
 

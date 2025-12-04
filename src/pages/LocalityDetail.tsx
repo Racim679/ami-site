@@ -86,7 +86,20 @@ const LocalityDetail = () => {
           .neq('status', 'Vendu'); // Exclude sold properties
 
         if (propertiesError) throw propertiesError;
-        setProperties(propertiesData || []);
+        
+        // Transform data to handle array/object responses
+        const transformedData = (propertiesData || []).map(property => {
+          let communeData = null;
+          if (property.commune) {
+            if (Array.isArray(property.commune) && property.commune.length > 0) {
+              communeData = property.commune[0];
+            } else if (typeof property.commune === 'object' && !Array.isArray(property.commune)) {
+              communeData = property.commune;
+            }
+          }
+          return { ...property, commune: communeData } as Property;
+        });
+        setProperties(transformedData);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {

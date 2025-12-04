@@ -206,14 +206,14 @@ const NosBiens = () => {
       }
       return {
         ...property,
-        commune
+        commune: locality
       };
     }) || [];
 
     // Préserver l'ordre de pertinence de la recherche
     const orderedResults = searchResults
       .map(searchResult => transformedData.find(p => p.id === searchResult.id))
-      .filter((p): p is Property => p !== undefined);
+      .filter((p): p is typeof transformedData[number] => p !== undefined && p !== null) as Property[];
 
     return orderedResults;
   };
@@ -314,7 +314,7 @@ const NosBiens = () => {
               }
               return {
                 ...property,
-                commune
+                commune: locality
               };
             }) || [];
             setProperties(transformedData);
