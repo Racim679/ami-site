@@ -28,50 +28,80 @@ export interface PropertyHealthScore {
 export const calculatePropertyHealth = (property: Property): PropertyHealthScore => {
    const warnings: string[] = [];
    let score = 0;
-   const maxScore = 5;
 
-   // 1. Image principale (20 points)
+   // 1. CRITÈRES CRITIQUES (Base : 40 points)
+   // Ces éléments sont indispensables pour une annonce valide
+   let criticalScore = 0;
+   const maxCritical = 40;
+
+   if (property.price && property.price > 0) criticalScore += 10;
+   else warnings.push("Prix manquant (Critique)");
+
+   if (property.surface && property.surface > 0) criticalScore += 10;
+   else warnings.push("Surface manquante (Critique)");
+
+   if (property.commune_id) criticalScore += 10;
+   else warnings.push("Commune manquante (Critique)");
+
+   if (property.typology) criticalScore += 10;
+   else warnings.push("Type de bien manquant (Critique)");
+
+   score += criticalScore;
+
+   // 2. VISUEL (Base : 30 points)
+   // L'image est le facteur #1 de clic
    if (property.image_url) {
-      score += 1;
+      score += 30;
    } else {
-      warnings.push("Image principale manquante");
+      warnings.push("Photo principale manquante (-30%)");
    }
 
-   // 2. Description (20 points)
-   if (property.description && property.description.length > 50) {
-      score += 1;
-   } else if (!property.description) {
+   // 3. QUALITATIF (Base : 20 points)
+   // Description et Titre
+   if (property.title && property.title.length > 10) {
+      score += 10;
+   } else {
+      score += 5; // Titre présent mais court
+      warnings.push("Titre peu descriptif");
+   }
+
+   if (property.description && property.description.length > 100) {
+      score += 10;
+   } else if (property.description && property.description.length > 20) {
+      score += 8; // Description correcte mais perfectible
+      warnings.push("Description pourrait être plus détaillée");
+   } else if (property.description) {
+      score += 5; // Description très courte
+      warnings.push("Description trop courte");
+   } else {
       warnings.push("Description manquante");
-   } else {
-      warnings.push("Description trop courte (< 50 caractères)");
    }
 
-   // 3. Prix (20 points)
-   if (property.price && property.price > 0) {
-      score += 1;
-   } else {
-      warnings.push("Prix manquant");
-   }
-
-   // 4. Surface (20 points)
-   if (property.surface && property.surface > 0) {
-      score += 1;
-   } else {
-      warnings.push("Surface manquante");
-   }
-
-   // 5. Localisation GPS (20 points)
+   // 4. BONUS & TECHNIQUE (Base : 10 points)
+   // GPS et Contact
    if (property.latitude && property.longitude) {
-      score += 1;
+      score += 5;
    } else {
-      warnings.push("Coordonnées GPS manquantes");
+      warnings.push("Géolocalisation exacte manquante (Bonus)");
    }
 
-   const percentageScore = Math.round((score / maxScore) * 100);
-   const isComplete = score === maxScore;
+   if (property.phone_whatsapp) {
+      score += 5;
+   } else {
+      warnings.push("Numéro WhatsApp manquant");
+   }
+
+   // PÉNALITÉS BLOQUANTES
+   // Si pas de photo, le score ne peut pas dépasser 60% même si tout le reste est parfait
+   if (!property.image_url && score > 60) score = 60;
+
+   // Si pas de prix, le score ne peut pas dépasser 50%
+   if ((!property.price || property.price === 0) && score > 50) score = 50;
+
+   const isComplete = score >= 95; // On considère complet à 95% (ex: manque juste GPS exact)
 
    return {
-      score: percentageScore,
+      score,
       warnings,
       isComplete
    };
