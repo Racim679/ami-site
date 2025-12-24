@@ -297,10 +297,11 @@ const PropertyDetail: React.FC = () => {
           </Link>
         </div>
 
-        {/* Main Image - Full Width */}
-        <div className="mb-8 -mx-4 block">
+        {/* Main Image - Full Width - Hidden on mobile */}
+        <div className="mb-8 -mx-4 hidden md:block">
           <div
-            className="w-full bg-muted cursor-pointer hover:opacity-95 transition-opacity h-[40vh] md:h-[80vh] relative"
+            className="w-full bg-muted cursor-pointer hover:opacity-95 transition-opacity"
+            style={{ height: '80vh' }}
             onClick={() => openCarousel(0)}
           >
             {property.image_url ? (
@@ -312,13 +313,6 @@ const PropertyDetail: React.FC = () => {
             ) : (
               <div className="w-full h-full flex items-center justify-center text-muted-foreground">
                 Aucune image disponible
-              </div>
-            )}
-
-            {/* Mobile Photo Count Indicator */}
-            {property.property_photos && property.property_photos.length > 0 && (
-              <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-medium md:hidden flex items-center">
-                <span className="mr-1">📷</span> {property.property_photos.length}
               </div>
             )}
           </div>
@@ -339,6 +333,23 @@ const PropertyDetail: React.FC = () => {
             <div className="px-4">
               <div className="relative">
                 <h3 className="text-2xl font-bold mb-4 hidden md:block">Photos de la propriété</h3>
+
+                {/* Mobile: Une seule image */}
+                <div className="block md:hidden">
+                  <div
+                    className="h-64 rounded-lg overflow-hidden bg-muted cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => openCarousel(0)}
+                  >
+                    <img
+                      src={property.property_photos![0].photo_url}
+                      alt={property.property_photos![0].caption || `Photo principale`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="text-center text-sm text-muted-foreground mt-2">
+                    Cliquez pour voir toutes les {property.property_photos!.length} photo{property.property_photos!.length > 1 ? 's' : ''}
+                  </div>
+                </div>
 
                 {/* Desktop: Grille de photos */}
                 <div className="hidden md:block">

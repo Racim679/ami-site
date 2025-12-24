@@ -136,24 +136,18 @@ export type Database = {
           created_at: string | null
           id: number
           name: string
-          name_in_arabic: string | null
-          name_in_english: string | null
           wilaya_id: number | null
         }
         Insert: {
           created_at?: string | null
           id?: number
           name: string
-          name_in_arabic?: string | null
-          name_in_english?: string | null
           wilaya_id?: number | null
         }
         Update: {
           created_at?: string | null
           id?: number
           name?: string
-          name_in_arabic?: string | null
-          name_in_english?: string | null
           wilaya_id?: number | null
         }
         Relationships: [
@@ -271,33 +265,6 @@ export type Database = {
           url_instagram?: string
           url_video?: string | null
           video_analyzed?: Json | null
-        }
-        Relationships: []
-      }
-      followers_dm: {
-        Row: {
-          created_at: string
-          id: number
-          persistant_unqualified: boolean | null
-          response_latest: string | null
-          unqualified: boolean | null
-          unqualified_updated_at: string | null
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          persistant_unqualified?: boolean | null
-          response_latest?: string | null
-          unqualified?: boolean | null
-          unqualified_updated_at?: string | null
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          persistant_unqualified?: boolean | null
-          response_latest?: string | null
-          unqualified?: boolean | null
-          unqualified_updated_at?: string | null
         }
         Relationships: []
       }
@@ -622,33 +589,13 @@ export type Database = {
         }
         Relationships: []
       }
-      pending_sql_query: {
-        Row: {
-          created_at: string
-          id: number
-          sql_query: string | null
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          sql_query?: string | null
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          sql_query?: string | null
-        }
-        Relationships: []
-      }
       properties: {
         Row: {
           commune_id: number | null
           created_at: string | null
           description: string | null
-          facebook_post_id: string | null
           id: string
           image_url: string | null
-          instagram_post_id: string | null
           latitude: number | null
           longitude: number | null
           phone_whatsapp: string
@@ -663,10 +610,8 @@ export type Database = {
           commune_id?: number | null
           created_at?: string | null
           description?: string | null
-          facebook_post_id?: string | null
           id?: string
           image_url?: string | null
-          instagram_post_id?: string | null
           latitude?: number | null
           longitude?: number | null
           phone_whatsapp?: string
@@ -681,10 +626,8 @@ export type Database = {
           commune_id?: number | null
           created_at?: string | null
           description?: string | null
-          facebook_post_id?: string | null
           id?: string
           image_url?: string | null
-          instagram_post_id?: string | null
           latitude?: number | null
           longitude?: number | null
           phone_whatsapp?: string
@@ -1269,22 +1212,16 @@ export type Database = {
           created_at: string | null
           id: number
           name: string
-          name_in_arabic: string | null
-          name_in_english: string | null
         }
         Insert: {
           created_at?: string | null
           id?: number
           name: string
-          name_in_arabic?: string | null
-          name_in_english?: string | null
         }
         Update: {
           created_at?: string | null
           id?: number
           name?: string
-          name_in_arabic?: string | null
-          name_in_english?: string | null
         }
         Relationships: []
       }
@@ -1306,7 +1243,6 @@ export type Database = {
     }
     Functions: {
       create_user_tables: { Args: { p_user_id: string }; Returns: undefined }
-      execute_safe_query: { Args: { query_text: string }; Returns: Json }
       increment_analytics: {
         Args: { p_platform: string; p_type: string; p_user_id: string }
         Returns: undefined

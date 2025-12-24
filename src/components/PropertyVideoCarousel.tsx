@@ -26,7 +26,7 @@ const PropertyVideoCarousel: React.FC<PropertyVideoCarouselProps> = ({ videos, c
               <PropertyVideoPlayer
                 videoUrl={video.video_url}
                 videoType={video.video_type || 'youtube'}
-                className="w-full aspect-video"
+                className="h-64"
               />
             </CarouselItem>
           ))}
