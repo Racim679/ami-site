@@ -461,7 +461,7 @@ const PropertyPage: React.FC = () => {
             {property.description && (
               <div>
                 <h3 className="text-xl font-semibold mb-4">Description</h3>
-                <p className="text-muted-foreground leading-relaxed">{property.description}</p>
+                <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{property.description}</p>
               </div>
             )}
 
