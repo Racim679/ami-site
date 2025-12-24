@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Edit, Search, Filter } from "lucide-react";
+import { Edit, Search, Filter, Trash2 } from "lucide-react";
 import { calculatePropertyHealth, getHealthBadgeColor, generateQualityFlags } from "@/utils/dataQualityUtils";
 import { Property } from "@/types/property";
 import { QualityBadges } from "./QualityBadges";
@@ -18,9 +18,10 @@ interface PropertyDataGridProps {
    properties: Property[];
    communes: Commune[];
    onEdit: (property: Property) => void;
+   onDelete: (propertyId: string, propertyTitle: string) => void;
 }
 
-export const PropertyDataGrid = ({ properties, communes, onEdit }: PropertyDataGridProps) => {
+export const PropertyDataGrid = ({ properties, communes, onEdit, onDelete }: PropertyDataGridProps) => {
    const [searchQuery, setSearchQuery] = useState("");
    const [statusFilter, setStatusFilter] = useState<string>("all");
    const [communeFilter, setCommuneFilter] = useState<string>("all");
@@ -232,15 +233,26 @@ export const PropertyDataGrid = ({ properties, communes, onEdit }: PropertyDataG
                                  </span>
                               </TableCell>
                               <TableCell>
-                                 <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => onEdit(property)}
-                                    className="flex items-center gap-1"
-                                 >
-                                    <Edit className="h-3 w-3" />
-                                    Modifier
-                                 </Button>
+                                 <div className="flex items-center gap-2">
+                                    <Button
+                                       variant="outline"
+                                       size="sm"
+                                       onClick={() => onEdit(property)}
+                                       className="flex items-center gap-1"
+                                    >
+                                       <Edit className="h-3 w-3" />
+                                       Modifier
+                                    </Button>
+                                    <Button
+                                       variant="destructive"
+                                       size="sm"
+                                       onClick={() => onDelete(property.id, property.title)}
+                                       className="flex items-center gap-1"
+                                    >
+                                       <Trash2 className="h-3 w-3" />
+                                       Supprimer
+                                    </Button>
+                                 </div>
                               </TableCell>
                            </TableRow>
                         );

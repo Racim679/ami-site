@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import PropertyDetailsEditor from "@/components/PropertyDetailsEditor";
-import { Building, Plus, LogOut, Edit, Save, X } from "lucide-react";
+import { Building, Plus, LogOut, Edit, Save, X, Trash2 } from "lucide-react";
 import { ImageUploadDropzone } from "@/components/ImageUploadDropzone";
 import { DashboardStats } from "@/components/crm/DashboardStats";
 import { PropertyDataGrid } from "@/components/crm/PropertyDataGrid";
@@ -298,6 +298,68 @@ const CRM = () => {
       setActiveTab("list");
    };
 
+   const handleDelete = async (propertyId: string, propertyTitle: string) => {
+      // Confirmation avant suppression
+      if (!window.confirm(`Êtes-vous sûr de vouloir supprimer le bien "${propertyTitle}" ?\n\nCette action est irréversible et supprimera toutes les données associées (photos, détails, etc.).`)) {
+         return;
+      }
+
+      setIsLoading(true);
+
+      try {
+         // Supprimer toutes les données associées
+         // Photos
+         await supabase.from('property_photos').delete().eq('property_id', propertyId);
+         
+         // Vidéos
+         await supabase.from('property_videos').delete().eq('property_id', propertyId);
+         
+         // Détails
+         await supabase.from('property_details').delete().eq('property_id', propertyId);
+         
+         // Commodités structurées
+         await supabase.from('property_amenities_structured').delete().eq('property_id', propertyId);
+         
+         // Sécurité structurée
+         await supabase.from('property_security_structured').delete().eq('property_id', propertyId);
+         
+         // Documents structurés
+         await supabase.from('property_documents_structured').delete().eq('property_id', propertyId);
+         
+         // Proximité structurée
+         await supabase.from('property_nearby_structured').delete().eq('property_id', propertyId);
+         
+         // Caractéristiques du bâtiment
+         await supabase.from('property_building').delete().eq('property_id', propertyId);
+         
+         // Le bien lui-même
+         const { error } = await supabase.from('properties').delete().eq('id', propertyId);
+
+         if (error) throw error;
+
+         toast({
+            title: "Succès",
+            description: `Le bien "${propertyTitle}" a été supprimé avec succès`,
+         });
+
+         // Recharger la liste
+         loadProperties();
+
+         // Si on était en train d'éditer ce bien, annuler l'édition
+         if (editingProperty?.id === propertyId) {
+            cancelEdit();
+         }
+      } catch (error: any) {
+         toast({
+            title: "Erreur",
+            description: error.message || "Impossible de supprimer le bien",
+            variant: "destructive",
+         });
+      } finally {
+         setIsLoading(false);
+      }
+   };
+
    const loadGalleryPhotos = async (propertyId: string) => {
       try {
          const { data, error } = await supabase
@@ -428,6 +490,7 @@ const CRM = () => {
                               properties={properties}
                               communes={communes}
                               onEdit={handleEdit}
+                              onDelete={handleDelete}
                            />
                         </CardContent>
                      </Card>
