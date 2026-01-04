@@ -100,6 +100,31 @@ const CRM = () => {
       }
    };
 
+   // Fonction helper pour valider et convertir commune_id
+   const validateAndConvertCommuneId = (communeIdString: string): number | null => {
+      // Vérifier que la valeur n'est pas vide
+      if (!communeIdString || communeIdString.trim() === "") {
+         return null;
+      }
+
+      // Convertir en nombre avec base 10 explicite
+      const communeId = parseInt(communeIdString.trim(), 10);
+
+      // Vérifier que la conversion a réussi (pas NaN) et que c'est un nombre positif
+      if (isNaN(communeId) || communeId <= 0) {
+         return null;
+      }
+
+      // Vérifier que la commune existe dans la liste chargée
+      const communeExists = communes.some(c => c.id === communeId);
+      if (!communeExists) {
+         console.warn(`Commune ID ${communeId} n'existe pas dans la liste chargée`);
+         // On continue quand même car la DB vérifiera la foreign key
+      }
+
+      return communeId;
+   };
+
    const loadProperties = async () => {
       try {
          const { data, error } = await supabase
@@ -170,6 +195,17 @@ const CRM = () => {
          return;
       }
 
+      // Valider la commune_id avant de continuer
+      const communeId = validateAndConvertCommuneId(formData.commune_id);
+      if (communeId === null) {
+         toast({
+            title: "Erreur",
+            description: "La commune sélectionnée n'est pas valide. Veuillez sélectionner une commune dans la liste.",
+            variant: "destructive",
+         });
+         return;
+      }
+
       setIsLoading(true);
 
       try {
@@ -180,9 +216,9 @@ const CRM = () => {
             description: formData.description || null,
             status: formData.status,
             surface: formData.surface ? parseFloat(formData.surface) : null,
-            price: formData.price ? parseInt(formData.price) : null,
+            price: formData.price ? parseInt(formData.price, 10) : null,
             typology: formData.typology || null,
-            commune_id: formData.commune_id ? parseInt(formData.commune_id) : null,
+            commune_id: communeId, // Utiliser la valeur validée
             image_url: formData.image_url || null,
             latitude: formData.latitude ? parseFloat(formData.latitude) : null,
             longitude: formData.longitude ? parseFloat(formData.longitude) : null,
@@ -250,6 +286,17 @@ const CRM = () => {
          return;
       }
 
+      // Valider la commune_id avant de continuer
+      const communeId = validateAndConvertCommuneId(formData.commune_id);
+      if (communeId === null) {
+         toast({
+            title: "Erreur",
+            description: "La commune sélectionnée n'est pas valide. Veuillez sélectionner une commune dans la liste.",
+            variant: "destructive",
+         });
+         return;
+      }
+
       setIsLoading(true);
 
       try {
@@ -258,9 +305,9 @@ const CRM = () => {
             description: formData.description || null,
             status: formData.status,
             surface: formData.surface ? parseFloat(formData.surface) : null,
-            price: formData.price ? parseInt(formData.price) : null,
+            price: formData.price ? parseInt(formData.price, 10) : null,
             typology: formData.typology || null,
-            commune_id: formData.commune_id ? parseInt(formData.commune_id) : null,
+            commune_id: communeId, // Utiliser la valeur validée
             image_url: formData.image_url || null,
             latitude: formData.latitude ? parseFloat(formData.latitude) : null,
             longitude: formData.longitude ? parseFloat(formData.longitude) : null,
