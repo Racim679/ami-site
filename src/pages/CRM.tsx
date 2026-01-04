@@ -125,6 +125,28 @@ const CRM = () => {
       return communeId;
    };
 
+   // Fonction pour convertir le status du formulaire vers le format attendu par la DB
+   // La contrainte chk_status attend : 'à vendre', 'vendu', 'à louer' (en minuscules)
+   const convertStatusForDB = (status: string): string => {
+      const statusMap: Record<string, string> = {
+         "À Vendre": "à vendre",
+         "Vendu": "vendu",
+         "À louer": "à louer"
+      };
+      
+      return statusMap[status] || status.toLowerCase();
+   };
+
+   // Fonction inverse pour convertir le status de la DB vers l'affichage
+   const convertStatusFromDB = (status: string): string => {
+      const reverseMap: Record<string, string> = {
+         "à vendre": "À Vendre",
+         "vendu": "Vendu",
+         "à louer": "À louer"
+      };
+      
+      return reverseMap[status] || status;
+   };
 
    const loadProperties = async () => {
       try {
@@ -221,7 +243,7 @@ const CRM = () => {
             id: propertyId,
             title: formData.title,
             description: formData.description || null,
-            status: formData.status, // La contrainte accepte maintenant directement les valeurs avec accents
+            status: convertStatusForDB(formData.status), // Convertir en minuscules pour la DB
             surface: formData.surface ? parseFloat(formData.surface) : null,
             price: formData.price ? parseInt(formData.price, 10) : null,
             typology: formData.typology || null,
@@ -268,7 +290,7 @@ const CRM = () => {
       setFormData({
          title: property.title,
          description: property.description || "",
-         status: property.status, // La DB stocke maintenant directement avec accents
+         status: convertStatusFromDB(property.status), // Convertir depuis la DB (minuscules) vers l'affichage (majuscules)
          surface: property.surface?.toString() || "",
          price: property.price?.toString() || "",
          typology: property.typology || "",
@@ -317,7 +339,7 @@ const CRM = () => {
          const propertyData = {
             title: formData.title,
             description: formData.description || null,
-            status: formData.status, // La contrainte accepte maintenant directement les valeurs avec accents
+            status: convertStatusForDB(formData.status), // Convertir en minuscules pour la DB
             surface: formData.surface ? parseFloat(formData.surface) : null,
             price: formData.price ? parseInt(formData.price, 10) : null,
             typology: formData.typology || null,
