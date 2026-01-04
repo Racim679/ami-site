@@ -136,18 +136,24 @@ export type Database = {
           created_at: string | null
           id: number
           name: string
+          name_in_arabic: string | null
+          name_in_english: string | null
           wilaya_id: number | null
         }
         Insert: {
           created_at?: string | null
           id?: number
           name: string
+          name_in_arabic?: string | null
+          name_in_english?: string | null
           wilaya_id?: number | null
         }
         Update: {
           created_at?: string | null
           id?: number
           name?: string
+          name_in_arabic?: string | null
+          name_in_english?: string | null
           wilaya_id?: number | null
         }
         Relationships: [
@@ -265,6 +271,33 @@ export type Database = {
           url_instagram?: string
           url_video?: string | null
           video_analyzed?: Json | null
+        }
+        Relationships: []
+      }
+      followers_dm: {
+        Row: {
+          created_at: string
+          id: number
+          persistant_unqualified: boolean | null
+          response_latest: string | null
+          unqualified: boolean | null
+          unqualified_updated_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          persistant_unqualified?: boolean | null
+          response_latest?: string | null
+          unqualified?: boolean | null
+          unqualified_updated_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          persistant_unqualified?: boolean | null
+          response_latest?: string | null
+          unqualified?: boolean | null
+          unqualified_updated_at?: string | null
         }
         Relationships: []
       }
@@ -589,13 +622,33 @@ export type Database = {
         }
         Relationships: []
       }
+      pending_sql_query: {
+        Row: {
+          created_at: string
+          id: number
+          sql_query: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          sql_query?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          sql_query?: string | null
+        }
+        Relationships: []
+      }
       properties: {
         Row: {
           commune_id: number | null
           created_at: string | null
           description: string | null
+          facebook_post_id: string | null
           id: string
           image_url: string | null
+          instagram_post_id: string | null
           latitude: number | null
           longitude: number | null
           phone_whatsapp: string
@@ -610,8 +663,10 @@ export type Database = {
           commune_id?: number | null
           created_at?: string | null
           description?: string | null
+          facebook_post_id?: string | null
           id?: string
           image_url?: string | null
+          instagram_post_id?: string | null
           latitude?: number | null
           longitude?: number | null
           phone_whatsapp?: string
@@ -626,8 +681,10 @@ export type Database = {
           commune_id?: number | null
           created_at?: string | null
           description?: string | null
+          facebook_post_id?: string | null
           id?: string
           image_url?: string | null
+          instagram_post_id?: string | null
           latitude?: number | null
           longitude?: number | null
           phone_whatsapp?: string
@@ -1051,6 +1108,45 @@ export type Database = {
           },
         ]
       }
+      Templates: {
+        Row: {
+          created_at: string
+          id: number
+          text: string | null
+          title: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          text?: string | null
+          title?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          text?: string | null
+          title?: string | null
+        }
+        Relationships: []
+      }
+      transcripts: {
+        Row: {
+          created_at: string
+          id: number
+          text: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          text?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          text?: string | null
+        }
+        Relationships: []
+      }
       user_medias: {
         Row: {
           caption: string | null
@@ -1107,6 +1203,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
       }
       users: {
         Row: {
@@ -1212,16 +1329,46 @@ export type Database = {
           created_at: string | null
           id: number
           name: string
+          name_in_arabic: string | null
+          name_in_english: string | null
         }
         Insert: {
           created_at?: string | null
-          id?: number
+          id: number
           name: string
+          name_in_arabic?: string | null
+          name_in_english?: string | null
         }
         Update: {
           created_at?: string | null
           id?: number
           name?: string
+          name_in_arabic?: string | null
+          name_in_english?: string | null
+        }
+        Relationships: []
+      }
+      wilayas_old: {
+        Row: {
+          created_at: string | null
+          id: number
+          name: string
+          name_in_arabic: string | null
+          name_in_english: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          name: string
+          name_in_arabic?: string | null
+          name_in_english?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          name?: string
+          name_in_arabic?: string | null
+          name_in_english?: string | null
         }
         Relationships: []
       }
@@ -1243,6 +1390,14 @@ export type Database = {
     }
     Functions: {
       create_user_tables: { Args: { p_user_id: string }; Returns: undefined }
+      execute_safe_query: { Args: { query_text: string }; Returns: Json }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       increment_analytics: {
         Args: { p_platform: string; p_type: string; p_user_id: string }
         Returns: undefined
@@ -1250,7 +1405,7 @@ export type Database = {
       refresh_db_metadata: { Args: never; Returns: undefined }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "agent" | "viewer"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1377,6 +1532,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "agent", "viewer"],
+    },
   },
 } as const
