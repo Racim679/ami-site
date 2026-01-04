@@ -125,6 +125,7 @@ const CRM = () => {
       return communeId;
    };
 
+
    const loadProperties = async () => {
       try {
          const { data, error } = await supabase
@@ -214,7 +215,7 @@ const CRM = () => {
             id: propertyId,
             title: formData.title,
             description: formData.description || null,
-            status: formData.status,
+            status: formData.status, // La contrainte accepte maintenant directement les valeurs avec accents
             surface: formData.surface ? parseFloat(formData.surface) : null,
             price: formData.price ? parseInt(formData.price, 10) : null,
             typology: formData.typology || null,
@@ -259,7 +260,7 @@ const CRM = () => {
       setFormData({
          title: property.title,
          description: property.description || "",
-         status: property.status,
+         status: property.status, // La DB stocke maintenant directement avec accents
          surface: property.surface?.toString() || "",
          price: property.price?.toString() || "",
          typology: property.typology || "",
@@ -303,7 +304,7 @@ const CRM = () => {
          const propertyData = {
             title: formData.title,
             description: formData.description || null,
-            status: formData.status,
+            status: formData.status, // La contrainte accepte maintenant directement les valeurs avec accents
             surface: formData.surface ? parseFloat(formData.surface) : null,
             price: formData.price ? parseInt(formData.price, 10) : null,
             typology: formData.typology || null,
