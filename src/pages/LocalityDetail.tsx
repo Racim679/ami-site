@@ -47,24 +47,33 @@ const communeImages: Record<string, string> = {
 };
 
 const LocalityDetail = () => {
-  const { id } = useParams<{ id: string }>();
+  const { localityId } = useParams<{ localityId: string }>();
   const [commune, setCommune] = useState<Commune | null>(null);
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCommuneAndProperties = async () => {
-      if (!id) return;
+      if (!localityId) {
+        setLoading(false);
+        return;
+      }
 
       try {
         // Fetch commune details
         const { data: communeData, error: communeError } = await supabase
           .from("communes")
           .select("*, wilaya:wilayas(name)")
-          .eq("id", id)
-          .single();
+          .eq("id", localityId)
+          .maybeSingle();
 
         if (communeError) throw communeError;
+        if (!communeData) {
+          setCommune(null);
+          setProperties([]);
+          return;
+        }
+
         setCommune(communeData);
 
         // Fetch properties in this commune
@@ -82,33 +91,36 @@ const LocalityDetail = () => {
               wilaya:wilayas(name)
             )
           `)
-          .eq("commune_id", id)
+          .eq("commune_id", localityId)
           .neq('status', 'Vendu'); // Exclude sold properties
 
         if (propertiesError) throw propertiesError;
-        
+
         // Transform data to handle array/object responses
-        const transformedData = (propertiesData || []).map(property => {
-          let communeData = null;
+        const transformedData = (propertiesData || []).map((property) => {
+          let communeDataTransformed = null;
           if (property.commune) {
             if (Array.isArray(property.commune) && property.commune.length > 0) {
-              communeData = property.commune[0];
+              communeDataTransformed = property.commune[0];
             } else if (typeof property.commune === 'object' && !Array.isArray(property.commune)) {
-              communeData = property.commune;
+              communeDataTransformed = property.commune;
             }
           }
-          return { ...property, commune: communeData } as Property;
+          return { ...property, commune: communeDataTransformed } as Property;
         });
+
         setProperties(transformedData);
       } catch (error) {
         console.error("Error fetching data:", error);
+        setCommune(null);
+        setProperties([]);
       } finally {
         setLoading(false);
       }
     };
 
     fetchCommuneAndProperties();
-  }, [id]);
+  }, [localityId]);
 
   if (loading) {
     return (
