@@ -211,6 +211,12 @@ const CRM = () => {
 
       try {
          const propertyId = tempPropertyId;
+         
+         // Debug: logger la valeur du status avant envoi
+         console.log('Status à envoyer:', formData.status);
+         console.log('Status length:', formData.status.length);
+         console.log('Status char codes:', Array.from(formData.status).map(c => c.charCodeAt(0)));
+         
          const propertyData = {
             id: propertyId,
             title: formData.title,
@@ -226,6 +232,8 @@ const CRM = () => {
             phone_whatsapp: formData.phone_whatsapp,
          };
 
+         console.log('Données à envoyer:', JSON.stringify(propertyData, null, 2));
+         
          const { data, error } = await supabase.from("properties").insert([propertyData]).select().single();
 
          if (error) throw error;
@@ -301,6 +309,11 @@ const CRM = () => {
       setIsLoading(true);
 
       try {
+         // Debug: logger la valeur du status avant envoi
+         console.log('Status à envoyer (update):', formData.status);
+         console.log('Status length:', formData.status.length);
+         console.log('Status char codes:', Array.from(formData.status).map(c => c.charCodeAt(0)));
+         
          const propertyData = {
             title: formData.title,
             description: formData.description || null,
@@ -314,6 +327,8 @@ const CRM = () => {
             longitude: formData.longitude ? parseFloat(formData.longitude) : null,
             phone_whatsapp: formData.phone_whatsapp,
          };
+
+         console.log('Données à envoyer (update):', JSON.stringify(propertyData, null, 2));
 
          const { error } = await supabase.from("properties").update(propertyData).eq("id", editingProperty.id);
 
