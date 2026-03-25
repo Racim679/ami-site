@@ -1,6 +1,6 @@
 import { Facebook, Instagram, Youtube } from "lucide-react";
 import { Link } from "react-router-dom";
-import logo from "@/assets/ami-immobilier-logo.png";
+import logo from "@/assets/ami-immo-logo-transparant.png";
 
 // Icône TikTok personnalisée
 const TikTokIcon = ({ className }: { className?: string }) => (
