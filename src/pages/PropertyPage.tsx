@@ -61,7 +61,7 @@ interface PropertyPageData {
   documents: Array<{ document_name: string }>;
 }
 
-const PropertyPage: React.FC = () => {
+const PropertyPage = () => {
   const { propertyId } = useParams<{ propertyId: string }>();
   const [property, setProperty] = useState<PropertyPageData | null>(null);
   const [loading, setLoading] = useState(true);
