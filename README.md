@@ -1,73 +1,106 @@
-# Welcome to your Lovable project
+# AMI Immobilier
 
-## Project info
+Site web vitrine pour AMI Immobilier, agence immobilière en Algérie.
 
-**URL**: https://lovable.dev/projects/5b34b0b7-8630-4518-8f86-1ea2a10e4867
+## Description
 
-## How can I edit this code?
+Application React + TypeScript + Vite permettant de présenter les biens immobiliers (appartements, villas, terrains) disponibles à la vente ou à la location en Algérie.
 
-There are several ways of editing your application.
+## Stack Technique
 
-**Use Lovable**
+- **Framework** : React 18 + TypeScript
+- **Build Tool** : Vite 5
+- **Styling** : Tailwind CSS + shadcn/ui
+- **Base de données** : Supabase
+- **Authentification** : Supabase Auth
+- **Cartes** : Google Maps API
+- **Animations** : Framer Motion
+- **Déploiement** : Vercel
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/5b34b0b7-8630-4518-8f86-1ea2a10e4867) and start prompting.
+## Prérequis
 
-Changes made via Lovable will be committed automatically to this repo.
+- Node.js 18+ 
+- npm ou yarn
+- Compte Supabase
+- Clés API Google Maps (optionnel)
 
-**Use your preferred IDE**
+## Installation
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+```bash
+# Cloner le repository
+git clone <repo-url>
+cd AMI_IMMOBILIER_SITE
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+# Installer les dépendances
+npm install
 
-Follow these steps:
+# Configurer les variables d'environnement
+cp .env.example .env
+# Éditer .env avec vos clés Supabase
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Lancer en mode développement
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Variables d'environnement
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Créer un fichier `.env` à la racine :
 
-**Use GitHub Codespaces**
+```env
+VITE_SUPABASE_URL=https://votre-projet.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=votre-cle-publique
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Scripts disponibles
 
-## What technologies are used for this project?
+| Commande | Description |
+|----------|-------------|
+| `npm run dev` | Lancer le serveur de développement |
+| `npm run build` | Build pour production |
+| `npm run preview` | Prévisualiser le build |
+| `npm run lint` | Lancer ESLint |
 
-This project is built with:
+## Structure du projet
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```
+src/
+├── assets/           # Images, polices, fichiers statiques
+├── components/       # Composants React réutilisables
+│   ├── crm/         # Composants du CRM
+│   └── ui/          # Composants UI (shadcn)
+├── hooks/           # Custom React hooks
+├── integrations/    # Configurations externes (Supabase)
+├── lib/             # Utilitaires
+├── pages/           # Pages de l'application
+├── types/           # Types TypeScript
+└── utils/           # Fonctions utilitaires
+```
 
-## How can I deploy this project?
+## Fonctionnalités
 
-Simply open [Lovable](https://lovable.dev/projects/5b34b0b7-8630-4518-8f86-1ea2a10e4867) and click on Share -> Publish.
+- Catalogue de biens immobiliers avec filtres avancés
+- Fiches détaillées des biens (photos, vidéos, caractéristiques)
+- CRM pour la gestion des biens
+- Système de comparaison de biens
+- Favoris et partage
+- Formulaire de contact et prise de rendez-vous
+- Chatbot intégré
+- Design responsive (mobile-first)
 
-## Can I connect a custom domain to my Lovable project?
+## Déploiement
 
-Yes, you can!
+Le projet est configuré pour être déployé sur Vercel :
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+1. Connecter le repository GitHub à Vercel
+2. Configurer les variables d'environnement dans le dashboard Vercel
+3. Déployer
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Configuration build sur Vercel :
+- **Framework Preset** : Vite
+- **Build Command** : `npm run build`
+- **Output Directory** : `dist`
+
+## Licence
+
+© 2025 AMI Immobilier. Tous droits réservés.
+Développé par Si Smail Racim.
