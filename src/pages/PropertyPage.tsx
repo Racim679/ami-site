@@ -61,7 +61,7 @@ interface PropertyPageData {
   documents: Array<{ document_name: string }>;
 }
 
-const PropertyPage = () => {
+function PropertyPage() {
   const { propertyId } = useParams<{ propertyId: string }>();
   const [property, setProperty] = useState<PropertyPageData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -584,6 +584,6 @@ const PropertyPage = () => {
       <WhatsAppFloatingButton phoneNumber={property.phone_whatsapp} />
     </div>
   );
-};
+}
 
 export default PropertyPage;
