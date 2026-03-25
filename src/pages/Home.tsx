@@ -37,7 +37,7 @@ const Home: React.FC = () => {
         backgroundImage: "url('/placeholder.svg')"
       }}></div>
 
-        <div className="relative z-20 text-center text-primary-foreground px-4 sm:px-6 md:px-8 w-full max-w-4xl mx-auto">
+        <div className="relative z-20 text-center text-primary-foreground px-6 sm:px-8 md:px-12 w-full max-w-4xl mx-auto">
           <motion.h1 className="text-3xl min-[375px]:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight" initial={{
           opacity: 0,
           y: 50
@@ -85,9 +85,9 @@ const Home: React.FC = () => {
       <CitiesCarousel />
 
       {/* Features Section */}
-      <AnimatedSection className="pb-4 pt-2 bg-background">
-        <div className="container mx-auto px-4">
-          <motion.div className="text-center mb-4 sm:mb-6 px-4" initial={{
+      <AnimatedSection className="py-12 md:py-16 lg:py-20 bg-background">
+        <div className="container mx-auto px-6 sm:px-8 md:px-12">
+          <motion.div className="text-center mb-8 md:mb-12 px-4" initial={{
           opacity: 0,
           y: 30
         }} whileInView={{
@@ -104,7 +104,7 @@ const Home: React.FC = () => {
             </p>
           </motion.div>
 
-          <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6" variants={{
+          <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8" variants={{
           hidden: {
             opacity: 0
           },
@@ -129,7 +129,7 @@ const Home: React.FC = () => {
           }} transition={{
             duration: 0.5
           }}>
-                <AnimatedCard className="text-center p-4 md:p-5 h-full bg-card border border-border">
+                <AnimatedCard className="text-center p-6 md:p-8 h-full bg-card border border-border">
                   <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                     <feature.icon className="w-8 h-8 text-primary" />
                   </div>
@@ -144,7 +144,7 @@ const Home: React.FC = () => {
           </motion.div>
 
           {/* CTA Contact */}
-          <motion.div className="text-center mt-6 md:mt-8" initial={{
+          <motion.div className="text-center mt-10 md:mt-12" initial={{
           opacity: 0,
           y: 20
         }} whileInView={{

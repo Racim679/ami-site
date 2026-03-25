@@ -13,7 +13,7 @@ export const ActiveFilters = ({ filters, onRemoveFilter, onResetAll }: ActiveFil
     const labels: Record<string, string> = {
       typeOffre: "Type d'offre",
       type: "Type",
-      localite: "Localité",
+      wilaya: "Wilaya",
       minPrice: "Prix min",
       maxPrice: "Prix max",
       minSurface: "Surface min",

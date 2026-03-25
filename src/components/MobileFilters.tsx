@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useLocalities } from '@/hooks/useLocalities';
+import { useWilayas } from '@/hooks/useWilayas';
 import { FilterState } from '@/components/PropertyFilters';
 import { motion } from 'framer-motion';
 
@@ -21,7 +21,7 @@ interface MobileFiltersProps {
 const initialFilters: FilterState = {
   typeOffre: "",
   type: "",
-  localite: "",
+  wilaya: "",
   minPrice: "",
   maxPrice: "",
   minSurface: "",
@@ -42,14 +42,14 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('principaux');
   const [filters, setFilters] = useState<FilterState>(initialFilters);
-  const { localities, loading: localitiesLoading } = useLocalities();
+  const { wilayas, loading: wilayasLoading } = useWilayas();
 
   // Synchroniser les filtres avec l'URL au chargement et quand l'URL change
   useEffect(() => {
     const urlFilters: FilterState = {
       typeOffre: searchParams.get("typeOffre") || "",
       type: searchParams.get("type") || "",
-      localite: searchParams.get("localite") || "",
+      wilaya: searchParams.get("wilaya") || "",
       minPrice: searchParams.get("minPrice") || "",
       maxPrice: searchParams.get("maxPrice") || "",
       minSurface: searchParams.get("minSurface") || "",
@@ -234,21 +234,21 @@ export const MobileFilters = ({ onFiltersChange }: MobileFiltersProps) => {
                     </div>
                   </div>
 
-                  {/* Localité */}
+                  {/* Wilaya */}
                   <div className="space-y-3">
-                    <h3 className="text-base font-medium">Localité</h3>
+                    <h3 className="text-base font-medium">Wilaya</h3>
                     <Select 
-                      value={filters.localite || ALL}
-                      onValueChange={(value) => handleFilterChange('localite', value === ALL ? "" : value)}
+                      value={filters.wilaya || ALL}
+                      onValueChange={(value) => handleFilterChange('wilaya', value === ALL ? "" : value)}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Sélectionner une localité" />
+                        <SelectValue placeholder="Sélectionner une wilaya" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value={ALL}>Toutes les localités</SelectItem>
-                        {!localitiesLoading && localities.map((locality) => (
-                          <SelectItem key={locality.id} value={locality.name}>
-                            {locality.name}
+                        <SelectItem value={ALL}>Toutes les wilayas</SelectItem>
+                        {!wilayasLoading && wilayas.map((wilaya) => (
+                          <SelectItem key={wilaya.id} value={wilaya.name}>
+                            {wilaya.name}
                           </SelectItem>
                         ))}
                       </SelectContent>

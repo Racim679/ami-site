@@ -151,10 +151,10 @@ const FeaturedPropertiesCarousel = ({
         return false;
       }
 
-      // Localité filter
-      if (externalFilters.localite) {
+      // Wilaya filter
+      if (externalFilters.wilaya) {
         const locationText = getLocationText(property).toLowerCase();
-        if (!locationText.includes(externalFilters.localite.toLowerCase())) {
+        if (!locationText.includes(externalFilters.wilaya.toLowerCase())) {
           return false;
         }
       }

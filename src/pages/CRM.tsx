@@ -138,14 +138,14 @@ const CRM = () => {
    };
 
    // Fonction inverse pour convertir le status de la DB vers l'affichage
-   const convertStatusFromDB = (status: string): string => {
-      const reverseMap: Record<string, string> = {
+   const convertStatusFromDB = (status: string): "Vendu" | "À Vendre" | "À louer" => {
+      const reverseMap: Record<string, "Vendu" | "À Vendre" | "À louer"> = {
          "à vendre": "À Vendre",
          "vendu": "Vendu",
          "à louer": "À louer"
       };
       
-      return reverseMap[status] || status;
+      return reverseMap[status] || "À Vendre";
    };
 
    const loadProperties = async () => {
