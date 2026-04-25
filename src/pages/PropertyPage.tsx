@@ -41,6 +41,7 @@ interface PropertyPageData {
   };
   typology?: {
     label: string;
+  };
   
   // New fields from detailed tables
   photos: Array<{ photo_url: string; caption?: string }>;
