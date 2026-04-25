@@ -59,11 +59,12 @@ const Footer = () => {
 
           {/* Center Section - Logo */}
           <div className="flex-shrink-0">
-            <Link to="/" className="flex items-center justify-center">
+            <Link to="/" className="flex items-center justify-center" aria-label="Accueil AMI Immobilier">
+              {/* mix-blend-screen: le noir du PNG se fond sur le fond du footer (comme de la transparence) */}
               <img
                 src={logo}
                 alt="AMI Immobilier"
-                className="h-16 md:h-20 w-auto"
+                className="h-16 md:h-20 w-auto mix-blend-screen"
               />
             </Link>
           </div>
