@@ -5,7 +5,7 @@ import { formatPrice } from "@/lib/utils";
 import { MapPin, Bed, Bath, Square, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Section, SectionHeader, SectionTitle, SectionSubtitle } from "@/components/ui/section";
+import { Section, SectionHeader, SectionTitle } from "@/components/ui/section";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { usePropertyTypeStorage } from "@/hooks/usePropertyTypeStorage";
@@ -217,17 +217,14 @@ const FeaturedPropertiesCarousel = ({
   }
   console.log("FeaturedPropertiesCarousel - Rendering with", filteredProperties.length, "filtered properties");
   return <Section className="pt-2 md:pt-3 pb-4 md:pb-6 lg:pb-8 bg-gradient-to-b from-background to-muted/20">
-      <SectionHeader className="mb-3 md:mb-4">
-        <SectionTitle className="text-3xl md:text-4xl font-serif lg:text-5xl">
+      <SectionHeader className="mb-3 md:mb-4 text-left max-w-none mx-0">
+        <SectionTitle className="text-3xl md:text-4xl lg:text-5xl !mb-0">
           Nos Biens en Vedette
         </SectionTitle>
-        <SectionSubtitle className="text-base md:text-lg">
-          Découvrez une sélection de nos meilleures propriétés disponibles
-        </SectionSubtitle>
       </SectionHeader>
 
       {/* Filter Buttons */}
-      <div className="flex justify-center gap-2 md:gap-4 mb-4 md:mb-6 flex-wrap">
+      <div className="flex justify-start gap-2 md:gap-4 mb-4 md:mb-6 flex-wrap">
         {filters.map(filter => <button key={filter} onClick={() => setSelectedFilter(filter)} className={selectedFilter === filter ? "px-2 py-1 md:px-6 md:py-2 rounded-lg bg-primary text-primary-foreground text-xs md:text-base font-semibold font-heading transition-all duration-300" : "px-2 py-1 md:px-6 md:py-2 rounded-lg bg-transparent text-foreground text-xs md:text-base font-semibold font-heading hover:bg-muted/50 transition-all duration-300"}>
             {filter}
           </button>)}
