@@ -35,30 +35,7 @@
   font-display: swap;
 }
 
-/* Freight Text Font Family - For body text and descriptions */
-@font-face {
-  font-family: 'Freight Text';
-  src: url('./assets/Freight Text/fonnts.com-Freight-Text-Pro-Book-.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Freight Text';
-  src: url('./assets/Freight Text/fonnts.com-Freight-Text-Pro-Medium.otf') format('opentype');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Freight Text';
-  src: url('./assets/Freight Text/fonnts.com-Freight-Text-Pro-Bold.otf') format('opentype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
+/* Poppins : chargé via Google Fonts dans index.html (textes courants / plus petits) */
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
@@ -67,8 +44,8 @@ All colors MUST be HSL.
 @layer base {
   /* Design system variables */
   :root {
-    --font-heading: 'Gotham';
-    --font-body: 'Freight Text';
+    --font-heading: 'Gotham', 'Helvetica Neue', Arial, sans-serif;
+    --font-body: 'Poppins', system-ui, sans-serif;
     
     /* Background & Core Colors */
     --background: 0 0% 100%;        /* #FFFFFF - Blanc pur */

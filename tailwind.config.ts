@@ -22,7 +22,7 @@ export default {
 				'heading': ['var(--font-heading)'],
 				'body': ['var(--font-body)'],
 				'gotham': ['Gotham', 'Helvetica Neue', 'Arial', 'sans-serif'],
-				'freight': ['Freight Text', 'Georgia', 'Times New Roman', 'serif']
+				'poppins': ['Poppins', 'system-ui', 'sans-serif']
 			},
 			colors: {
 				border: 'hsl(var(--border))',
